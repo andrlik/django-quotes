@@ -48,7 +48,7 @@ jobs:
       run: |
         poetry config virtualenvs.in-project true
         poetry install
-        python -m spacy download en_core_web_sm
+        poetry run python -m spacy download en_core_web_sm
     - name: Test with pytest
       run: |
         sqlite3 tests/django_quotes.db '.databases'
