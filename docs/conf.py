@@ -63,9 +63,13 @@ html_theme = "sphinx_rtd_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ["_static"]
 
+
+def download_nlp(_):
+    import spacy
+    spacy(["download", "en_core_web_sm"])
+
+
 # Adding apidoc generation to setup so that RTD will build these on deploy.
-
-
 def run_apidoc(_):
     from sphinx.ext.apidoc import main
     import os
@@ -78,4 +82,5 @@ def run_apidoc(_):
 
 
 def setup(app):
+    app.connect("config-inited", download_nlp)
     app.connect("builder-inited", run_apidoc)
