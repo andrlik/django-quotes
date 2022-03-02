@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n crispy_forms_filters %}
+{% block extratitle %}{% translate "Editing" %} {{ character.name }} - {% endblock %}
+{% block content %}
+        <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=character.group.slug %}">{{ character.group.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:character_list' group=character.group.slug %}">{% translate "Characters" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:character_detail' character=character.slug %}">{{ character.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Edit" %}</li>
+  </ol>
+  </nav>
+<h1>{% translate "Edit" %} {{ character.name }}</h1>
+  <p>{% translate "Make your edits in the form below." %}</p>
+  <form method="post">
+  {% csrf_token %}
+    {{ form|crispy }}
+  <button type="submit" class="btn btn-success">{% translate "Update" %}</button> <a href="{% url 'quotes:character_detail' character=character.slug %}" class="btn btn-secondary">{% trans "Go back to character details" %}</a>
+  </form>
+{% endblock %}
