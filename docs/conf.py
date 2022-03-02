@@ -14,11 +14,16 @@ import os
 import sys
 
 import django
+import spacy
 
 if os.getenv("READTHEDOCS", default=False) == "True":
     sys.path.insert(0, os.path.abspath(".."))
     os.environ["DJANGO_READ_DOT_ENV_FILE"] = "True"
     os.environ["USE_DOCKER"] = "no"
+    try:
+        nlp = spacy.load("en_core_web_sm")
+    except OSError:
+        spacy(['download', 'en_core_web_sm'])
 else:
     sys.path.insert(0, os.path.abspath(".."))
 os.environ["DATABASE_URL"] = "sqlite:///readthedocs.db"
@@ -64,11 +69,6 @@ html_theme = "sphinx_rtd_theme"
 # html_static_path = ["_static"]
 
 
-def download_nlp(_):
-    import spacy
-    spacy(["download", "en_core_web_sm"])
-
-
 # Adding apidoc generation to setup so that RTD will build these on deploy.
 def run_apidoc(_):
     from sphinx.ext.apidoc import main
@@ -82,5 +82,4 @@ def run_apidoc(_):
 
 
 def setup(app):
-    app.connect("config-inited", download_nlp)
     app.connect("builder-inited", run_apidoc)
