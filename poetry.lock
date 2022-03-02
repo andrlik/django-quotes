@@ -347,7 +347,7 @@ sqlparse = ">=0.2.0"
 name = "django-easy-logging"
 version = "0.4.0"
 description = "Easy Django logging with Loguru"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -1866,12 +1866,12 @@ docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [extras]
-docs = ["Sphinx", "sphinx-autobuild"]
+docs = ["Sphinx", "sphinx-autobuild", "django-easy-logging"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "697247a7199ac76ceead832ce8aee3fab62acb83cc8370dcd092a0f0d8017862"
+content-hash = "1c41874cf54e11b3158910be71ad3215fd80d153f9168a09797ce141aebc04b2"
 
 [metadata.files]
 aiohttp = [
