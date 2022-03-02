@@ -23,7 +23,8 @@ if os.getenv("READTHEDOCS", default=False) == "True":
     try:
         nlp = spacy.load("en_core_web_sm")
     except OSError:
-        spacy(['download', 'en_core_web_sm'])
+        from spacy.cli.download import download
+        download("en_core_web_sm")
 else:
     sys.path.insert(0, os.path.abspath(".."))
 os.environ["DATABASE_URL"] = "sqlite:///readthedocs.db"
