@@ -8,7 +8,7 @@ A simple reusable [Django](https://www.djangoproject.com) app that allows you to
 ![Test results](https://github.com/andrlik/django-quotes/actions/workflows/ci.yml/badge.svg)
 ![Codestyle check results](https://github.com/andrlik/django-quotes/actions/workflows/codestyle.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/andrlik/django-quotes/badge.svg?branch=main)](https://coveralls.io/github/andrlik/django-quotes?branch=main)
-
+[![Documentation Status](https://readthedocs.org/projects/django-quotes-app/badge/?version=latest)](https://django-quotes-app.readthedocs.io/en/latest/?badge=latest)
 
 ## Quickstart
 
