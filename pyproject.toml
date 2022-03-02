@@ -5,7 +5,7 @@ description = """A reusable Django app to collect quotes for use in random retri
     Markov Chains."""
 authors = ["Daniel Andrlik <daniel@andrlik.org>"]
 license = "BSD-3-Clause"
-readme = "README.rst"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
