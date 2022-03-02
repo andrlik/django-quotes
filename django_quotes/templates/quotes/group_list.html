@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% load i18n crispy_forms_tags %}
-{% block extratitle %}{% trans "Character Groups" %} - {% endblock %}
+{% block extratitle %}{% trans "Source Groups" %} - {% endblock %}
 {% block content %}
   <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item active" aria-current="page">{% translate "Groups" %}</li>
   </ol>
   </nav>
-<h1>{% trans "Your Character Groups" %}</h1>
+<h1>{% trans "Your Source Groups" %}</h1>
 <table class="table table-striped caption-top">
 <caption>{% translate "Showing" %} {{ page_obj|length }} {% translate "of" %} {{ groups.count }}</caption>
 <thead>
 <tr>
   <th scope="col">{% translate "Group" %}</th>
   <th scope="col">{% translate "Summary" %}</th>
-  <th scope="col" class="text-end">{% translate "# Characters" %}</th>
+  <th scope="col" class="text-end">{% translate "# Sources" %}</th>
   <th scope="col" class="text-end">{% translate "# Quotes" %}</th>
 </tr>
 </thead>
@@ -23,7 +23,7 @@
   <tr>
     <th scope="row"><a href="{% url 'quotes:group_detail' group=group.slug %}">{{ group.name }}</a></th>
     <td>{{ group.description_rendered|truncatewords_html:10|safe }}</td>
-    <td class="text-end">{{ group.total_characters }}</td>
+    <td class="text-end">{{ group.total_sources }}</td>
     <td class="text-end">{{ group.total_quotes }}</td>
   </tr>
   {% empty %}

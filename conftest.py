@@ -5,7 +5,7 @@ from typing import List
 import pytest
 from django.contrib.auth import get_user_model
 
-from django_quotes.models import Character, CharacterGroup, Quote
+from django_quotes.models import Quote, Source, SourceGroup
 from tests.factories.users import UserFactory
 
 User = get_user_model()
@@ -79,15 +79,15 @@ def corpus_sentences() -> List[str]:
 
 @pytest.fixture
 def property_group(user, corpus_sentences):
-    cg = CharacterGroup.objects.create(name="Wranglin Robots", owner=user)
+    cg = SourceGroup.objects.create(name="Wranglin Robots", owner=user)
     for x in range(10):
         allow_markov = False
         if x % 2 == 0:
             allow_markov = True
-        c = Character.objects.create(
+        c = Source.objects.create(
             name=str(x), group=cg, allow_markov=allow_markov, owner=user
         )
         for quote in corpus_sentences:
-            Quote.objects.create(quote=quote, character=c, owner=user)
+            Quote.objects.create(quote=quote, source=c, owner=user)
     yield cg
     cg.delete()

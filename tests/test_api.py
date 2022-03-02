@@ -4,9 +4,9 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from django_quotes.api.serializers import CharacterSerializer
-from django_quotes.api.views import CharacterGroupViewSet
-from django_quotes.models import Character, CharacterGroup
+from django_quotes.api.serializers import SourceSerializer
+from django_quotes.api.views import SourceGroupViewSet
+from django_quotes.models import Source, SourceGroup
 from tests.factories.users import UserFactory
 
 pytestmark = pytest.mark.django_db(transaction=True)
@@ -18,10 +18,8 @@ def apiclient():
 
 
 class TestGroupViewSet:
-    def test_list_groups(
-        self, property_group: CharacterGroup, rf: RequestFactory
-    ) -> None:
-        view = CharacterGroupViewSet()
+    def test_list_groups(self, property_group: SourceGroup, rf: RequestFactory) -> None:
+        view = SourceGroupViewSet()
         request = rf.get("/ignorethisurl/")
         request.user = property_group.owner
         view.request = request
@@ -38,7 +36,7 @@ class TestGroupViewSet:
     def test_empty_random_quote(self, apiclient):
         user = UserFactory()
         apiclient.force_authenticate(user=user)
-        group = CharacterGroup.objects.create(name="Nothing here", owner=user)
+        group = SourceGroup.objects.create(name="Nothing here", owner=user)
         response = apiclient.get(
             reverse("api:group-get-random-quote", kwargs={"group": group.slug}),
             format="json",
@@ -66,8 +64,8 @@ class TestGroupViewSet:
 
     def test_disallowed_markov_group(self, apiclient):
         user = UserFactory()
-        group = CharacterGroup.objects.create(name="Nothing here", owner=user)
-        Character.objects.create(
+        group = SourceGroup.objects.create(name="Nothing here", owner=user)
+        Source.objects.create(
             name="No Fun", group=group, owner=user, allow_markov=False
         )
         apiclient.force_authenticate(user=user)
@@ -78,10 +76,8 @@ class TestGroupViewSet:
 
     def test_empty_markov_group(self, apiclient):
         user = UserFactory()
-        group = CharacterGroup.objects.create(name="Nothing here", owner=user)
-        Character.objects.create(
-            name="No Fun", group=group, owner=user, allow_markov=True
-        )
+        group = SourceGroup.objects.create(name="Nothing here", owner=user)
+        Source.objects.create(name="No Fun", group=group, owner=user, allow_markov=True)
         apiclient.force_authenticate(user=user)
         response = apiclient.get(
             reverse("api:group-generate-sentence", kwargs={"group": group.slug})
@@ -89,90 +85,88 @@ class TestGroupViewSet:
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
 
-class TestCharacterViewSet:
-    def test_list_characters(self, apiclient, property_group):
+class TestSourceViewSet:
+    def test_list_sources(self, apiclient, property_group):
         apiclient.force_authenticate(user=property_group.owner)
-        response = apiclient.get(reverse("api:character-list"))
+        response = apiclient.get(reverse("api:source-list"))
         assert response.status_code == status.HTTP_200_OK
 
-    def test_list_characters_by_group(self, apiclient, property_group):
+    def test_list_sources_by_group(self, apiclient, property_group):
         apiclient.force_authenticate(user=property_group.owner)
-        extra_group = CharacterGroup.objects.create(
+        extra_group = SourceGroup.objects.create(
             name="I'm extra", owner=property_group.owner
         )
-        Character.objects.create(
+        Source.objects.create(
             name="Bobble the Odd", group=extra_group, owner=property_group.owner
         )
         response = apiclient.get(
-            reverse("api:character-list") + f"?group={property_group.slug}"
+            reverse("api:source-list") + f"?group={property_group.slug}"
         )
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == property_group.character_set.count()
+        assert len(response.data) == property_group.source_set.count()
 
     def test_filter_by_nonexistent_group(self, apiclient, property_group):
         apiclient.force_authenticate(user=property_group.owner)
-        response = apiclient.get(reverse("api:character-list") + "?group=sayonara")
+        response = apiclient.get(reverse("api:source-list") + "?group=sayonara")
         assert len(response.data) == 0
         assert response.status_code == status.HTTP_200_OK
 
-    def test_retrieve_character(self, apiclient, property_group):
-        char_to_retrieve = property_group.character_set.all()[0]
-        serializer = CharacterSerializer(char_to_retrieve)
+    def test_retrieve_source(self, apiclient, property_group):
+        char_to_retrieve = property_group.source_set.all()[0]
+        serializer = SourceSerializer(char_to_retrieve)
         apiclient.force_authenticate(user=property_group.owner)
         response = apiclient.get(
-            reverse("api:character-detail", kwargs={"character": char_to_retrieve.slug})
+            reverse("api:source-detail", kwargs={"source": char_to_retrieve.slug})
         )
         assert response.status_code == status.HTTP_200_OK
         assert response.data == serializer.data
 
-    def test_character_random_quote(self, apiclient, property_group):
-        char_to_retrieve = property_group.character_set.all()[0]
+    def test_source_random_quote(self, apiclient, property_group):
+        char_to_retrieve = property_group.source_set.all()[0]
         apiclient.force_authenticate(user=property_group.owner)
         response = apiclient.get(
             reverse(
-                "api:character-get-random-quote",
-                kwargs={"character": char_to_retrieve.slug},
+                "api:source-get-random-quote",
+                kwargs={"source": char_to_retrieve.slug},
             )
         )
         assert response.status_code == status.HTTP_200_OK
 
-    def test_random_quote_empty_character(self, apiclient, property_group):
+    def test_random_quote_empty_source(self, apiclient, property_group):
         apiclient.force_authenticate(user=property_group.owner)
-        character = Character.objects.create(
+        source = Source.objects.create(
             name="Bobble the Elder", group=property_group, owner=property_group.owner
         )
         response = apiclient.get(
-            reverse(
-                "api:character-get-random-quote", kwargs={"character": character.slug}
-            )
+            reverse("api:source-get-random-quote", kwargs={"source": source.slug})
         )
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    def test_character_generate_sentence(self, apiclient, property_group):
-        char_to_retrieve = property_group.character_set.filter(allow_markov=True)[0]
+    def test_source_generate_sentence(self, apiclient, property_group):
+        char_to_retrieve = property_group.source_set.filter(allow_markov=True)[0]
         apiclient.force_authenticate(user=property_group.owner)
         response = apiclient.get(
             reverse(
-                "api:character-generate-sentence",
-                kwargs={"character": char_to_retrieve.slug},
+                "api:source-generate-sentence",
+                kwargs={"source": char_to_retrieve.slug},
             )
         )
         assert response.status_code == status.HTTP_200_OK
         assert response.data["sentence"] is not None
 
-    def test_disallowed_character_generate_sentence(self, apiclient, property_group):
-        char_to_retrieve = property_group.character_set.filter(allow_markov=False)[0]
+    def test_disallowed_source_generate_sentence(self, apiclient, property_group):
+        char_to_retrieve = property_group.source_set.filter(allow_markov=False)[0]
         apiclient.force_authenticate(user=property_group.owner)
         response = apiclient.get(
             reverse(
-                "api:character-generate-sentence",
-                kwargs={"character": char_to_retrieve.slug},
+                "api:source-generate-sentence",
+                kwargs={"source": char_to_retrieve.slug},
             )
         )
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_empty_character_generate_sentence(self, apiclient, property_group):
-        char_to_retrieve = Character.objects.create(
+    def test_empty_source_generate_sentence(self, apiclient, property_group):
+        char_to_retrieve = Source.objects.create(
             name="I say nothing",
             group=property_group,
             owner=property_group.owner,
@@ -181,8 +175,8 @@ class TestCharacterViewSet:
         apiclient.force_authenticate(user=property_group.owner)
         response = apiclient.get(
             reverse(
-                "api:character-generate-sentence",
-                kwargs={"character": char_to_retrieve.slug},
+                "api:source-generate-sentence",
+                kwargs={"source": char_to_retrieve.slug},
             )
         )
         assert response.status_code == status.HTTP_204_NO_CONTENT

@@ -1,25 +1,25 @@
 from rest_framework.serializers import ModelSerializer
 
-from ..models import Character, CharacterGroup, Quote
+from ..models import Quote, Source, SourceGroup
 
 
-class CharacterGroupSerializer(ModelSerializer):
+class SourceGroupSerializer(ModelSerializer):
     class Meta:
-        model = CharacterGroup
+        model = SourceGroup
         fields = ["name", "slug", "description", "description_rendered"]
 
 
-class CharacterSerializer(ModelSerializer):
-    group = CharacterGroupSerializer()
+class SourceSerializer(ModelSerializer):
+    group = SourceGroupSerializer()
 
     class Meta:
-        model = Character
+        model = Source
         fields = ["name", "group", "slug", "description", "description_rendered"]
 
 
 class QuoteSerializer(ModelSerializer):
-    character = CharacterSerializer()
+    source = SourceSerializer()
 
     class Meta:
         model = Quote
-        fields = ["quote", "quote_rendered", "character", "citation", "citation_url"]
+        fields = ["quote", "quote_rendered", "source", "citation", "citation_url"]

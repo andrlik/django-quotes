@@ -1,30 +1,30 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block extratitle %}{{ character.name }} - {% endblock %}
+{% block extratitle %}{{ source.name }} - {% endblock %}
 {% block content %}
       <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=character.group.slug %}">{{ character.group.name }}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'quotes:character_list' group=character.group.slug %}">{% translate "Characters" %}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ character.name }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=source.group.slug %}">{{ source.group.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_list' group=source.group.slug %}">{% translate "Sources" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ source.name }}</li>
   </ol>
   </nav>
-<h1>{% translate "Character Details" %}: {{ character.name }}</h1>
+<h1>{% translate "Source Details" %}: {{ source.name }}</h1>
   <div class="card">
-  <h2 class="card-header">{{ character.name }}</h2>
+  <h2 class="card-header">{{ source.name }}</h2>
     <div class="card-body">
-  {{ character.description_rendered|safe }}
+  {{ source.description_rendered|safe }}
     </div>
     <div class="card-footer text-muted">
-  <small>{% translate "Created at" %} {{ character.created }} {% translate "Last modified" %} {{ character.modified }}</small>
+  <small>{% translate "Created at" %} {{ source.created }} {% translate "Last modified" %} {{ source.modified }}</small>
     </div>
   </div>
   <p></p>
-  <p><a href="{% url 'quotes:character_update' character=character.slug %}" class="btn btn-primary">{% translate "Edit character" %}</a> <a href="{% url "quotes:character_list" group=character.group.slug %}" class="btn btn-secondary">{% translate "Back to character list" %}</a></p>
+  <p><a href="{% url 'quotes:source_update' source=source.slug %}" class="btn btn-primary">{% translate "Edit source" %}</a> <a href="{% url 'quotes:source_list' group=source.group.slug %}" class="btn btn-secondary">{% translate "Back to source list" %}</a></p>
   <h2>{% translate "Sample of Quotes" %}</h2>
   <table class="table table-striped caption-top">
-  <caption>{% translate "Showing" %} {{ samp_quotes|length }} {% translate "of" %} {{ character.quote_set.count }} {% translate "quotes" %}. <a href="{% url 'quotes:quote_list' character=character.slug %}">{% translate "See all." %}</a></caption>
+  <caption>{% translate "Showing" %} {{ samp_quotes|length }} {% translate "of" %} {{ source.quote_set.count }} {% translate "quotes" %}. <a href="{% url 'quotes:quote_list' source=source.slug %}">{% translate "See all." %}</a></caption>
   <thead>
   <tr>
     <th scope="col" class="text-right">#</th>
@@ -52,8 +52,8 @@
   {% endfor %}
   </tbody>
   </table>
-  <p><a href="{% url 'quotes:quote_create' character=character.slug %}" class="btn btn-success">{% translate "Add new quote" %}</a></p>
-  <h2>{% translate "Character Statistics" %}</h2>
+  <p><a href="{% url 'quotes:quote_create' source=source.slug %}" class="btn btn-success">{% translate "Add new quote" %}</a></p>
+  <h2>{% translate "Source Statistics" %}</h2>
   <table class="table">
   <thead>
   <tr>
@@ -64,11 +64,11 @@
   </thead>
   <tbody>
   <tr>
-    <td class="text-end">{{ character.quote_set.count }}</td>
-    <td class="text-end">{{ character.stats.quotes_requested }}</td>
-    <td class="text-end">{{ character.stats.quotes_generated }}</td>
+    <td class="text-end">{{ source.quote_set.count }}</td>
+    <td class="text-end">{{ source.stats.quotes_requested }}</td>
+    <td class="text-end">{{ source.stats.quotes_generated }}</td>
   </tr>
   </tbody>
   </table>
-  <p class="text-end"><a href="{% url 'quotes:character_delete' character=character.slug %}" class="btn btn-danger">{% translate "Delete character" %}</a></p>
+  <p class="text-end"><a href="{% url 'quotes:source_delete' source=source.slug %}" class="btn btn-danger">{% translate "Delete source" %}</a></p>
 {% endblock %}

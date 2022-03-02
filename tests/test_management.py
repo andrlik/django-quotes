@@ -3,18 +3,18 @@ from io import StringIO
 import pytest
 from django.core.management import call_command
 
-from django_quotes.models import CharacterGroup, CharacterMarkovModel, GroupMarkovModel
+from django_quotes.models import GroupMarkovModel, SourceGroup, SourceMarkovModel
 
 pytestmark = pytest.mark.django_db(transaction=True)
 
 
 def test_markov_command(property_group):
     pgmm = GroupMarkovModel.objects.get(group=property_group)
-    character = property_group.character_set.filter(allow_markov=True)[0]
+    source = property_group.source_set.filter(allow_markov=True)[0]
     group_modify = pgmm.modified
-    cmm = CharacterMarkovModel.objects.get(character=character)
+    cmm = SourceMarkovModel.objects.get(source=source)
     char_modify = cmm.modified
-    nochangegroup = CharacterGroup.objects.create(
+    nochangegroup = SourceGroup.objects.create(
         name="So Alone", owner=property_group.owner
     )
     nochange_modify = GroupMarkovModel.objects.get(group=nochangegroup).modified

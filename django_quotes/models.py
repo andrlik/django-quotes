@@ -44,12 +44,12 @@ class AbstractOwnerModel(models.Model):
 
 
 # Create your models here.
-class CharacterGroup(
+class SourceGroup(
     AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=RulesModelBase
 ):
     """
-    An abstract group or source for a given set of quotes. Multiple sources, or Character objects, can belong to
-    the same group.
+    An abstract group or source for a given set of quotes. Multiple sources, or Source objects, can belong to
+    the same group. For example, a novel or series if you plan to quote the characters within individually.
 
     Attributes:
         id (int): Database primary key for the object.
@@ -90,25 +90,25 @@ class CharacterGroup(
     )
 
     @cached_property
-    def total_characters(self) -> int:
-        return Character.objects.filter(group=self).count()
+    def total_sources(self) -> int:
+        return Source.objects.filter(group=self).count()
 
     @cached_property
-    def markov_characters(self) -> int:
-        return Character.objects.filter(group=self, allow_markov=True).count()
+    def markov_sources(self) -> int:
+        return Source.objects.filter(group=self, allow_markov=True).count()
 
     @cached_property
     def total_quotes(self) -> int:
         return Quote.objects.filter(
-            character__in=Character.objects.filter(group=self)
+            source__in=Source.objects.filter(group=self)
         ).count()
 
     @cached_property
     def markov_ready(self) -> bool:
         if (
-            self.markov_characters > 0
+            self.markov_sources > 0
             and Quote.objects.filter(
-                character__in=self.character_set.filter(allow_markov=True)
+                source__in=self.source_set.filter(allow_markov=True)
             ).count()
             > 10
         ):
@@ -147,20 +147,20 @@ class CharacterGroup(
 
         :return: ``Quote`` object or None if no quotes are defined.
         """
-        quotes = Quote.objects.filter(character__in=self.character_set.all())[
+        quotes = Quote.objects.filter(source__in=self.source_set.all())[
             :max_quotes_to_process
         ]
         if quotes.exists():
             quote = random.choice(list(quotes))
             quote_random_retrieved.send(
-                type(quote.character), instance=quote.character, quote_retrieved=quote
+                type(quote.source), instance=quote.source, quote_retrieved=quote
             )
             return quote
         return None
 
     def refresh_from_db(self, *args, **kwargs):
         super().refresh_from_db(*args, **kwargs)
-        cached_properties = ["total_characters", "markov_characters", "total_quotes"]
+        cached_properties = ["total_sources", "markov_sources", "total_quotes"]
         for prop in cached_properties:
             try:
                 del self.__dict__[prop]
@@ -187,16 +187,17 @@ class CharacterGroup(
         ordering = ["name"]
 
 
-class Character(
+class Source(
     AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=RulesModelBase
 ):
     """
-    An individual character to attribute the quote to in the system.
+    An individual source to attribute the quote to in the system, such as a character from a podcast/book, or a specific
+    author.
 
     Attributes:
         id (int): Database primary key for the object.
         name (str): Unique name of a character within a ``CharacterGroup`` for this entity.
-        group (CharacterGroup): The parent ``CharacterGroup``.
+        group (SourceGroup): The parent ``SourceGroup``.
         slug (str): Slug made up of a generated version of the character name and the group slug prefix.
         description (str): Description for the character. Markdown can be used for styling.
         description_rendered (str): HTML representation of the description for convenience. Automatically generated.
@@ -231,7 +232,7 @@ class Character(
         default=False, help_text=_("Allow to be used in markov chains?")
     )
     group = models.ForeignKey(
-        CharacterGroup,
+        SourceGroup,
         on_delete=models.CASCADE,
         help_text=_("The group this character belongs to."),
     )
@@ -244,7 +245,7 @@ class Character(
 
         :return: bool
         """
-        if self.allow_markov and Quote.objects.filter(character=self).count() > 10:
+        if self.allow_markov and Quote.objects.filter(source=self).count() > 10:
             return True
         return False
 
@@ -258,7 +259,7 @@ class Character(
         logger.debug("Checking to see if character is markov ready...")
         if self.markov_ready:
             logger.debug("It IS ready. Fetching markov model.")
-            markov_model = CharacterMarkovModel.objects.get(character=self)
+            markov_model = SourceMarkovModel.objects.get(source=self)
             if not markov_model.data:
                 logger.debug("No model defined yet, generating...")
                 markov_model.generate_model_from_corpus()
@@ -281,7 +282,7 @@ class Character(
         :return: ``Quote`` object or None
         """
         quotes_to_pick = (
-            Quote.objects.filter(character=self)
+            Quote.objects.filter(source=self)
             .select_related("stats")
             .order_by("stats__times_used")[:max_quotes_to_process]
         )
@@ -315,7 +316,7 @@ class Quote(
     AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=RulesModelBase
 ):
     """
-    A quote from a given character.
+    A quote from a given source.
 
     Attributes:
         id (int): Database primary key for the object.
@@ -323,7 +324,7 @@ class Quote(
         quote_rendered (str): HTML rendered version of the quote field. Automatically generated.
         citation (str): Optional description of quote source, e.g. episode number or book title.
         citation_url (str): Optional accompanying URL for the citation.
-        character (Character): The character that said this quote.
+        character (Source): The source of this quote.
         owner (User): The user that created and owns this quote.
         created (datetime): When this object was first created. Auto-generated.
         modified (datetime): Last time this object was modified. Auto-generated.
@@ -339,8 +340,10 @@ class Quote(
         blank=True,
         help_text=_("HTML rendered version of quote generated from quote plain text."),
     )
-    character = models.ForeignKey(
-        Character, on_delete=models.CASCADE, help_text=_("The character who said this.")
+    source = models.ForeignKey(
+        Source,
+        on_delete=models.CASCADE,
+        help_text=_("The source of this quote, i.e. name."),
     )
     citation = models.CharField(
         max_length=250,
@@ -353,7 +356,7 @@ class Quote(
     )
 
     def __str__(self):  # pragma: nocover
-        return f"{self.character.name}: {self.quote}"
+        return f"{self.source.name}: {self.quote}"
 
     class Meta:
         rules_permissions = {
@@ -364,21 +367,21 @@ class Quote(
         }
 
 
-class CharacterMarkovModel(TimeStampedModel):
+class SourceMarkovModel(TimeStampedModel):
     """
-    The cached markov model for a given character. The databse object for this is automatically created
+    The cached markov model for a given source. The database object for this is automatically created
     whenever a new character object is saved.
 
     Attributes:
         id (int): Database primary key for the object.
-        character (Character): The character who the model is sourced from.
+        source (Source): The character who the model is sourced from.
         data (json): The JSON representation of the Markov model created by ``markovify``.
         created (datetime): When this object was first created. Auto-generated.
         modified (datetime): Last time this object was modified. Auto-generated.
 
     """
 
-    character = models.OneToOneField(Character, on_delete=models.CASCADE)
+    source = models.OneToOneField(Source, on_delete=models.CASCADE)
     data = models.JSONField(null=True, blank=True)
 
     def generate_model_from_corpus(self):
@@ -387,7 +390,7 @@ class CharacterMarkovModel(TimeStampedModel):
         create, compile, and save the model.
         """
         logger.debug("Generating text model. Fetching quotes.")
-        quotes = Quote.objects.filter(character=self.character)
+        quotes = Quote.objects.filter(source=self.source)
         # Don't bother generating model if there isn't data.
         if not quotes.exists():  # pragma: nocover
             logger.debug("There are no quotes. Returning None.")
@@ -404,7 +407,7 @@ class CharacterMarkovModel(TimeStampedModel):
         logger.debug("Markov model populated to database.")
 
     def __str__(self):  # pragma: nocover
-        return self.character.name
+        return self.source.name
 
 
 class GroupMarkovModel(TimeStampedModel):
@@ -414,14 +417,14 @@ class GroupMarkovModel(TimeStampedModel):
 
     Attributes:
         id (int): The database id of this object.
-        group (CharacterGroup): The OneToOne relationship to ``CharacterGroup``
+        group (SourceGroup): The OneToOne relationship to ``SourceGroup``
         data (json): The cached markov model.
         created (datetime): When the object was created.
         modified (datetime): When the object was last modified.
     """
 
     group = models.OneToOneField(
-        CharacterGroup,
+        SourceGroup,
         on_delete=models.CASCADE,
         help_text=_("The character group this model belongs to."),
     )
@@ -435,7 +438,7 @@ class GroupMarkovModel(TimeStampedModel):
         """
         logger.debug(f"Gathering corpus for character group: {self.group.name}")
         quotes = Quote.objects.filter(
-            character__in=Character.objects.filter(group=self.group, allow_markov=True)
+            source__in=Source.objects.filter(group=self.group, allow_markov=True)
         )
         if quotes.exists():
             if quotes.count() >= 10:
@@ -484,13 +487,13 @@ class GroupStats(TimeStampedModel):
     An object for using to track usage stats for ``CharacterGroup``.
 
     Attributes:
-        group (CharacterGroup): The group this is collecting stats for.
+        group (SourceGroup): The group this is collecting stats for.
         quotes_requested (int): The number of times a quote from this object or its children has been requested.
         quotes_generated (int): The number of times a markov quote has been generated for this or it's children.
     """
 
     group = models.OneToOneField(
-        CharacterGroup, related_name="stats", on_delete=models.CASCADE
+        SourceGroup, related_name="stats", on_delete=models.CASCADE
     )
     quotes_requested = models.PositiveIntegerField(
         default=0, help_text=_("Number of time child quotes have been requested.")
@@ -501,18 +504,18 @@ class GroupStats(TimeStampedModel):
     )
 
 
-class CharacterStats(TimeStampedModel):
+class SourceStats(TimeStampedModel):
     """
     An object for using to track usage stats for ``Character``.
 
     Attributes:
-        character (Character): The character this is collecting stats for.
+        source (Source): The source this is collecting stats for.
         quotes_requested (int): The number of times a quote from this object or its children has been requested.
         quotes_generated (int): The number of times a markov quote has been generated for this or it's children.
     """
 
-    character = models.OneToOneField(
-        Character, related_name="stats", on_delete=models.CASCADE
+    source = models.OneToOneField(
+        Source, related_name="stats", on_delete=models.CASCADE
     )
     quotes_requested = models.PositiveIntegerField(
         default=0, help_text=_("Number of time child quotes have been requested.")

@@ -20,48 +20,48 @@
   </div>
   <p></p>
 <p>  <a href="{% url 'quotes:group_update' group=group.slug %}" class="btn btn-primary">{% trans "Edit group" %}</a> <a href="{% url 'quotes:group_list' %}" class="btn btn-secondary">{% trans "Back to list" %}</a></p>
-  <h2>{% translate "Sample of Characters" %}</h2>
+  <h2>{% translate "Sample of Sources" %}</h2>
   <table class="table table-striped caption-top">
-  <caption>{% translate "Showing" %} {{ char_sample.count }} {% translate "of" %} {{ group.character_set.count }} {% translate "characters." %}
-  <a href="{% url 'quotes:character_list' group=group.slug %}">{% translate "See all." %}</a></caption>
+  <caption>{% translate "Showing" %} {{ source_sample.count }} {% translate "of" %} {{ group.source_set.count }} {% translate "sources." %}
+  <a href="{% url 'quotes:source_list' group=group.slug %}">{% translate "See all." %}</a></caption>
   <thead>
   <tr>
-    <th scope="col">{% trans "Character" %}</th>
+    <th scope="col">{% trans "Source" %}</th>
     <th scope="col">{% trans "Allows Markov" %}</th>
     <th scope="col" class="text-end">{% trans "# Quotes" %}</th>
   </tr>
   </thead>
   <tbody>
-  {% for char in char_sample %}
+  {% for source in source_sample %}
   <tr>
-    <th scope="row"><a href="{% url 'quotes:character_detail' character=char.slug %}">{{ char.name }}</a></th>
-    <td><span class="badge {% if char.allow_markov %}bg-success{% else %}bg-secondary{% endif %}">{% if char.allow_markov %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</span></td>
-    <td class="text-end"><a href="{% url 'quotes:quote_list' character=char.slug %}">{{ char.quote_set.count }}</a></td>
+    <th scope="row"><a href="{% url 'quotes:source_detail' source=source.slug %}">{{ source.name }}</a></th>
+    <td><span class="badge {% if source.allow_markov %}bg-success{% else %}bg-secondary{% endif %}">{% if source.allow_markov %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</span></td>
+    <td class="text-end"><a href="{% url 'quotes:quote_list' source=source.slug %}">{{ source.quote_set.count }}</a></td>
   </tr>
   {% empty %}
   {% endfor %}
   </tbody>
   </table>
 
-  <p><a href="{% url 'quotes:character_create' group=group.slug %}" class="btn btn-success">{% translate "Add new character" %}</a></p>
+  <p><a href="{% url 'quotes:source_create' group=group.slug %}" class="btn btn-success">{% translate "Add new source" %}</a></p>
 
   <h2>{% translate "Group Statistics" %}</h2>
 
   <table class="table">
   <thead>
   <tr>
-    <th scope="col" class="text-end">{% translate "Total characters" %}</th>
+    <th scope="col" class="text-end">{% translate "Total sources" %}</th>
     <th scope="col" class="text-end">{% translate "Total quotes" %}</th>
-    <th scope="col" class="text-end">{% translate "Markov enabled characters" %}</th>
+    <th scope="col" class="text-end">{% translate "Markov enabled sources" %}</th>
     <th scope="col" class="text-end">{% translate "Random quotes requested" %}</th>
     <th scope="col" class="text-end">{% translate "Markov sentences generated" %}</th>
   </tr>
   </thead>
   <tbody>
   <tr>
-    <td class="text-end">{{ group.total_characters }}</td>
+    <td class="text-end">{{ group.total_sources }}</td>
     <td class="text-end">{{ group.total_quotes }}</td>
-    <td class="text-end">{{ group.markov_characters }}</td>
+    <td class="text-end">{{ group.markov_sources }}</td>
     <td class="text-end">{{ group.stats.quotes_requested }}</td>
     <td class="text-end">{{ group.stats.quotes_generated }}</td>
   </tr>
