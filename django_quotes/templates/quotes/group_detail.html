@@ -23,7 +23,7 @@
   <h2>{% translate "Sample of Sources" %}</h2>
   <table class="table table-striped caption-top">
   <caption>{% translate "Showing" %} {{ source_sample.count }} {% translate "of" %} {{ group.source_set.count }} {% translate "sources." %}
-  <a href="{% url 'quotes:character_list' group=group.slug %}">{% translate "See all." %}</a></caption>
+  <a href="{% url 'quotes:source_list' group=group.slug %}">{% translate "See all." %}</a></caption>
   <thead>
   <tr>
     <th scope="col">{% trans "Source" %}</th>
@@ -34,7 +34,7 @@
   <tbody>
   {% for source in source_sample %}
   <tr>
-    <th scope="row"><a href="{% url 'quotes:character_detail' source=source.slug %}">{{ source.name }}</a></th>
+    <th scope="row"><a href="{% url 'quotes:source_detail' source=source.slug %}">{{ source.name }}</a></th>
     <td><span class="badge {% if source.allow_markov %}bg-success{% else %}bg-secondary{% endif %}">{% if source.allow_markov %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</span></td>
     <td class="text-end"><a href="{% url 'quotes:quote_list' source=source.slug %}">{{ source.quote_set.count }}</a></td>
   </tr>
@@ -43,7 +43,7 @@
   </tbody>
   </table>
 
-  <p><a href="{% url 'quotes:character_create' group=group.slug %}" class="btn btn-success">{% translate "Add new character" %}</a></p>
+  <p><a href="{% url 'quotes:source_create' group=group.slug %}" class="btn btn-success">{% translate "Add new source" %}</a></p>
 
   <h2>{% translate "Group Statistics" %}</h2>
 

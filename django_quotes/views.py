@@ -45,7 +45,7 @@ class SourceGroupDetailView(LoginRequiredMixin, PermissionRequiredMixin, Generic
     template_name = "quotes/group_detail.html"
     permission_required = "django_quotes.read_sourcegroup"
     slug_url_kwarg = "group"
-    prefetch_related = ["character_set"]
+    prefetch_related = ["source_set"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -200,7 +200,7 @@ class SourceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelet
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy("quotes:character_list", kwargs={"group": self.group.slug})
+        return reverse_lazy("quotes:source_list", kwargs={"group": self.group.slug})
 
 
 class SourceListView(LoginRequiredMixin, PermissionRequiredMixin, GenericList):
@@ -261,8 +261,8 @@ class QuoteListView(LoginRequiredMixin, PermissionRequiredMixin, GenericList):
 
     def get_queryset(self):
         return (
-            Quote.objects.filter(character=self.source)
-            .select_related("character", "character__group")
+            Quote.objects.filter(source=self.source)
+            .select_related("source", "source__group")
             .order_by("-created")
         )
 
@@ -301,12 +301,10 @@ class QuoteCreateView(LoginRequiredMixin, PermissionRequiredMixin, GenericCreate
 
     def form_valid(self, form):
         # Check to see if this exact quote is already here. This is imperfect, but better than nothing.
-        if Quote.objects.filter(
-            character=self.source, quote=form.instance.quote
-        ).exists():
+        if Quote.objects.filter(source=self.source, quote=form.instance.quote).exists():
             messages.error(
                 self.request,
-                _(f"This quote for character {self.source.name} already exists."),
+                _(f"This quote for source {self.source.name} already exists."),
             )
             return self.form_invalid(form)
         form.instance.source = self.source
