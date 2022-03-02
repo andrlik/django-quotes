@@ -6,6 +6,14 @@ description = """A reusable Django app to collect quotes for use in random retri
 authors = ["Daniel Andrlik <daniel@andrlik.org>"]
 license = "BSD-3-Clause"
 readme = "README.md"
+repository = "https://github.com/andrlik/django-quotes"
+homepage = "https://github.com/andrlik/django-quotes"
+classifiers = [
+    "Framework :: Django :: 4",
+    "License :: OSI Approved :: BSD License",
+    "Framework :: Django",
+]
+documentation = "https://django-quotes-app.readthedocs.io/en/latest/"
 
 [tool.poetry.dependencies]
 python = "^3.9"
