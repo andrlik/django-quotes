@@ -1,67 +1,65 @@
 from django.urls import path
 
 from .views import (
-    CharacterCreateView,
-    CharacterDeleteView,
-    CharacterDetailView,
-    CharacterGroupCreateView,
-    CharacterGroupDeleteView,
-    CharacterGroupDetailView,
-    CharacterGroupListView,
-    CharacterGroupUpdateView,
-    CharacterListView,
-    CharacterUpdateView,
     QuoteCreateView,
     QuoteDeleteView,
     QuoteDetailView,
     QuoteListView,
     QuoteUpdateView,
+    SourceCreateView,
+    SourceDeleteView,
+    SourceDetailView,
+    SourceGroupCreateView,
+    SourceGroupDeleteView,
+    SourceGroupDetailView,
+    SourceGroupListView,
+    SourceGroupUpdateView,
+    SourceListView,
+    SourceUpdateView,
 )
 
 app_name = "quotes"
 urlpatterns = [
-    path("groups/", view=CharacterGroupListView.as_view(), name="group_list"),
-    path(
-        "groups/create/", view=CharacterGroupCreateView.as_view(), name="group_create"
-    ),
+    path("groups/", view=SourceGroupListView.as_view(), name="group_list"),
+    path("groups/create/", view=SourceGroupCreateView.as_view(), name="group_create"),
     path(
         "groups/<slug:group>/",
-        view=CharacterGroupDetailView.as_view(),
+        view=SourceGroupDetailView.as_view(),
         name="group_detail",
     ),
     path(
         "groups/<slug:group>/edit/",
-        view=CharacterGroupUpdateView.as_view(),
+        view=SourceGroupUpdateView.as_view(),
         name="group_update",
     ),
     path(
         "groups/<slug:group>/delete/",
-        view=CharacterGroupDeleteView.as_view(),
+        view=SourceGroupDeleteView.as_view(),
         name="group_delete",
     ),
     path(
         "groups/<slug:group>/characters/",
-        view=CharacterListView.as_view(),
+        view=SourceListView.as_view(),
         name="character_list",
     ),
     path(
         "groups/<slug:group>/characters/add/",
-        view=CharacterCreateView.as_view(),
+        view=SourceCreateView.as_view(),
         name="character_create",
     ),
     path(
         "characters/<slug:character>/",
-        view=CharacterDetailView.as_view(),
+        view=SourceDetailView.as_view(),
         name="character_detail",
     ),
     path(
         "characters/<slug:character>/edit/",
-        view=CharacterUpdateView.as_view(),
+        view=SourceUpdateView.as_view(),
         name="character_update",
     ),
     path(
         "characters/<slug:character>/delete/",
-        view=CharacterDeleteView.as_view(),
+        view=SourceDeleteView.as_view(),
         name="character_delete",
     ),
     path(

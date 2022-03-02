@@ -1,24 +1,24 @@
 from django.contrib import admin
 
 from .models import (
-    Character,
-    CharacterGroup,
-    CharacterMarkovModel,
-    CharacterStats,
     GroupMarkovModel,
     GroupStats,
     Quote,
     QuoteStats,
+    Source,
+    SourceGroup,
+    SourceMarkovModel,
+    SourceStats,
 )
 
 # Register your models here.
 
 
-class CharacterGroupAdmin(admin.ModelAdmin):
+class SourceGroupAdmin(admin.ModelAdmin):
     pass
 
 
-class CharacterAdmin(admin.ModelAdmin):
+class SourceAdmin(admin.ModelAdmin):
     pass
 
 
@@ -26,7 +26,7 @@ class QuoteAdmin(admin.ModelAdmin):
     pass
 
 
-class CharacterMarkovModelAdmin(admin.ModelAdmin):
+class SourceMarkovModelAdmin(admin.ModelAdmin):
     pass
 
 
@@ -38,7 +38,7 @@ class GroupStatsAdmin(admin.ModelAdmin):
     pass
 
 
-class CharacterStatAdmin(admin.ModelAdmin):
+class SourceStatAdmin(admin.ModelAdmin):
     pass
 
 
@@ -46,11 +46,11 @@ class QuoteStatAdmin(admin.ModelAdmin):
     pass
 
 
-admin.site.register(CharacterGroup, CharacterGroupAdmin)
-admin.site.register(Character, CharacterAdmin)
+admin.site.register(SourceGroup, SourceGroupAdmin)
+admin.site.register(Source, SourceAdmin)
 admin.site.register(Quote, QuoteAdmin)
-admin.site.register(CharacterMarkovModel, CharacterMarkovModelAdmin)
+admin.site.register(SourceMarkovModel, SourceMarkovModelAdmin)
 admin.site.register(GroupMarkovModel, GroupMarkovModelAdmin)
 admin.site.register(GroupStats, GroupStatsAdmin)
-admin.site.register(CharacterStats, CharacterStatAdmin)
+admin.site.register(SourceStats, SourceStatAdmin)
 admin.site.register(QuoteStats, QuoteStatAdmin)

@@ -5,18 +5,18 @@
           <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=object.character.group.slug %}">{{ object.character.group.name }}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'quotes:character_list' group=object.character.group.slug %}">{% translate "Characters" %}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'quotes:character_detail' character=object.character.slug %}">{{ object.character.name }}</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'quotes:quote_list' character=object.character.slug %}">{% translate "Quotes" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=object.source.group.slug %}">{{ object.source.group.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_list' group=object.source.group.slug %}">{% translate "Sources" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_detail' source=object.source.slug %}">{{ object.source.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:quote_list' source=object.source.slug %}">{% translate "Quotes" %}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'quotes:quote_detail' quote=object.id %}">{{ object.id }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">{% translate "Delete" %}</li>
   </ol>
   </nav>
-<h1>{% blocktranslate %}Delete this quote from{% endblocktranslate %} {{ object.character.name }}</h1>
+<h1>{% blocktranslate %}Delete this quote from{% endblocktranslate %} {{ object.source.name }}</h1>
   <p><strong>{% translate "Are you sure you want to delete this?" %}</strong></p>
   <blockquote>{{ quote.quote_rendered|safe }}</blockquote>
 <form method="post">{% csrf_token %}
-<button class="btn btn-danger" type="submit">{% translate "Delete quote" %}</button> <a href="{% url "quotes:quote_list" character=object.character.slug %}" class="btn btn-secondary">{% translate "Return to quote list" %}</a>
+<button class="btn btn-danger" type="submit">{% translate "Delete quote" %}</button> <a href="{% url "quotes:quote_list" source=object.source.slug %}" class="btn btn-secondary">{% translate "Return to quote list" %}</a>
 </form>
 {% endblock %}

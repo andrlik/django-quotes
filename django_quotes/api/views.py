@@ -8,18 +8,18 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
-from ..models import Character, CharacterGroup
-from .serializers import CharacterGroupSerializer, CharacterSerializer, QuoteSerializer
+from ..models import Source, SourceGroup
+from .serializers import QuoteSerializer, SourceGroupSerializer, SourceSerializer
 
 
-class CharacterGroupViewSet(
+class SourceGroupViewSet(
     AutoPermissionViewSetMixin, RetrieveModelMixin, ListModelMixin, GenericViewSet
 ):
     """
-    A generic viewset for listing and retrieving details on character groups.
+    A generic viewset for listing and retrieving details on sourceGroup groups.
     """
 
-    serializer_class = CharacterGroupSerializer
+    serializer_class = SourceGroupSerializer
     lookup_field = "slug"
     lookup_url_kwarg = "group"
     permission_type_map = {
@@ -34,9 +34,9 @@ class CharacterGroupViewSet(
     }
 
     def get_queryset(self, *args, **kwargs):
-        return CharacterGroup.objects.filter(
+        return SourceGroup.objects.filter(
             owner=self.request.user
-        ) | CharacterGroup.objects.filter(public=True)
+        ) | SourceGroup.objects.filter(public=True)
 
     @extend_schema(responses={200: QuoteSerializer})
     @action(detail=True, methods=["get"])
@@ -60,7 +60,7 @@ class CharacterGroupViewSet(
     @action(detail=True, methods=["get"])
     def generate_sentence(self, request, group=None):
         g = self.get_object()
-        if g.markov_characters == 0:
+        if g.markov_sources == 0:
             return Response(
                 status=status.HTTP_403_FORBIDDEN,
                 data={
@@ -76,16 +76,16 @@ class CharacterGroupViewSet(
         )
 
 
-class CharacterViewSet(
+class SourceViewSet(
     AutoPermissionViewSetMixin, RetrieveModelMixin, ListModelMixin, GenericViewSet
 ):
     """
-    Retrieve and list views for characters.
+    Retrieve and list views for sources.
     """
 
-    serializer_class = CharacterSerializer
+    serializer_class = SourceSerializer
     lookup_field = "slug"
-    lookup_url_kwarg = "character"
+    lookup_url_kwarg = "source"
     permission_type_map = {
         "create": "add",
         "destroy": "delete",
@@ -99,22 +99,22 @@ class CharacterViewSet(
 
     def get_queryset(self, *args, **kwargs):
         group_slug = self.request.query_params.get("group")
-        queryset = Character.objects.filter(
+        queryset = Source.objects.filter(
             owner=self.request.user
-        ) | Character.objects.filter(public=True)
+        ) | Source.objects.filter(public=True)
         if group_slug:
             try:
-                group = CharacterGroup.objects.get(slug=group_slug)
+                group = SourceGroup.objects.get(slug=group_slug)
             except ObjectDoesNotExist:
-                return CharacterGroup.objects.none()
+                return SourceGroup.objects.none()
             queryset = queryset.filter(group=group)
         return queryset
 
     @extend_schema(responses={200: QuoteSerializer})
     @action(detail=True, methods=["get"])
-    def get_random_quote(self, request, character=None):
-        character = self.get_object()
-        quote = character.get_random_quote()
+    def get_random_quote(self, request, source=None):
+        source = self.get_object()
+        quote = source.get_random_quote()
         if quote is not None:
             qs = QuoteSerializer(quote)
             return Response(status=status.HTTP_200_OK, data=qs.data)
@@ -130,19 +130,19 @@ class CharacterViewSet(
         }
     )
     @action(detail=True, methods=["get"])
-    def generate_sentence(self, request, character=None):
-        character = self.get_object()
-        if not character.allow_markov:
+    def generate_sentence(self, request, source=None):
+        source = self.get_object()
+        if not source.allow_markov:
             return Response(
                 status=status.HTTP_403_FORBIDDEN,
-                data={"error": "This character does not permit sentence generation."},
+                data={"error": "This source does not permit sentence generation."},
             )
-        sentence = character.get_markov_sentence()
+        sentence = source.get_markov_sentence()
         if sentence is not None:
             return Response(status=status.HTTP_200_OK, data={"sentence": sentence})
         return Response(
             status=status.HTTP_204_NO_CONTENT,
             data={
-                "error": "Unable to generate markov sentence. This character may not have enough quotes yet."
+                "error": "Unable to generate markov sentence. This source may not have enough quotes yet."
             },
         )
