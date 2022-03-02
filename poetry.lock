@@ -461,21 +461,6 @@ offline = ["drf-spectacular-sidecar"]
 sidecar = ["drf-spectacular-sidecar"]
 
 [[package]]
-name = "en-core-web-sm"
-version = "3.2.0"
-description = "English pipeline optimized for CPU. Components: tok2vec, tagger, parser, senter, ner, attribute_ruler, lemmatizer."
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-spacy = ">=3.2.0,<3.3.0"
-
-[package.source]
-type = "url"
-url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.2.0/en_core_web_sm-3.2.0.tar.gz"
-
-[[package]]
 name = "executing"
 version = "0.8.3"
 description = "Get the currently executing AST node of a frame, and other information"
@@ -1871,7 +1856,7 @@ docs = ["Sphinx", "sphinx-autobuild", "django-easy-logging"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "1c41874cf54e11b3158910be71ad3215fd80d153f9168a09797ce141aebc04b2"
+content-hash = "5533a238f0f503f2e8246086b7d912fe2d6ce0fd784319d8d2e587feb5a2a615"
 
 [metadata.files]
 aiohttp = [
@@ -2192,7 +2177,6 @@ drf-spectacular = [
     {file = "drf-spectacular-0.21.2.tar.gz", hash = "sha256:aa7a78c8595b63e1ba14906049c770210c8fa34d84b6d1c7dce5c9e334aa2775"},
     {file = "drf_spectacular-0.21.2-py3-none-any.whl", hash = "sha256:4ad3a72609640c57a4ff297d498cb0b810a70aca5555c0760b2da9e2f74a45b2"},
 ]
-en-core-web-sm = []
 executing = [
     {file = "executing-0.8.3-py2.py3-none-any.whl", hash = "sha256:d1eef132db1b83649a3905ca6dd8897f71ac6f8cac79a7e58a1a09cf137546c9"},
     {file = "executing-0.8.3.tar.gz", hash = "sha256:c6554e21c6b060590a6d3be4b82fb78f8f0194d809de5ea7df1c093763311501"},

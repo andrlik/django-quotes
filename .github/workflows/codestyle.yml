@@ -49,6 +49,7 @@ jobs:
         run: |
           poetry config virtualenvs.in-project true
           poetry install
+          python -m spacy download en_core_web_sm
 
       - name: Run pre-commit
         uses: pre-commit/action@v2.0.3
