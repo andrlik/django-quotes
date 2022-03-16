@@ -12,6 +12,7 @@ Welcome to Django Quotes documentation!
 
    quickstart
    managing_quotes
+   changelog
 
 
 
