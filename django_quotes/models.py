@@ -20,7 +20,7 @@ from .signals import markov_sentence_generated, quote_random_retrieved
 
 MAX_QUOTES_FOR_RANDOM_SET = 50
 
-if hasattr(settings, "MAX_QUOTES_FOR_RANDOM_SET"):
+if hasattr(settings, "MAX_QUOTES_FOR_RANDOM_SET"):  # pragma: nocover
     MAX_QUOTES_FOR_RANDOM_SET = settings.MAX_QUOTES_FOR_RANDOM_SET
 
 
