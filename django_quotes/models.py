@@ -18,6 +18,11 @@ from .rules import (  # is_character_owner,; is_group_owner_and_authenticated,
 )
 from .signals import markov_sentence_generated, quote_random_retrieved
 
+MAX_QUOTES_FOR_RANDOM_SET = 50
+
+if hasattr(settings, "MAX_QUOTES_FOR_RANDOM_SET"):
+    MAX_QUOTES_FOR_RANDOM_SET = settings.MAX_QUOTES_FOR_RANDOM_SET
+
 
 class AbstractOwnerModel(models.Model):
     """
@@ -141,7 +146,9 @@ class SourceGroup(
         logger.debug("Group is not ready for markov requests yet!")
         return None
 
-    def get_random_quote(self, max_quotes_to_process: Optional[int] = 50) -> Any:
+    def get_random_quote(
+        self, max_quotes_to_process: Optional[int] = MAX_QUOTES_FOR_RANDOM_SET
+    ) -> Any:
         """
         Get a random quote object from any of the characters defined within the group.
 
@@ -272,7 +279,7 @@ class Source(
         return None
 
     def get_random_quote(
-        self, max_quotes_to_process: Optional[int] = 50
+        self, max_quotes_to_process: Optional[int] = MAX_QUOTES_FOR_RANDOM_SET
     ) -> Optional[Any]:
         """
         This actually not all that random. It's going to grab the quotes
