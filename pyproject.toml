@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-quotes"
-version = "0.1.0"
+version = "0.1.1"
 description = """A reusable Django app to collect quotes for use in random retrieval or generation of sentences using \
     Markov Chains."""
 authors = ["Daniel Andrlik <daniel@andrlik.org>"]
@@ -41,9 +41,9 @@ Werkzeug = {extras = ["watchdog"], version = "^2.0.2"}
 ipdb = "^0.13.9"
 psycopg2-binary = "^2.9.3"
 watchgod = "^0.7"
-mypy = "^0.931"
+mypy = "^0.941"
 django-stubs = "^1.9.0"
-pytest = "^7.0.0"
+pytest = "^7.1.0"
 pytest-sugar = "^0.9.4"
 djangorestframework-stubs = "^1.4.0"
 Sphinx = "^4.4.0"

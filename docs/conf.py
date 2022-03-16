@@ -33,7 +33,7 @@ django.setup()
 
 # -- Project information -----------------------------------------------------
 
-project = "Django Quote Service"
+project = "Django Quotes"
 copyright = """2022, Daniel Andrlik"""
 author = "Daniel Andrlik"
 

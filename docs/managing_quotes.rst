@@ -249,3 +249,15 @@ Quote Generated
    The ``sender`` should in most contexts be either :ref:`Source` or in rare cases, :ref:`SourceGroup`.
    The ``instance`` should be the actual instance of the :ref:`Source` that is being used.
    This signal will update the ``quotes_generated`` stats in both :ref:`GroupStats` and :ref:`SourceStats`.
+
+
+.. _management_commands:
+
+Management Commands
+--------------------
+
+``django-quotes`` provides a management command you can use to check and generate new Markov models for both :ref:`SourceGroup` and :ref:`Source` objects.
+
+.. code-block:: bash
+
+   python manage.py makemarkov
