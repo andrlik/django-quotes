@@ -19,9 +19,13 @@ from .rules import (  # is_character_owner,; is_group_owner_and_authenticated,
 from .signals import markov_sentence_generated, quote_random_retrieved
 
 MAX_QUOTES_FOR_RANDOM_SET = 50
+MAX_QUOTES_FOR_RANDOM_GROUP_SET = 50
 
 if hasattr(settings, "MAX_QUOTES_FOR_RANDOM_SET"):  # pragma: nocover
     MAX_QUOTES_FOR_RANDOM_SET = settings.MAX_QUOTES_FOR_RANDOM_SET
+
+if hasattr(settings, "MAX_QUOTES_FOR_RANDOM_GROUP_SET"):  # pragma: nocover
+    MAX_QUOTES_FOR_RANDOM_GROUP_SET = settings.MAX_QUOTES_FOR_RANDOM_GROUP_SET
 
 
 class AbstractOwnerModel(models.Model):
@@ -147,16 +151,19 @@ class SourceGroup(
         return None
 
     def get_random_quote(
-        self, max_quotes_to_process: Optional[int] = MAX_QUOTES_FOR_RANDOM_SET
+        self, max_quotes_to_process: Optional[int] = MAX_QUOTES_FOR_RANDOM_GROUP_SET
     ) -> Any:
         """
         Get a random quote object from any of the characters defined within the group.
+        Prioritizes quotes that have been returned less often.
 
         :return: ``Quote`` object or None if no quotes are defined.
         """
-        quotes = Quote.objects.filter(source__in=self.source_set.all())[
-            :max_quotes_to_process
-        ]
+        quotes = (
+            Quote.objects.filter(source__in=self.source_set.all())
+            .select_related("stats")
+            .order_by("stats__times_used")[:max_quotes_to_process]
+        )
         if quotes.exists():
             quote = random.choice(list(quotes))
             quote_random_retrieved.send(

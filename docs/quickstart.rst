@@ -31,9 +31,13 @@ Now we need to configure our Django project to use ``django-quotes``. Because we
 .. code-block:: python
    :caption: settings.py
 
-   # Number of quotes to fetch when doing random selections.
+   # Number of quotes to fetch when doing random selections from a single source.
    # Optional. Default is 50.
    MAX_QUOTES_FOR_RANDOM_SET = 50
+
+   # Number of quotes to fetch when doing random selections from a SourceGroup.
+   # Optional. Default is 50.
+   MAX_QUOTES_FOR_RANDOM_GROUP_SET = 50
 
    INSTALLED_APPS = [
         "django.contrib.auth",
