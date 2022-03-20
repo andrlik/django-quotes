@@ -62,6 +62,9 @@ pytest-django = "^4.5.2"
 pytest-cov = "^3.0.0"
 sphinx-rtd-theme = "^1.0.0"
 django-easy-logging = "^0.4.0"
+dirty-equals = "^0.1"
+types-python-slugify = "^5.0.3"
+types-Markdown = "^3.3.12"
 
 [tool.poetry.extras]
 docs = ["sphinx", "sphinx-autobuild", "django-easy-logging"]

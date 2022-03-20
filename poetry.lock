@@ -293,6 +293,17 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "dirty-equals"
+version = "0.1"
+description = "Doing dirty (but extremely useful) things with equals."
+category = "dev"
+optional = false
+python-versions = ">=3.7.0,<4.0.0"
+
+[package.dependencies]
+pytz = ">=2021.3,<2022.0"
+
+[[package]]
 name = "distlib"
 version = "0.3.4"
 description = "Distribution utilities"
@@ -1706,6 +1717,22 @@ doc = ["mkdocs (>=1.1.2,<2.0.0)", "mkdocs-material (>=5.4.0,<6.0.0)", "markdown-
 test = ["shellingham (>=1.3.0,<2.0.0)", "pytest (>=4.4.0,<5.4.0)", "pytest-cov (>=2.10.0,<3.0.0)", "coverage (>=5.2,<6.0)", "pytest-xdist (>=1.32.0,<2.0.0)", "pytest-sugar (>=0.9.4,<0.10.0)", "mypy (==0.910)", "black (>=19.10b0,<20.0b0)", "isort (>=5.0.6,<6.0.0)"]
 
 [[package]]
+name = "types-markdown"
+version = "3.3.12"
+description = "Typing stubs for Markdown"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "types-python-slugify"
+version = "5.0.3"
+description = "Typing stubs for python-slugify"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "types-pytz"
 version = "2021.3.5"
 description = "Typing stubs for pytz"
@@ -1885,7 +1912,7 @@ docs = ["Sphinx", "sphinx-autobuild", "django-easy-logging"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "d6ffde8b3d91e75519048d1a5c85489607615c7f0ab7e003d0d738cfd1dc2151"
+content-hash = "b042b17f6bd52ed2ec9b5184dabfda5e7de8074a37e24a27a516bc8aa128a335"
 
 [metadata.files]
 aiohttp = [
@@ -2149,6 +2176,10 @@ cymem = [
 decorator = [
     {file = "decorator-5.1.1-py3-none-any.whl", hash = "sha256:b8c3f85900b9dc423225913c5aace94729fe1fa9763b38939a95226f02d37186"},
     {file = "decorator-5.1.1.tar.gz", hash = "sha256:637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330"},
+]
+dirty-equals = [
+    {file = "dirty-equals-0.1.tar.gz", hash = "sha256:dfb852ef7e69b8bc74a6d58990b1e9b516e827f3e68099fb637f9abe0a94a34f"},
+    {file = "dirty_equals-0.1-py3-none-any.whl", hash = "sha256:1d226b49131abf5d6cfa9e918405ea98abe961c2009975c25e25506aa97e4e4a"},
 ]
 distlib = [
     {file = "distlib-0.3.4-py2.py3-none-any.whl", hash = "sha256:6564fe0a8f51e734df6333d08b8b94d4ea8ee6b99b5ed50613f731fd4089f34b"},
@@ -3054,6 +3085,14 @@ traitlets = [
 typer = [
     {file = "typer-0.4.0-py3-none-any.whl", hash = "sha256:d81169725140423d072df464cad1ff25ee154ef381aaf5b8225352ea187ca338"},
     {file = "typer-0.4.0.tar.gz", hash = "sha256:63c3aeab0549750ffe40da79a1b524f60e08a2cbc3126c520ebf2eeaf507f5dd"},
+]
+types-markdown = [
+    {file = "types-Markdown-3.3.12.tar.gz", hash = "sha256:bcc56dfb95be2389646e01808dc637c45805a9bb38047c93a509d96d183ca79d"},
+    {file = "types_Markdown-3.3.12-py3-none-any.whl", hash = "sha256:9a1428bfe856a0df0ac1e74507ee0cfe841c8b2a676cb83672ca249cb9f54a00"},
+]
+types-python-slugify = [
+    {file = "types-python-slugify-5.0.3.tar.gz", hash = "sha256:76169f4a6d40896fea76fb45a25c50ac7ba2ca03eee759ecac322a05fe4dd21c"},
+    {file = "types_python_slugify-5.0.3-py3-none-any.whl", hash = "sha256:a5761d3c55e949f8ace0694eb5be81210087084bb78df495de14ee5eaad6ac54"},
 ]
 types-pytz = [
     {file = "types-pytz-2021.3.5.tar.gz", hash = "sha256:fef8de238ee95135952229a2a23bfb87bd63d5a6c8598106a46cfcf48f069ea8"},

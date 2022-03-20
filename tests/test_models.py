@@ -19,12 +19,6 @@ def test_generate_group_slug(user: User) -> None:
     assert group.slug == "curious-george"
 
 
-def test_ensure_group_slug_unique(user: User) -> None:
-    SourceGroup.objects.create(name="EW", owner=user)
-    with pytest.raises(IntegrityError):
-        SourceGroup.objects.create(name="Explorers Wanted", slug="ew", owner=user)
-
-
 def test_generate_source_slug(user: User) -> None:
     """
     Tests the slug generation for sources to ensure it's being set up correctly.

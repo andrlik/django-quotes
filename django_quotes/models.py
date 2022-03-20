@@ -9,7 +9,6 @@ from django.utils.translation import gettext_lazy as _
 from loguru import logger
 from model_utils.models import TimeStampedModel
 from rules.contrib.models import RulesModelBase, RulesModelMixin
-from slugify import slugify
 
 from .markov_utils import MarkovPOSText
 from .rules import (  # is_character_owner,; is_group_owner_and_authenticated,
@@ -17,6 +16,7 @@ from .rules import (  # is_character_owner,; is_group_owner_and_authenticated,
     is_owner_or_public,
 )
 from .signals import markov_sentence_generated, quote_random_retrieved
+from .utils import generate_unique_slug_for_model
 
 MAX_QUOTES_FOR_RANDOM_SET = 50
 
@@ -76,7 +76,6 @@ class SourceGroup(
         help_text=_(
             "A source for individuals making the quotes. Use as an abstract grouping."
         ),
-        unique=True,
         db_index=True,
     )
     description = models.TextField(
@@ -90,6 +89,7 @@ class SourceGroup(
     slug = models.SlugField(
         unique=True,
         max_length=70,
+        editable=False,
         blank=True,
         help_text=_("Unique slug for this group."),
     )
@@ -178,7 +178,10 @@ class SourceGroup(
         if (
             not self.slug
         ):  # Once this slug is set, it does not change except through devil pacts
-            self.slug = slugify(self.name)
+            logger.debug("Group is being saved and a slug was provided.")
+            self.slug = generate_unique_slug_for_model(
+                model_class=type(self), text=self.name, proposed_slug=self.slug
+            )
         super().save(*args, **kwargs)
 
     def __str__(self):  # pragma: nocover
@@ -224,6 +227,7 @@ class Source(
             "Global slug of the character, will be auto generated from name and group if not overridden."
         ),
         blank=True,
+        editable=False,
         unique=True,
         db_index=True,
     )
@@ -307,7 +311,9 @@ class Source(
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = f"{self.group.slug}-" + slugify(self.name)
+            self.slug = generate_unique_slug_for_model(
+                type(self), text=f"{self.group.slug} {self.name}"
+            )
         super().save(*args, **kwargs)
 
     class Meta:
