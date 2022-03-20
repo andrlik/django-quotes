@@ -187,7 +187,7 @@ class SourceGroup(
         ):  # Once this slug is set, it does not change except through devil pacts
             logger.debug("Group is being saved and a slug was provided.")
             self.slug = generate_unique_slug_for_model(
-                model_class=type(self), text=self.name, proposed_slug=self.slug
+                model_class=type(self), text=self.name
             )
         super().save(*args, **kwargs)
 
