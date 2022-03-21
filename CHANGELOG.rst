@@ -2,6 +2,13 @@
 Changelog
 #########################
 
+0.2.0
+-----
+
+- ``SourceGroups`` no longer require a unique name (since users won't know what else is there anyway).
+- New slug generation to ensure that slugs remain unique.
+- It is no longer possible to specify a slug within a given create form for either ``SourceGroup`` or ``Source`` objects.
+
 0.1.3
 -----
 
