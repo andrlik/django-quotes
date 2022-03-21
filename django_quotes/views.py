@@ -191,7 +191,6 @@ class SourceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelet
     template_name = "quotes/source_delete.html"
     permission_required = "django_quotes.delete_source"
     context_object_name = "source"
-    group = None
 
     def dispatch(self, request, *args, **kwargs):
         source_slug = kwargs.get("source")
@@ -284,7 +283,6 @@ class QuoteCreateView(LoginRequiredMixin, PermissionRequiredMixin, GenericCreate
     template_name = "quotes/quote_create.html"
     permission_required = "django_quotes.edit_source"
     fields = ["quote", "citation", "citation_url"]
-    source = None
 
     def dispatch(self, request, *args, **kwargs):
         source_slug = kwargs.pop("source")

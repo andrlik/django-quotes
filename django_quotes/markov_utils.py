@@ -11,7 +11,7 @@ class MarkovPOSText(markovify.Text):
     """
 
     def word_split(self, sentence):
-        return ["::".join((word.orth_, word.pos_)) for word in nlp(sentence)]  # type: ignore
+        return ["::".join((word.orth_, word.pos_)) for word in nlp(sentence)]
 
     def word_join(self, words):
         sentence = " ".join(word.split("::")[0] for word in words)

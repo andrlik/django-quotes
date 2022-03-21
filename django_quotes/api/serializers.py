@@ -18,7 +18,7 @@ class SourceSerializer(ModelSerializer):
 
 
 class QuoteSerializer(ModelSerializer):
-    source = SourceSerializer()
+    source = SourceSerializer()  # type: ignore
 
     class Meta:
         model = Quote

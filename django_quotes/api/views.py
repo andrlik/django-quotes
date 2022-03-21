@@ -35,7 +35,7 @@ class SourceGroupViewSet(
 
     def get_queryset(self, *args, **kwargs):
         return SourceGroup.objects.filter(
-            owner=self.request.user
+            owner=self.request.user  # type: ignore
         ) | SourceGroup.objects.filter(public=True)
 
     @extend_schema(responses={200: QuoteSerializer})
@@ -100,7 +100,7 @@ class SourceViewSet(
     def get_queryset(self, *args, **kwargs):
         group_slug = self.request.query_params.get("group")
         queryset = Source.objects.filter(
-            owner=self.request.user
+            owner=self.request.user  # type: ignore
         ) | Source.objects.filter(public=True)
         if group_slug:
             try:

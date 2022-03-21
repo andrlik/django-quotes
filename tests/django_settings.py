@@ -247,4 +247,11 @@ REST_FRAMEWORK["TEST_REQUEST_DEFAULT_FORMAT"] = "json"  # noqa
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 
+
+MAX_QUOTES_FOR_RANDOM_SET = 50
+
+
+MAX_QUOTES_FOR_RANDOM_GROUP_SET = 50
+
+
 load_loguru(globals())
