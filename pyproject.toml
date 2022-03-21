@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-quotes"
-version = "0.1.3"
+version = "0.2.0"
 description = """A reusable Django app to collect quotes for use in random retrieval or generation of sentences using \
     Markov Chains."""
 authors = ["Daniel Andrlik <daniel@andrlik.org>"]
