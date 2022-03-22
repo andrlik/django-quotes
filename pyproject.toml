@@ -29,7 +29,7 @@ sphinx-autobuild = {version = "^2021.3.14", optional=true}
 django-easy-logging = {version = "^0.4.0", optional=true}
 djangorestframework = "^3.13.1"
 django-cors-headers = "^3.11.0"
-drf-spectacular = "^0.21.2"
+drf-spectacular = ">=0.21.2,<0.23.0"
 django-crispy-forms = "^1.14.0"
 loguru = "^0.6.0"
 
