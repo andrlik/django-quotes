@@ -40,7 +40,7 @@ jobs:
       run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python${{ matrix.python-version }} -
 
     - name: Setup cache
-      uses: actions/cache@v2.1.7
+      uses: actions/cache@v3
       with:
         path: .venv
         key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
