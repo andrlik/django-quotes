@@ -2,6 +2,11 @@
 Changelog
 #########################
 
+0.2.1
+-----
+
+- Enable type annotations with py.typed.
+
 0.2.0
 -----
 
