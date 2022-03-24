@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from rest_framework.serializers import ModelSerializer
 
 from ..models import Quote, Source, SourceGroup

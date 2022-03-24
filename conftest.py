@@ -1,6 +1,7 @@
+from typing import List
+
 import re
 from pathlib import Path
-from typing import List
 
 import pytest
 from django.contrib.auth import get_user_model
