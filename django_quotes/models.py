@@ -1,5 +1,6 @@
-import random
 from typing import Any, Optional
+
+import random
 
 import rules
 from django.conf import settings
