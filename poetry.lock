@@ -2008,7 +2008,7 @@ docs = ["Sphinx", "sphinx-autobuild", "django-easy-logging"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "25e250c2ad5a384f35f4eb72a71c5b092a83395234d965cb71f10c0bc3473326"
+content-hash = "989c7c8679ab2d30f2fa97cb38c7a3a2d31af8d036173904b1f002424d147143"
 
 [metadata.files]
 aiohttp = [
