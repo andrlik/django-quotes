@@ -64,6 +64,10 @@ sphinx-rtd-theme = "^1.0.0"
 django-easy-logging = "^0.4.0"
 types-python-slugify = "^5.0.3"
 types-Markdown = "^3.3.12"
+safety = "^1.10.3"
+darglint = "^1.8.1"
+bandit = "^1.7.4"
+django-stubs-ext = "^0.3.1"
 
 [tool.poetry.extras]
 docs = ["sphinx", "sphinx-autobuild", "django-easy-logging"]
@@ -128,7 +132,7 @@ color_output = true
 
 allow_redefinition = false
 check_untyped_defs = true
-disallow_any_generics = true
+disallow_any_generics = false
 disallow_incomplete_defs = true
 ignore_missing_imports = true
 implicit_reexport = false
@@ -165,3 +169,4 @@ profile = "black"
 multi_line_output = 3
 indent = 4
 color_output = true
+skip_glob = "**/migrations/*.py"

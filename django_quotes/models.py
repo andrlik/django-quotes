@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, Optional
 
 import random
@@ -127,7 +129,7 @@ class SourceGroup(
 
     def generate_markov_sentence(
         self, max_characters: Optional[int] = 280
-    ) -> Optional[str]:
+    ) -> str | None:
         """
         Generate a markov sentence based on quotes from markov enabled characters for the group.
 
@@ -144,7 +146,9 @@ class SourceGroup(
             logger.debug("Loading text model...")
             text_model = MarkovPOSText.from_json(mmodel.data)
             logger.debug("Generating sentence...")
-            sentence = text_model.make_short_sentence(max_chars=max_characters)
+            sentence: str | None = text_model.make_short_sentence(
+                max_chars=max_characters
+            )
             if sentence is not None:
                 logger.debug(f"Returning generated sentence: '{sentence}'")
                 return sentence
@@ -284,7 +288,9 @@ class Source(
                 markov_model.generate_model_from_corpus()
             text_model = MarkovPOSText.from_json(markov_model.data)
             logger.debug("Markov text model loaded. Generating sentence.")
-            sentence = text_model.make_short_sentence(max_chars=max_characters)
+            sentence: str | None = text_model.make_short_sentence(
+                max_chars=max_characters
+            )
             if sentence is not None:
                 markov_sentence_generated.send(type(self), instance=self)
                 return sentence
