@@ -1,3 +1,6 @@
+# Initial Makefile based on https://github.com/TezRomacH/python-package-template
+# Originally written by Roman Tezikov and released under an MIT license.
+
 #* Variables
 SHELL := /usr/bin/env bash
 PYTHON := python
