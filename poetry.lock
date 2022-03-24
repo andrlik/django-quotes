@@ -1283,7 +1283,7 @@ use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
 name = "rules"
-version = "3.2.1"
+version = "3.3"
 description = "Awesome Django authorization, without the database"
 category = "main"
 optional = false
@@ -2874,8 +2874,8 @@ requests = [
     {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},
 ]
 rules = [
-    {file = "rules-3.2.1-py2.py3-none-any.whl", hash = "sha256:a11e61fb02f435db8dc3fe8c0aa8b8c1872c6e3a385522309be26b1327331a0e"},
-    {file = "rules-3.2.1.tar.gz", hash = "sha256:3cc8b07dd83249d176151d938ef0118ed2ee7116c08daa1807e8b805952f7dc8"},
+    {file = "rules-3.3-py2.py3-none-any.whl", hash = "sha256:12c8bbab5f54560e68528fcca7abc0e162c35ac882e3cc0daed40ac49c963070"},
+    {file = "rules-3.3.tar.gz", hash = "sha256:bf7bea8b724b73c36a622714c1b3557620c187a2ee05321a2ac8ab7472dc4464"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
