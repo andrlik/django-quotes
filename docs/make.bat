@@ -10,7 +10,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=_source
 set BUILDDIR=_build
-set APP=..\django_quote_service
+set APP=..\{{ cookiecutter.package_name }}
 
 if "%1" == "" goto help
 

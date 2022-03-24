@@ -1,9 +1,6 @@
 from pathlib import Path
 
-import django_stubs_ext
 from dj_easy_log import load_loguru
-
-django_stubs_ext.monkeypatch()
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
 APPS_DIR = ROOT_DIR
