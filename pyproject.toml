@@ -41,8 +41,8 @@ Werkzeug = {extras = ["watchdog"], version = "^2.0.2"}
 ipdb = "^0.13.9"
 psycopg2-binary = "^2.9.3"
 watchgod = "^0.8"
-mypy = "^0.941"
-django-stubs = "^1.9.0"
+mypy = "^0.942"
+django-stubs = "^1.10.1"
 pytest = "^7.1.1"
 pytest-sugar = "^0.9.4"
 djangorestframework-stubs = "^1.4.0"
@@ -67,6 +67,7 @@ types-Markdown = "^3.3.12"
 safety = "^1.10.3"
 darglint = "^1.8.1"
 bandit = "^1.7.4"
+django-stubs-ext = "^0.4.0"
 
 [tool.poetry.extras]
 docs = ["sphinx", "sphinx-autobuild", "django-easy-logging"]
