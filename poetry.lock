@@ -1834,7 +1834,7 @@ test = ["shellingham (>=1.3.0,<2.0.0)", "pytest (>=4.4.0,<5.4.0)", "pytest-cov (
 
 [[package]]
 name = "types-markdown"
-version = "3.3.13"
+version = "3.3.14"
 description = "Typing stubs for Markdown"
 category = "dev"
 optional = false
@@ -2047,7 +2047,7 @@ docs = ["Sphinx", "sphinx-autobuild", "django-easy-logging", "django-stubs-ext"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "726bb966d70d12f20c868c2a0ecbaedb0362dddd6ef5f3bd42dbfe70a3ba6aa6"
+content-hash = "26820c9a6d268176e883805babc0219db2ca632543ac1604441b451fb55b1310"
 
 [metadata.files]
 aiohttp = [
@@ -3259,8 +3259,8 @@ typer = [
     {file = "typer-0.4.1.tar.gz", hash = "sha256:5646aef0d936b2c761a10393f0384ee6b5c7fe0bb3e5cd710b17134ca1d99cff"},
 ]
 types-markdown = [
-    {file = "types-Markdown-3.3.13.tar.gz", hash = "sha256:35711d58243172b81a6bed4148005f1bd9661f7df9d636e281e5810180f391e8"},
-    {file = "types_Markdown-3.3.13-py3-none-any.whl", hash = "sha256:43a4b5392084124621766e3c17732b1a26c4b6a044bb5f75aa257c0b1be2b431"},
+    {file = "types-Markdown-3.3.14.tar.gz", hash = "sha256:10841332581bd79efdb153fb8f856818ef5cdb40a6e71e5d18505b5db6eba01c"},
+    {file = "types_Markdown-3.3.14-py3-none-any.whl", hash = "sha256:49a406c12be2181346a756086f326d42d5bb3abbfaede8942ccdc9cef367db1f"},
 ]
 types-python-slugify = [
     {file = "types-python-slugify-5.0.4.tar.gz", hash = "sha256:a9d44edf034d5ceab8442ce602f976b7880ee935baeff7443964aed93f7e21d4"},
