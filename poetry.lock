@@ -388,14 +388,14 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "django-debug-toolbar"
-version = "3.2.4"
+version = "3.3.0"
 description = "A configurable set of panels that display various debug information about the current request/response."
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
-Django = ">=2.2"
+Django = ">=3.2"
 sqlparse = ">=0.2.0"
 
 [[package]]
@@ -2047,7 +2047,7 @@ docs = ["Sphinx", "sphinx-autobuild", "django-easy-logging", "django-stubs-ext"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "26820c9a6d268176e883805babc0219db2ca632543ac1604441b451fb55b1310"
+content-hash = "acf8bff583827f0555657c13312de5d794a5c06ff4294a71aca22e2f52a71db2"
 
 [metadata.files]
 aiohttp = [
@@ -2345,8 +2345,8 @@ django-crispy-forms = [
     {file = "django_crispy_forms-1.14.0-py3-none-any.whl", hash = "sha256:bc4d2037f6de602d39c0bc452ac3029d1f5d65e88458872cc4dbc01c3a400604"},
 ]
 django-debug-toolbar = [
-    {file = "django-debug-toolbar-3.2.4.tar.gz", hash = "sha256:644bbd5c428d3283aa9115722471769cac1bec189edf3a0c855fd8ff870375a9"},
-    {file = "django_debug_toolbar-3.2.4-py3-none-any.whl", hash = "sha256:6b633b6cfee24f232d73569870f19aa86c819d750e7f3e833f2344a9eb4b4409"},
+    {file = "django-debug-toolbar-3.3.0.tar.gz", hash = "sha256:74151c292db9455fa5127d64a4414faee8ee3b1cddfb17f0e93cf3f13cd84bc1"},
+    {file = "django_debug_toolbar-3.3.0-py3-none-any.whl", hash = "sha256:85015fedbf937a6f3526617546fefaf21859eb1f9bbbc82a2fcba313d7c15917"},
 ]
 django-easy-logging = [
     {file = "django-easy-logging-0.4.0.tar.gz", hash = "sha256:097619a86e86de5166afe94fb14a307eccc95fc395d7222f1bfdd9e4bb333084"},
