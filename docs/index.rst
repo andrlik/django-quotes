@@ -13,6 +13,9 @@ Welcome to Django Quotes documentation!
    quickstart
    managing_quotes
    changelog
+   contributing.md
+   code_of_conduct.md
+   security.md
 
 
 
