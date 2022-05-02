@@ -2,6 +2,12 @@
 Changelog
 #########################
 
+
+0.2.2
+-----
+
+Update for latest mypy and fixes for documentation builds.
+
 0.2.1
 -----
 
