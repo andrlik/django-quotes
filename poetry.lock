@@ -388,7 +388,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "django-debug-toolbar"
-version = "3.3.0"
+version = "3.4.0"
 description = "A configurable set of panels that display various debug information about the current request/response."
 category = "dev"
 optional = false
@@ -877,7 +877,7 @@ testing = ["coverage", "pyyaml"]
 name = "markdown-it-py"
 version = "2.1.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -936,7 +936,7 @@ python-versions = "*"
 name = "mdit-py-plugins"
 version = "0.3.0"
 description = "Collection of plugins for markdown-it-py"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "~=3.6"
 
@@ -952,7 +952,7 @@ testing = ["coverage", "pytest (>=3.6,<4)", "pytest-cov", "pytest-regressions"]
 name = "mdurl"
 version = "0.1.1"
 description = "Markdown URL utilities"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -1002,7 +1002,7 @@ python-versions = "*"
 name = "myst-parser"
 version = "0.17.2"
 description = "An extended commonmark compliant parser, with bridges to docutils & sphinx."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -2109,12 +2109,12 @@ docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
 
 [extras]
-docs = ["Sphinx", "sphinx-autobuild", "django-easy-logging", "django-stubs-ext"]
+docs = ["Sphinx", "sphinx-autobuild", "django-easy-logging", "django-stubs-ext", "myst-parser"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "63b87a903543faf1aacfb5bd82f90c6f7097698b82207831ff1922d1fd9d18ae"
+content-hash = "7305afc7f3bc1217a401602ffc9ccccfaf857d30bbf2b8add637a345a2a6cb30"
 
 [metadata.files]
 aiohttp = [
@@ -2412,8 +2412,8 @@ django-crispy-forms = [
     {file = "django_crispy_forms-1.14.0-py3-none-any.whl", hash = "sha256:bc4d2037f6de602d39c0bc452ac3029d1f5d65e88458872cc4dbc01c3a400604"},
 ]
 django-debug-toolbar = [
-    {file = "django-debug-toolbar-3.3.0.tar.gz", hash = "sha256:74151c292db9455fa5127d64a4414faee8ee3b1cddfb17f0e93cf3f13cd84bc1"},
-    {file = "django_debug_toolbar-3.3.0-py3-none-any.whl", hash = "sha256:85015fedbf937a6f3526617546fefaf21859eb1f9bbbc82a2fcba313d7c15917"},
+    {file = "django-debug-toolbar-3.4.0.tar.gz", hash = "sha256:ae6bec2c1ce0e6900b0ab0443e1427eb233d8e6f57a84a0b2705eeecb8874e22"},
+    {file = "django_debug_toolbar-3.4.0-py3-none-any.whl", hash = "sha256:42c1c2e9dc05bb57b53d641e3a6d131fc031b92377b34ae32e604a1fe439bb83"},
 ]
 django-easy-logging = [
     {file = "django-easy-logging-0.4.0.tar.gz", hash = "sha256:097619a86e86de5166afe94fb14a307eccc95fc395d7222f1bfdd9e4bb333084"},
