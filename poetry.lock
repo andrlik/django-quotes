@@ -877,7 +877,7 @@ testing = ["coverage", "pyyaml"]
 name = "markdown-it-py"
 version = "2.1.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -936,7 +936,7 @@ python-versions = "*"
 name = "mdit-py-plugins"
 version = "0.3.0"
 description = "Collection of plugins for markdown-it-py"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "~=3.6"
 
@@ -952,7 +952,7 @@ testing = ["coverage", "pytest (>=3.6,<4)", "pytest-cov", "pytest-regressions"]
 name = "mdurl"
 version = "0.1.1"
 description = "Markdown URL utilities"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -1002,7 +1002,7 @@ python-versions = "*"
 name = "myst-parser"
 version = "0.17.2"
 description = "An extended commonmark compliant parser, with bridges to docutils & sphinx."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -1139,7 +1139,7 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "pre-commit"
-version = "2.18.1"
+version = "2.19.0"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 category = "dev"
 optional = false
@@ -2109,12 +2109,12 @@ docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
 
 [extras]
-docs = ["Sphinx", "sphinx-autobuild", "django-easy-logging", "django-stubs-ext"]
+docs = ["Sphinx", "sphinx-autobuild", "django-easy-logging", "django-stubs-ext", "myst-parser"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "63b87a903543faf1aacfb5bd82f90c6f7097698b82207831ff1922d1fd9d18ae"
+content-hash = "e4487f0fd78565b62ad021bca51c001ef1e8cf2ce9e0556da7fda121e617853d"
 
 [metadata.files]
 aiohttp = [
@@ -2893,8 +2893,8 @@ pluggy = [
     {file = "pluggy-1.0.0.tar.gz", hash = "sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159"},
 ]
 pre-commit = [
-    {file = "pre_commit-2.18.1-py2.py3-none-any.whl", hash = "sha256:02226e69564ebca1a070bd1f046af866aa1c318dbc430027c50ab832ed2b73f2"},
-    {file = "pre_commit-2.18.1.tar.gz", hash = "sha256:5d445ee1fa8738d506881c5d84f83c62bb5be6b2838e32207433647e8e5ebe10"},
+    {file = "pre_commit-2.19.0-py2.py3-none-any.whl", hash = "sha256:10c62741aa5704faea2ad69cb550ca78082efe5697d6f04e5710c3c229afdd10"},
+    {file = "pre_commit-2.19.0.tar.gz", hash = "sha256:4233a1e38621c87d9dda9808c6606d7e7ba0e087cd56d3fe03202a01d2919615"},
 ]
 preshed = [
     {file = "preshed-3.0.6-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:66a71ced487516cf81fd0431a3a843514262ae2f33e9a7688b87562258fa75d5"},
