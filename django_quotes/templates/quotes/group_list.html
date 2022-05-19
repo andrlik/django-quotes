@@ -9,7 +9,7 @@
   </nav>
 <h1>{% trans "Your Source Groups" %}</h1>
 <table class="table table-striped caption-top">
-<caption>{% translate "Showing" %} {{ page_obj|length }} {% translate "of" %} {{ groups.count }}</caption>
+<caption>{% translate "Showing" %} {{ page_obj|length }} {% translate "of" %} {{ page_obj.paginator.object_list.count }}</caption>
 <thead>
 <tr>
   <th scope="col">{% translate "Group" %}</th>

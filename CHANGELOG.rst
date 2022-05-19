@@ -2,6 +2,11 @@
 Changelog
 #########################
 
+0.2.3
+-----
+
+- Bug: Fixed issue with pagination not showing accurate count for all objects.
+- Bug: Fix page title when viewing a list of sources for a SourceGroup.
 
 0.2.2
 -----

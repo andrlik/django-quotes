@@ -15,7 +15,7 @@
 
 
 <table class="table table-striped caption-top">
-<caption>{% translate "Showing" %} {{ page_obj|length }} {% translate "of" %} {{ quotes.count }}</caption>
+<caption>{% translate "Showing" %} {{ page_obj|length }} {% translate "of" %} {{ page_obj.paginator.object_list.count }}</caption>
   <thead>
   <tr>
     <th scope="col">#</th>
