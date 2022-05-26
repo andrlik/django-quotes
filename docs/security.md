@@ -1,2 +1,3 @@
-```{include} ../SECURITY.md
-```
+{%
+    include-markdown "../SECURITY.md" 
+%}
