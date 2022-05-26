@@ -1,6 +1,6 @@
 # Quickstart
 
-Django-Quotes uses [markovify](https://github.com/jsvine/markovify) in conjunction with natural language processing functions form [spacy](https://spacy.io) so installation and configuration requires some additional steps.
+Django-Quotes uses [markovify](https://github.com/jsvine/markovify) in conjunction with natural language processing functions from [spacy](https://spacy.io) so installation and configuration requires some additional steps.
 
 ## Installation
 
