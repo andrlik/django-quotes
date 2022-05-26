@@ -11,7 +11,7 @@ A simple reusable [Django](https://www.djangoproject.com) app that allows you to
 ![Test results](https://github.com/andrlik/django-quotes/actions/workflows/ci.yml/badge.svg)
 ![Codestyle check results](https://github.com/andrlik/django-quotes/actions/workflows/codestyle.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/andrlik/django-quotes/badge.svg?branch=main)](https://coveralls.io/github/andrlik/django-quotes?branch=main)
-[![Documentation Status](https://readthedocs.org/projects/django-quotes-app/badge/?version=latest)](https://django-quotes-app.readthedocs.io/en/latest/?badge=latest)
+[![Documentation](https://img.shields.io/badge/docs-mkdocs-blue)](https://andrlik.github.io/django-quotes/)
 
 ## Features
 
@@ -23,4 +23,4 @@ A simple reusable [Django](https://www.djangoproject.com) app that allows you to
 - Bootstrap-compatible templates.
 - A simple REST API for fetching data via JSON with CORS support.
 
-Check out [the documentation](https://django-quotes-app.readthedocs.io/en/latest/) for installation and quickstart instructions.
+Check out [the documentation](https://andrlik.github.io/django-quotes/) for installation and quickstart instructions.
