@@ -4,6 +4,7 @@ nav:
   - Home: index.md
   - Quickstart: quickstart.md
   - "Managing Sources & Quotes": managing_quotes.md
+  - Changelog: changelog.md
   - Contributing: contributing.md
   - Code of Conduct: code_of_conduct.md
   - Security: security.md

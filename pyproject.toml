@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-quotes"
-version = "0.2.3"
+version = "0.2.4"
 description = """A reusable Django app to collect quotes for use in random retrieval or generation of sentences using \
     Markov Chains."""
 authors = ["Daniel Andrlik <daniel@andrlik.org>"]
@@ -13,7 +13,7 @@ classifiers = [
     "License :: OSI Approved :: BSD License",
     "Framework :: Django",
 ]
-documentation = "https://django-quotes-app.readthedocs.io/en/latest/"
+documentation = "https://andrlik.github.io/django-quotes/"
 
 [tool.poetry.dependencies]
 python = "^3.9"
