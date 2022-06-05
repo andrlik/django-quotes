@@ -334,5 +334,8 @@ vendors.js
 .envs/*
 .envrc
 
+# Nova Editor
+.nova/*
+
 # Test Database
 django_quotes.db
