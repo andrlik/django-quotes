@@ -309,6 +309,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#running-updates" class="md-nav__link">
+    Running updates
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#codestyle" class="md-nav__link">
     Codestyle
   </a>
@@ -414,6 +421,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#running-updates" class="md-nav__link">
+    Running updates
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#codestyle" class="md-nav__link">
     Codestyle
   </a>
@@ -468,29 +482,33 @@
 <!-- BEGIN INCLUDE ../CONTRIBUTING.md   -->
 <h1 id="how-to-contribute">How to contribute</h1>
 <h2 id="dependencies">Dependencies</h2>
+<p>We use <a href="https://github.com/casey/just"><code>just</code></a> to execute common tasks. It is available for any platform. Once installed, you can see a list of available commands by running <code>just --list</code>.</p>
 <p>We use <code>poetry</code> to manage the <a href="https://github.com/python-poetry/poetry">dependencies</a>.
-If you dont have <code>poetry</code>, you should install with <code>make poetry-download</code>.</p>
-<p>To install dependencies and prepare <a href="https://pre-commit.com/"><code>pre-commit</code></a> hooks you would need to run <code>install</code> command:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>make install
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>make pre-commit-install
+If you don't have <code>poetry</code>, you should install with <code>just poetry-download</code>.</p>
+<p>To install dependencies and prepare <a href="https://pre-commit.com/"><code>pre-commit</code></a> hooks you would need to run the <code>setup</code> command:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>just setup
 </code></pre></div>
 <p>To activate your <code>virtualenv</code> run <code>poetry shell</code>.</p>
+<h2 id="running-updates">Running updates</h2>
+<p>After pulling new updates from the repository you can quickly install updated dependencies and run database migrations by running <code>just update</code>.</p>
 <h2 id="codestyle">Codestyle</h2>
 <p>After installation you may execute code formatting.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>make codestyle
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>just codestyle
 </code></pre></div>
 <h3 id="checks">Checks</h3>
-<p>Many checks are configured for this project. Command <code>make check-codestyle</code> will check black, isort and darglint.
-The <code>make check-safety</code> command will look at the security of your code.</p>
-<p>Comand <code>make lint</code> applies all checks.</p>
+<p>Many checks are configured for this project. Command <code>just check-codestyle</code> will check black, isort and darglint.
+The <code>just check-safety</code> command will look at the security of your code.</p>
+<p>To run <strong>ALL</strong> checks:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>just lint
+</code></pre></div>
 <h3 id="before-submitting">Before submitting</h3>
 <p>Before submitting your code please do the following steps:</p>
 <ol>
 <li>Add any changes you want</li>
 <li>Add tests for the new changes</li>
 <li>Edit documentation if you have changed something significant</li>
-<li>Run <code>make codestyle</code> to format your changes.</li>
-<li>Run <code>make lint</code> to ensure that types, security and docstrings are okay.</li>
+<li>Run <code>just codestyle</code> to format your changes.</li>
+<li>Run <code>just lint</code> to ensure that types, security and docstrings are okay.</li>
 <li>Add your name to the <code>CONTRIBUTERS.txt</code> file.</li>
 </ol>
 <h2 id="other-help">Other help</h2>
