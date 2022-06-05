@@ -27,6 +27,8 @@ jobs:
 
     steps:
 
+      - uses: extractions/setup-just@v1
+
       - name: Checkout Code Repository
         uses: actions/checkout@v3
 
@@ -56,8 +58,8 @@ jobs:
 
       - name: Run linters
         run: |
-          make check-codestyle
+          just check-codestyle
 
       - name: Run safety checks
         run: |
-          make check-safety
+          just check-safety
