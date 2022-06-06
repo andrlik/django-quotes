@@ -483,7 +483,7 @@
 <h1 id="how-to-contribute">How to contribute</h1>
 <h2 id="dependencies">Dependencies</h2>
 <p>We use <a href="https://github.com/casey/just"><code>just</code></a> to execute common tasks. It is available for any platform. Once installed, you can see a list of available commands by running <code>just --list</code>.</p>
-<p>We use <code>poetry</code> to manage the <a href="https://github.com/python-poetry/poetry">dependencies</a>.
+<p>We use <code>poetry</code> to manage the Python <a href="https://github.com/python-poetry/poetry">dependencies</a>.
 If you don't have <code>poetry</code>, you should install with <code>just poetry-download</code>.</p>
 <p>To install dependencies and prepare <a href="https://pre-commit.com/"><code>pre-commit</code></a> hooks you would need to run the <code>setup</code> command:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>just setup
@@ -496,10 +496,15 @@ If you don't have <code>poetry</code>, you should install with <code>just poetry
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>just codestyle
 </code></pre></div>
 <h3 id="checks">Checks</h3>
-<p>Many checks are configured for this project. Command <code>just check-codestyle</code> will check black, isort and darglint.
-The <code>just check-safety</code> command will look at the security of your code.</p>
-<p>To run <strong>ALL</strong> checks:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>just lint
+<p>Many checks are configured for this project.</p>
+<p>To run your test suite:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>just <span class="nb">test</span>
+</code></pre></div>
+<p>To use mypy for type checking run <code>just mypy</code>.</p>
+<p>Command <code>just check-codestyle</code> will check black, isort and darglint.</p>
+<p>The <code>just check-safety</code> command will look at the security of your code.</p>
+<p>To run <strong>ALL</strong> checks, including test suite, codestyle, mypy, and safety:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>just lint
 </code></pre></div>
 <h3 id="before-submitting">Before submitting</h3>
 <p>Before submitting your code please do the following steps:</p>
