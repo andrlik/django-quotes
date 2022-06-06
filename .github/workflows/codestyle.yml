@@ -54,7 +54,7 @@ jobs:
           poetry run python -m spacy download en_core_web_sm
 
       - name: Run pre-commit
-        uses: pre-commit/action@v2.0.3
+        uses: pre-commit/action@v3.0.0
 
       - name: Run linters
         run: |
