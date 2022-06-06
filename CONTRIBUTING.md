@@ -4,7 +4,7 @@
 
 We use [`just`](https://github.com/casey/just) to execute common tasks. It is available for any platform. Once installed, you can see a list of available commands by running `just --list`.
 
-We use `poetry` to manage the [dependencies](https://github.com/python-poetry/poetry).
+We use `poetry` to manage the Python [dependencies](https://github.com/python-poetry/poetry).
 If you don't have `poetry`, you should install with `just poetry-download`.
 
 To install dependencies and prepare [`pre-commit`](https://pre-commit.com/) hooks you would need to run the `setup` command:
@@ -29,10 +29,21 @@ just codestyle
 
 ### Checks
 
-Many checks are configured for this project. Command `just check-codestyle` will check black, isort and darglint.
+Many checks are configured for this project.
+
+To run your test suite:
+
+```bash
+just test
+```
+
+To use mypy for type checking run `just mypy`.
+
+Command `just check-codestyle` will check black, isort and darglint.
+
 The `just check-safety` command will look at the security of your code.
 
-To run **ALL** checks:
+To run **ALL** checks, including test suite, codestyle, mypy, and safety:
 
 ```bash
 just lint
