@@ -1,8 +1,12 @@
 # How to contribute
 
-## Dependencies
+Contributions to either the code, localization, or the documentation are very welcome!
+
+## Development task runner
 
 We use [`just`](https://github.com/casey/just) to execute common tasks. It is available for any platform. Once installed, you can see a list of available commands by running `just --list`.
+
+## Dependencies
 
 We use `poetry` to manage the Python [dependencies](https://github.com/python-poetry/poetry).
 If you don't have `poetry`, you should install with `just poetry-download`.
