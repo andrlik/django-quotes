@@ -57,7 +57,7 @@ check-codestyle:
 
 # Runs mypy type checking.
 mypy:
-  poetry run mypy --config-file pyproject.toml django_quotes
+  poetry run mypy --install-types --non-interactive --config-file pyproject.toml django_quotes
 
 # Runs poetry safety and bandit checks.
 check-safety:

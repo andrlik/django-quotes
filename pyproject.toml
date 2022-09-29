@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-quotes"
-version = "0.2.4"
+version = "0.2.5"
 description = """A reusable Django app to collect quotes for use in random retrieval or generation of sentences using \
     Markov Chains."""
 authors = ["Daniel Andrlik <daniel@andrlik.org>"]
@@ -59,7 +59,7 @@ pytest-cov = "^3.0.0"
 django-easy-logging = "^0.4.0"
 types-python-slugify = "^5.0.3"
 types-Markdown = "^3.3.14"
-safety = "^1.10.3"
+safety = "^2.2.0"
 darglint = "^1.8.1"
 bandit = "^1.7.4"
 django-stubs-ext = "^0.4.0"
