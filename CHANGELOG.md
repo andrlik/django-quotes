@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- Add `pub_date` field to `Quote` model. This prevents a quote with a future date from appearing in random requests.
+
 ## 0.2.4
 
 - Update documentation links on PyPI.
