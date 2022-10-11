@@ -7,6 +7,7 @@ import random
 import rules
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from loguru import logger
@@ -164,8 +165,12 @@ class SourceGroup(
 
         :return: ``Quote`` object or None if no quotes are defined.
         """
+        # TODO: Create Q object to filter for null datetimes or less than now.
         quotes = (
             Quote.objects.filter(source__in=self.source_set.all())
+            .filter(
+                models.Q(pub_date__isnull=True) | models.Q(pub_date__lte=timezone.now())
+            )
             .select_related("stats")
             .order_by("stats__times_used")[:max_quotes_to_process]
         )
@@ -308,6 +313,9 @@ class Source(
         """
         quotes_to_pick = (
             Quote.objects.filter(source=self)
+            .filter(
+                models.Q(pub_date__isnull=True) | models.Q(pub_date__lte=timezone.now())
+            )
             .select_related("stats")
             .order_by("stats__times_used")[:max_quotes_to_process]
         )
@@ -380,6 +388,11 @@ class Quote(
     )
     citation_url = models.URLField(
         null=True, blank=True, help_text=_("URL for citation, if applicable.")
+    )
+    pub_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_("When is the earliest time this should appear in random results?"),
     )
 
     def __str__(self):  # pragma: nocover
