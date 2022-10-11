@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
+from django.utils import timezone
 
 from django_quotes.models import Quote, Source, SourceGroup
 
@@ -132,3 +135,40 @@ def test_group_generate_markov_sentence(property_group, corpus_sentences):
         )
     assert no_quote_group.generate_markov_sentence() is None
     assert property_group.generate_markov_sentence() is not None
+
+
+def test_pub_date_prevents_inclusion_in_source_random_quote(property_group):
+    new_source = Source.objects.create(
+        group=property_group, name="Future Man", owner=property_group.owner
+    )
+    q = Quote.objects.create(
+        source=new_source,
+        quote="This message is from the **future**!",
+        pub_date=timezone.now() + timedelta(days=4),
+        owner=property_group.owner,
+    )
+    assert Quote.objects.filter(source=new_source).count() == 1
+    assert new_source.get_random_quote() is None
+    q.pub_date = timezone.now() - timedelta(days=2)
+    q.save()
+    assert new_source.get_random_quote() == q
+
+
+def test_pub_date_prevents_inclusion_in_group_random_quote(property_group):
+    new_group = SourceGroup.objects.create(
+        name="Future Group", owner=property_group.owner
+    )
+    new_source = Source.objects.create(
+        group=new_group, owner=new_group.owner, name="Future Man"
+    )
+    q = Quote.objects.create(
+        source=new_source,
+        quote="This message is from the **future**!",
+        pub_date=timezone.now() + timedelta(days=4),
+        owner=property_group.owner,
+    )
+    assert Quote.objects.filter(source__group=new_group).count() == 1
+    assert new_group.get_random_quote() is None
+    q.pub_date = timezone.now() - timedelta(days=2)
+    q.save()
+    assert new_group.get_random_quote() == q
