@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.1
+
+- Adds support for python 3.11 by upgrading `spacy` dependency to 3.4.2 and adding `py`.
+
+**Upgrade Note:** You will want to update your spacy language model after updating. You can do this by:
+
+```bash
+python -m spacy download en_core_web_sm
+```
+
 ## 0.3.0
 
 - Add `pub_date` field to `Quote` model. This prevents a quote with a future date from appearing in random requests.

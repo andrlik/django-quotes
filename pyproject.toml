@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-quotes"
-version = "0.3.0"
+version = "0.3.1"
 description = """A reusable Django app to collect quotes for use in random retrieval or generation of sentences using \
     Markov Chains."""
 authors = ["Daniel Andrlik <daniel@andrlik.org>"]
@@ -22,7 +22,7 @@ django-model-utils = "^4.2.0"
 rules = "^3.1"
 Markdown = "^3.3.6"
 markovify = "^0.9.3"
-spacy = "^3.2.2"
+spacy = "^3.4.0"
 python-slugify = "^6.1.1"
 djangorestframework = "^3.13.1"
 django-cors-headers = "^3.11.0"
@@ -33,13 +33,14 @@ loguru = "^0.6.0"
 # [tool.poetry.dependencies.en_core_web_sm]
 docutils = "^0.18.1"
 # url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.2.0/en_core_web_sm-3.2.0.tar.gz"
+py = "^1.11.0"
 
 [tool.poetry.dev-dependencies]
 Werkzeug = {extras = ["watchdog"], version = "^2.1.2"}
 ipdb = "^0.13.9"
 psycopg2-binary = "^2.9.3"
 watchgod = "^0.8"
-mypy = "^0.942"
+mypy = "^0.982"
 django-stubs = "^1.10.1"
 pytest = "^7.1.2"
 pytest-sugar = "^0.9.4"
@@ -122,7 +123,7 @@ plugins = ["django_coverage_plugin"]
 
 [tool.mypy]
 # https://mypy.readthedocs.io/en/latest/config_file.html#using-a-pyproject-toml-file
-python_version = 3.9
+python_version = 3.11
 pretty = true
 show_traceback = true
 color_output = true
