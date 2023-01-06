@@ -12,6 +12,9 @@ classifiers = [
     "Framework :: Django :: 4",
     "License :: OSI Approved :: BSD License",
     "Framework :: Django",
+    "Programming Language :: Python :: 3.11"
+    "Programming Language :: Python :: 3.10"
+    "Programming Language :: Python :: 3.9"
 ]
 documentation = "https://andrlik.github.io/django-quotes/"
 
@@ -33,7 +36,6 @@ loguru = "^0.6.0"
 # [tool.poetry.dependencies.en_core_web_sm]
 docutils = ">=0.18.1,<0.20.0"
 # url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.2.0/en_core_web_sm-3.2.0.tar.gz"
-py = "^1.11.0"
 
 
 [tool.poetry.dev-dependencies]
