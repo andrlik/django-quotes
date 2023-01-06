@@ -72,7 +72,7 @@ class SourceGroupUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Generic
         return reverse_lazy("quotes:group_detail", kwargs={"group": self.object.slug})
 
 
-class SourceGroupDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelete):
+class SourceGroupDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelete):  # type: ignore
     """
     Delete and existing source group.
     """
@@ -180,7 +180,7 @@ class SourceUpdateView(LoginRequiredMixin, PermissionRequiredMixin, GenericUpdat
         )
 
 
-class SourceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelete):
+class SourceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelete):  # type: ignore
     """
     Used to delete a given Source
     """
@@ -194,7 +194,7 @@ class SourceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelet
 
     def dispatch(self, request, *args, **kwargs):
         source_slug = kwargs.get("source")
-        source = get_object_or_404(Source, slug=source_slug)
+        source = get_object_or_404(Source, slug=source_slug)  # type: ignore
         self.group = source.group
         return super().dispatch(request, *args, **kwargs)
 
@@ -286,7 +286,7 @@ class QuoteCreateView(LoginRequiredMixin, PermissionRequiredMixin, GenericCreate
 
     def dispatch(self, request, *args, **kwargs):
         source_slug = kwargs.pop("source")
-        self.source = get_object_or_404(Source, slug=source_slug)
+        self.source = get_object_or_404(Source, slug=source_slug)  # type: ignore
         return super().dispatch(request, *args, **kwargs)
 
     def get_permission_object(self):
@@ -348,7 +348,7 @@ class QuoteDetailView(LoginRequiredMixin, PermissionRequiredMixin, GenericDetail
     select_related = ["source", "source__group", "owner"]
 
 
-class QuoteDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelete):
+class QuoteDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelete):  # type: ignore
     """
     View to delete a quote.
     """

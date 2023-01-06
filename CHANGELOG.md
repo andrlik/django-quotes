@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2
+
+- Security update: removes `py` from dependencies as no longer needed and has a vulnerability.
+
 ## 0.3.1
 
 - Adds support for python 3.11 by upgrading `spacy` dependency to 3.4.2 and adding `py`.
