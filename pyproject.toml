@@ -42,7 +42,7 @@ itypes = "^1.2.0"
 
 
 [tool.poetry.dev-dependencies]
-Werkzeug = {extras = ["watchdog"], version = "^2.1.2"}
+Werkzeug = {extras = ["watchdog"], version = "^2.2.3"}
 ipdb = "^0.13.9"
 psycopg2-binary = "^2.9.3"
 watchgod = "^0.8"
