@@ -5,56 +5,72 @@ name: Tests
 #  DOCKER_BUILDKIT: 1
 #  COMPOSE_DOCKER_CLI_BUILD: 1
 
+concurrency:
+    group: test-${{ github.head_ref }}
+    cancel-in-progress: true
+
 env:
   DJANGO_DEBUG: True
+  PYTHONUNBUFFERED: "1"
+  FORCE_COLOR: "1"
 
 on:
   pull_request:
     branches: [ "master", "main" ]
-    paths-ignore: [ "docs/**" ]
+    paths-ignore: [ "docs/**", "README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md", "LICENSE" ]
 
   push:
     branches: [ "master", "main" ]
-    paths-ignore: [ "docs/**" ]
+    paths-ignore: [ "docs/**", "README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md", "LICENSE" ]
 
 
 jobs:
   # With no caching at all the entire ci process takes 4m 30s to complete!
-  pytest:
-    runs-on: ubuntu-latest
+  run:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        python-version: [ "3.9", "3.10", "3.11" ]
+        os: [ubuntu-latest]
+        python-version: [ "3.11", "3.12" ]
 
     steps:
 
     - name: Checkout Code Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
+      id: setup_python
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install poetry
-      run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python${{ matrix.python-version }} -
+    - name: Install uv
+      run: pip install --upgrade uv
 
     - name: Setup cache
       uses: actions/cache@v3
       with:
         path: .venv
-        key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
-    - name: Install dependencies
+        key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-${{ hashFiles('requirements-dev.lock') }}
+        restore-keys: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-
+
+    - name: Create venv, install dependencies
       run: |
-        poetry config virtualenvs.in-project true
-        poetry install
-        poetry run python -m spacy download en_core_web_sm
+        python -m uv venv
+        python -m uv pip install -r requirements-dev.lock
+        source .venv/bin/activate
+        echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+
     - name: Test with pytest
       run: |
         sqlite3 tests/django_quotes.db '.databases'
-        poetry run python manage.py collectstatic --noinput
-        poetry run pytest --cov-report=
-        poetry run coverage lcov
+        python manage.py collectstatic --noinput
+        python -m pytest --cov-report= --cov-config=pyproject.toml --cov=src/django_quotes
+        python -m coverage lcov
+
     - name: Submit coverage data to coveralls.io
       uses: coverallsapp/github-action@master
       with:
