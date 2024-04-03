@@ -13,7 +13,6 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from loguru import logger
-from model_utils.models import TimeStampedModel
 from rules.contrib.models import RulesModelBase, RulesModelMixin
 
 from django_quotes.markov_utils import MarkovPOSText
@@ -51,6 +50,16 @@ class AbstractOwnerModel(models.Model):
     )
     allow_submissions = models.BooleanField(default=False, help_text=_("Allow submissions from other users?"))
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
+class TimeStampedModel(models.Model):
+    """Automatically adds a created and modified field."""
+
+    created = models.DateTimeField(auto_now_add=True, help_text=_("Created timestamp"))
+    modified = models.DateTimeField(auto_now=True, help_text=_("Last modified time"))
 
     class Meta:
         abstract = True
@@ -231,7 +240,7 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         help_text=_("Description of this character. You can style this with Markdown."),
     )
     description_rendered = models.TextField(
-        null=True, blank=True, help_text=_("Automatically generated from description.")
+        null=True, blank=True, help_text=_("Automatically generated from description on save.")
     )
     allow_markov = models.BooleanField(default=False, help_text=_("Allow to be used in markov chains?"))
     group = models.ForeignKey(

@@ -78,7 +78,6 @@ django==5.0.4
     # via django-crispy-forms
     # via django-debug-toolbar
     # via django-extensions
-    # via django-model-utils
     # via django-quotes
     # via django-stubs-ext
     # via djangorestframework
@@ -91,8 +90,6 @@ django-crispy-forms==2.1
 django-debug-toolbar==4.3.0
 django-easy-logging==0.70
 django-extensions==3.2.3
-django-model-utils==4.5.0
-    # via django-quotes
 django-stubs-ext==4.2.7
 django-types==0.19.1
 djangorestframework==3.15.1

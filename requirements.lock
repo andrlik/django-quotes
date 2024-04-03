@@ -46,7 +46,6 @@ django==5.0.4
     # via crispy-bootstrap4
     # via django-cors-headers
     # via django-crispy-forms
-    # via django-model-utils
     # via django-quotes
     # via djangorestframework
     # via drf-spectacular
@@ -54,8 +53,6 @@ django-cors-headers==4.3.1
     # via django-quotes
 django-crispy-forms==2.1
     # via crispy-bootstrap4
-    # via django-quotes
-django-model-utils==4.5.0
     # via django-quotes
 djangorestframework==3.15.1
     # via django-quotes

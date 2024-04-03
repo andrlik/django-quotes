@@ -6,7 +6,6 @@ description = """A reusable Django app to collect quotes for use in random retri
 authors = [{ name = "Daniel Andrlik", email = "daniel@andrlik.org" }]
 dependencies = [
     "django>=4.2",
-    "django-model-utils>=4.2.0",
     "rules>=3.1",
     "Markdown>=3.3.6",
     "spacy>=3.7.4",
