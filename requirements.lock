@@ -36,11 +36,14 @@ coreapi==2.3.3
 coreschema==0.0.4
     # via coreapi
     # via django-quotes
+crispy-bootstrap4==2024.1
+    # via django-quotes
 cymem==2.0.8
     # via preshed
     # via spacy
     # via thinc
 django==5.0.4
+    # via crispy-bootstrap4
     # via django-cors-headers
     # via django-crispy-forms
     # via django-model-utils
@@ -50,6 +53,7 @@ django==5.0.4
 django-cors-headers==4.3.1
     # via django-quotes
 django-crispy-forms==2.1
+    # via crispy-bootstrap4
     # via django-quotes
 django-model-utils==4.5.0
     # via django-quotes

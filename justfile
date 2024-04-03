@@ -82,7 +82,7 @@ safety: check
 # Access Django management commands.
 manage *ARGS: check
     #!/usr/bin/env bash
-    DJANGO_SETTINGS_MODULE="tests.settings" PYTHONPATH="$PYTHONPATH:$(pwd)" rye run django-admin {{ ARGS }}
+    DJANGO_SETTINGS_MODULE="tests.django_settings" PYTHONPATH="$PYTHONPATH:$(pwd)" rye run django-admin {{ ARGS }}
 
 # Access mkdocs commands
 docs *ARGS: check
