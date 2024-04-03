@@ -62,6 +62,10 @@ check: _check-env _check-pre-commit
       exit 1
     fi
 
+# Check types
+check-types: check
+    rye run pyright
+
 # Run just formatter and rye formatter.
 fmt: check
     just --fmt --unstable
@@ -91,10 +95,6 @@ docs *ARGS: check
 # Build Python package
 build *ARGS: check
     rye build {{ ARGS }}
-
-# Runs mypy type checking.
-mypy:
-    rye run mypy --non-interactive --config-file pyproject.toml src/django_quotes
 
 # Removes pycache directories and files.
 _pycache-remove:

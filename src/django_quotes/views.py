@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
@@ -57,6 +59,9 @@ class SourceGroupUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Generic
     """
     Update an existing source group
     """
+
+    if TYPE_CHECKING:
+        object: SourceGroup
 
     model = SourceGroup
     context_object_name = "group"
@@ -341,7 +346,7 @@ class QuoteDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelete
 
     def get_object(self, *args, **kwargs):
         object = super().get_object(*args, **kwargs)
-        self.source = object.source
+        self.source = object.source  # type: ignore
         return object
 
     def get_success_url(self):

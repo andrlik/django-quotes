@@ -58,8 +58,6 @@ dev-dependencies = [
     "werkzeug[watchdog]>=3.0.2",
     "watchgod>=0.8.2",
     "ipdb>=0.13.13",
-    "mypy>=1.9.0",
-    "django-stubs>=4.2.7",
     "pytest-sugar>=1.0.0",
     "pytest-cov>=5.0.0",
     "pytest-django>=4.8.0",
@@ -77,6 +75,9 @@ dev-dependencies = [
     "en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.7.3/en_core_web_trf-3.7.3-py3-none-any.whl",
     "psycopg[binary]>=3.1.18",
     "bump-my-version>=0.20.0",
+    "pyright>=1.1.357",
+    "django-types>=0.19.1",
+    "django-stubs-ext>=4.2.7",
 ]
 
 [tool.coverage.run]
@@ -215,36 +216,15 @@ known-first-party = ["django_markov"]
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
-[tool.mypy]
-# https://mypy.readthedocs.io/en/latest/config_file.html#using-a-pyproject-toml-file
-python_version = 3.11
-pretty = true
-show_traceback = true
-color_output = true
-
-allow_redefinition = false
-check_untyped_defs = true
-disallow_any_generics = false
-disallow_incomplete_defs = true
-ignore_missing_imports = true
-implicit_reexport = false
-no_implicit_optional = true
-show_column_numbers = true
-show_error_codes = true
-show_error_context = true
-strict_equality = true
-strict_optional = true
-warn_no_return = true
-warn_redundant_casts = true
-warn_return_any = true
-warn_unreachable = true
-warn_unused_configs = true
-warn_unused_ignores = true
-plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
-
-[[tool.mypy.overrides]]
-module = "*.migrations.*"
-ignore_errors = true
+[tool.pyright]
+pythonVersion = "3.11"
+exclude = ["**/migrations/",
+    "**/__pycache__",
+    ".venv",
+    "tests",
+]
+reportIncompatibleVariableOverride = false
+reportIncompatibleMethodOverride = false
 
 [tool.django-stubs]
 django_settings_module = "tests.django_settings"

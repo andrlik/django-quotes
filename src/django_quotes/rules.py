@@ -16,7 +16,7 @@ def allows_submissions(user, obj):
     return obj.allow_submissions
 
 
-is_owner_or_public = is_public | is_owner
+is_owner_or_public = is_public | is_owner  # type: ignore
 
 
 @rules.predicate
@@ -29,4 +29,4 @@ def is_character_owner(user, obj):
     return user == obj.character.owner
 
 
-is_group_owner_and_authenticated = rules.is_authenticated & is_group_owner
+is_group_owner_and_authenticated = rules.is_authenticated & is_group_owner  # type: ignore

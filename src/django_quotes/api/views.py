@@ -88,7 +88,7 @@ class SourceViewSet(AutoPermissionViewSetMixin, RetrieveModelMixin, ListModelMix
     }
 
     def get_queryset(self, *args, **kwargs):
-        group_slug = self.request.query_params.get("group")
+        group_slug = self.request.query_params.get("group")  # type: ignore
         queryset = Source.objects.filter(owner=self.request.user) | Source.objects.filter(public=True)  # type: ignore
         if group_slug:
             try:

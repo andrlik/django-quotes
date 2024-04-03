@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import random
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import rules
+
+if TYPE_CHECKING:
+    from django.db.models.manager import RelatedManager
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -72,6 +75,9 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
         modified (datetime): Last time this object was modified. Auto-generated.
 
     """
+
+    if TYPE_CHECKING:
+        source_set: RelatedManager[Source]
 
     name = models.CharField(
         _("Source Name"),
@@ -207,6 +213,9 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
 
     """
 
+    if TYPE_CHECKING:
+        quote_set: RelatedManager[Quote]
+
     name = models.CharField(max_length=100, help_text=_("Name of the character"))
     slug = models.SlugField(
         max_length=250,
@@ -319,6 +328,9 @@ class Quote(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Rul
         modified (datetime): Last time this object was modified. Auto-generated.
 
     """
+
+    if TYPE_CHECKING:
+        id: int
 
     quote = models.CharField(
         max_length=280,  # Keep the base limit to 280 so that quotes are 'tweetable'

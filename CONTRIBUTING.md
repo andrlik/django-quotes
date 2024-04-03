@@ -8,27 +8,25 @@ We use [`just`](https://github.com/casey/just) to execute common tasks. It is av
 
 ## Dependencies
 
-We use `poetry` to manage the Python [dependencies](https://github.com/python-poetry/poetry).
-If you don't have `poetry`, you should install with `just poetry-download`.
+We use `rye` to manage the Python [dependencies](https://rye-up.com).
+If you don't have `rye`, you should install with `just rye-install`.
 
 To install dependencies and prepare [`pre-commit`](https://pre-commit.com/) hooks you would need to run the `setup` command:
 
 ```bash
-just setup
+just bootstrap
 ```
-
-To activate your `virtualenv` run `poetry shell`.
 
 ## Running updates
 
-After pulling new updates from the repository you can quickly install updated dependencies and run database migrations by running `just update`.
+After pulling new updates from the repository you can quickly install updated dependencies and run database migrations by running `just bootstrap`.
 
 ## Codestyle
 
 After installation you may execute code formatting.
 
 ```bash
-just codestyle
+just fmt
 ```
 
 ### Checks
@@ -41,17 +39,18 @@ To run your test suite:
 just test
 ```
 
-To use mypy for type checking run `just mypy`.
+To use pyright for type checking run:
+```bash
+just check-types
+```
 
-Command `just check-codestyle` will check black, isort and darglint.
-
-The `just check-safety` command will look at the security of your code.
-
-To run **ALL** checks, including test suite, codestyle, mypy, and safety:
+To run linting:
 
 ```bash
 just lint
 ```
+
+The `just safety` command will look at the security of your code.
 
 ### Before submitting
 
@@ -60,7 +59,7 @@ Before submitting your code please do the following steps:
 1. Add any changes you want
 2. Add tests for the new changes
 3. Edit documentation if you have changed something significant
-4. Run `just codestyle` to format your changes.
+4. Run `just fmt` to format your changes.
 5. Run `just lint` to ensure that types, security and docstrings are okay.
 6. Add your name to the `CONTRIBUTERS.txt` file.
 
