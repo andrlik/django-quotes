@@ -1,69 +1,112 @@
+set dotenv-load := true
+
 # Lists all available commands.
 help:
-  just --list
+    just --list
+
+# ---------------------------------------------- #
+# Script to rule them all recipes.               #
+# ---------------------------------------------- #
+
+# Downloads and installs rye on your system. If on Windows, download an official release from https://rye-up.com instead.
+rye-install:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if ! command -v rye &> /dev/null;
+    then
+      echo "Rye is not found on path! Starting install..."
+      curl -sSf https://rye-up.com/get | bash
+    else
+      rye self update
+    fi
+
+# Update Rye
+rye-update:
+    rye self update
+
+# Uninstall Rye
+rye-uninstall:
+    rye self uninstall
+
+_check-pre-commit:
+    #!/usr/bin/env bash
+    if ! command -v pre-commit &> /dev/null; then
+      echo "Pre-commit is not installed!"
+      exit 1
+    fi
+
+_check-env:
+    #!/usr/bin/env bash
+    if [[ -z "$DJANGO_SETTINGS_MODULE" ]]; then
+      echo "DJANGO_SETTINGS_MODULE is not set!" >&2
+    fi
 
 # Installs pre-commit into your clone of the git repo.
-_pre-commit-install:
-  pre-commit install
+_install-pre-commit: _check-pre-commit
+    pre-commit install
 
-# Install all dependencies and pypy types
-_install:
-  rye sync
-  rye run mypy --non-interactive src/django_quotes
+# Setup the project and update dependencies.
+bootstrap: rye-install _install-pre-commit _check-env
+    rye sync
+    rye run django-admin migrate
 
-# Installs pre-commit into git clone, python dependencies, and mypy types.
-setup: _pre-commit-install _install
+# Checks that project is ready for development.
+check: _check-env _check-pre-commit
+    #!/usr/bin/env bash
+    if ! command -v rye &> /dev/null; then
+      echo "Rye is not installed!"
+      exit 1
+    fi
+    if [[ ! -f ".venv/bin/python" ]]; then
+      echo "Virtualenv is not installed! Run 'just bootstrap' to complete setup."
+      exit 1
+    fi
 
-# Resync python environment with requirements and run database migrations.
-update: _install
-  rye run python manage.py migrate
+# Run just formatter and rye formatter.
+fmt: check
+    just --fmt --unstable
+    rye fmt
 
-# Runs the Django development server.
-server:
-  rye run python manage.py runserver
+# Run ruff linting
+lint: check
+    rye check
 
-# Opens a Python shell as provided by shell.
-console:
-  rye run python manage.py shell
+# Run the test suite
+test *ARGS: check
+    rye run pytest {{ ARGS }}
 
-# Opens a database shell for project DB.
-db:
-  rye run python manage.py dbshell
+# Runs bandit safety checks.
+safety: check
+    rye run python -m bandit -c pyproject.toml -r src
 
-# Runs pyupgrade, isort, and black against project files.
-codestyle:
-  rye run pyupgrade --exit-zero-even-if-changed --py39-plus **/*.py
-  rye run isort --settings-path pyproject.toml ./
-  rye run black --config pyproject.toml ./
+# Access Django management commands.
+manage *ARGS: check
+    #!/usr/bin/env bash
+    DJANGO_SETTINGS_MODULE="tests.settings" PYTHONPATH="$PYTHONPATH:$(pwd)" rye run django-admin {{ ARGS }}
 
-# Run test suite.
-test:
-  rye run pytest -c pyproject.toml
+# Access mkdocs commands
+docs *ARGS: check
+    rye run mkdocs {{ ARGS }}
 
-# Runs isort, black, and darglint in check-only mode.
-check-codestyle:
-  rye run isort --diff --check-only --settings-path pyproject.toml ./
-  rye run black --diff --check --config pyproject.toml ./
-  rye run darglint --verbosity 2 django_quotes tests
+# Build Python package
+build *ARGS: check
+    rye build {{ ARGS }}
 
 # Runs mypy type checking.
 mypy:
-  rye run mypy --non-interactive --config-file pyproject.toml src/django_quotes
-
-# Runs bandit checks.
-check-safety:
-  rye run bandit -ll --recursive src/django_quotes
-
-# Runs test suite, check-codestyle, mypy, and check-safety.
-lint: test check-codestyle mypy check-safety
+    rye run mypy --non-interactive --config-file pyproject.toml src/django_quotes
 
 # Removes pycache directories and files.
 _pycache-remove:
-  find . | grep -E "(__pycache__|\.pyc|\.pyo$$)" | xargs rm -rf
+    find . | grep -E "(__pycache__|\.pyc|\.pyo$$)" | xargs rm -rf
 
 # Remove generated builds.
 _build-remove:
-  rm -rf dist/*
+    rm -rf dist/*
+
+# Remove generated docs
+_docs-clean:
+    rm -rf site/*
 
 # Removes pycache directories and files, and generated builds.
-clean: _pycache-remove _build-remove
+clean: _pycache-remove _build-remove _docs-clean
