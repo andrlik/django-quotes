@@ -1,0 +1,17 @@
+{% extends "../base.html" %}
+{% load i18n crispy_forms_tags %}
+{% block extratitle %}{% trans "Deleting" %} {{ group.name }} - {% endblock %}
+{% block content %}
+        <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=group.slug %}">{{ group.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Delete" %}</li>
+  </ol>
+  </nav>
+<h1>{% trans "Deleting" %} {{ group.name }}</h1>
+<p><strong>{% trans "Are you sure you want to delete:" %}</strong> {{ group.name }}?</p>
+<form method="post">{% csrf_token %}
+<button type="submit" class="btn btn-danger">{% trans "Delete" %}</button> <a href="{% url 'quotes:group_detail' group=group.slug %}" class="btn btn-secondary">{% trans "Go back" %}</a>
+</form>
+{% endblock %}

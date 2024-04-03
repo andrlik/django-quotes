@@ -1,12 +1,10 @@
-from typing import List
-
 import re
 from pathlib import Path
 
 import pytest
 from django.contrib.auth import get_user_model
-
 from django_quotes.models import Quote, Source, SourceGroup
+
 from tests.factories.users import UserFactory
 
 User = get_user_model()
@@ -31,7 +29,7 @@ label_re = re.compile(r"\.\. _([^\s:]+):")
 
 def get_headings(filename, underline="-"):
     content = (docs_path / filename).open().read()
-    heading_re = re.compile(r"(\S+)\n\{}+\n".format(underline))
+    heading_re = re.compile(rf"(\S+)\n\{underline}+\n")
     return set(heading_re.findall(content))
 
 
@@ -53,7 +51,7 @@ def documented_views():
 
 # Courtesy of https://randomwordgenerator.com/sentence.php
 @pytest.fixture(scope="session")
-def corpus_sentences() -> List[str]:
+def corpus_sentences() -> list[str]:
     return [
         "She wasn't sure whether to be impressed or concerned that he folded underwear in neat little packages.",
         "She looked into the mirror and saw another person.",
@@ -85,9 +83,7 @@ def property_group(user, corpus_sentences):
         allow_markov = False
         if x % 2 == 0:
             allow_markov = True
-        c = Source.objects.create(
-            name=str(x), group=cg, allow_markov=allow_markov, owner=user
-        )
+        c = Source.objects.create(name=str(x), group=cg, allow_markov=allow_markov, owner=user)
         for quote in corpus_sentences:
             Quote.objects.create(quote=quote, source=c, owner=user)
     yield cg

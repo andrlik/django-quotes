@@ -1,6 +1,5 @@
 import pytest
 from django.contrib.auth import get_user_model
-
 from django_quotes.models import (
     GroupMarkovModel,
     GroupStats,
@@ -42,9 +41,7 @@ def test_source_description_render(user: User) -> None:
     """
     group = SourceGroup.objects.create(name="Monkey", owner=user)
     source = Source.objects.create(name="Curious George", group=group, owner=user)
-    assert (
-        source.description is None and source.description_rendered == source.description
-    )
+    assert source.description is None and source.description_rendered == source.description
     source.description = "A **dark** time for all."
     source.save()
     assert source.description_rendered == "<p>A <strong>dark</strong> time for all.</p>"
@@ -62,9 +59,7 @@ def test_quote_rendering(user: User) -> None:
     group = SourceGroup.objects.create(name="Monkey", owner=user)
     source = Source.objects.create(name="Curious George", group=group, owner=user)
     # Quotes can never be none so we just have to verify that the rendered version is getting created.
-    quote = Quote.objects.create(
-        source=source, owner=user, quote="A **dark** time for all."
-    )
+    quote = Quote.objects.create(source=source, owner=user, quote="A **dark** time for all.")
     assert quote.quote_rendered == "<p>A <strong>dark</strong> time for all.</p>"
 
 
@@ -113,9 +108,7 @@ def statable_source(user):
         source=source,
         owner=user,
     )
-    Quote.objects.create(
-        quote="I'm going to take your thumbs first.", source=source, owner=user
-    )
+    Quote.objects.create(quote="I'm going to take your thumbs first.", source=source, owner=user)
     yield source
     group.delete()
 
@@ -183,6 +176,4 @@ def test_source_set_to_allow_markov_regenerates_models(property_group):
     source.allow_markov = True
     source.save()
     assert cmodel_lastmodify < SourceMarkovModel.objects.get(source=source).modified
-    assert (
-        gmodel_lastmodify < GroupMarkovModel.objects.get(group=property_group).modified
-    )
+    assert gmodel_lastmodify < GroupMarkovModel.objects.get(group=property_group).modified

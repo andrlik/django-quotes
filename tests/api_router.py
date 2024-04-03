@@ -1,7 +1,6 @@
 from django.conf import settings
-from rest_framework.routers import DefaultRouter, SimpleRouter
-
 from django_quotes.api.views import SourceGroupViewSet, SourceViewSet
+from rest_framework.routers import DefaultRouter, SimpleRouter
 
 if settings.DEBUG:
     router = DefaultRouter()

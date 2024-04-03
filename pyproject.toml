@@ -1,89 +1,132 @@
-[tool.poetry]
+[project]
 name = "django-quotes"
 version = "0.3.2"
 description = """A reusable Django app to collect quotes for use in random retrieval or generation of sentences using \
     Markov Chains."""
-authors = ["Daniel Andrlik <daniel@andrlik.org>"]
+authors = [{ name = "Daniel Andrlik", email = "daniel@andrlik.org" }]
+dependencies = [
+    "django>=4.2",
+    "django-model-utils>=4.2.0",
+    "rules>=3.1",
+    "Markdown>=3.3.6",
+    "spacy>=3.7.4",
+    "python-slugify>=6.1.1",
+    "djangorestframework>=3.13.1",
+    "django-cors-headers>=3.11.0",
+    "drf-spectacular>=0.24.2",
+    "django-crispy-forms>=1.14.0",
+    "loguru>=0.6.0",
+    "docutils",
+    "coreapi>=2.3.3",
+    "coreschema>=0.0.4",
+    "itypes>=1.2.0",
+    "markovify>=0.9.4",
+]
 license = "BSD-3-Clause"
 readme = "README.md"
-repository = "https://github.com/andrlik/django-quotes"
-homepage = "https://github.com/andrlik/django-quotes"
 classifiers = [
-    "Framework :: Django :: 4",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
     "License :: OSI Approved :: BSD License",
     "Framework :: Django",
+    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.9",
 ]
-documentation = "https://andrlik.github.io/django-quotes/"
 
-[tool.poetry.dependencies]
-python = "^3.9"
-Django = "^4.0.2"
-django-model-utils = "^4.2.0"
-rules = "^3.1"
-Markdown = "^3.3.6"
-markovify = "^0.9.3"
-spacy = "^3.4.0"
-python-slugify = "^6.1.1"
-djangorestframework = "^3.13.1"
-django-cors-headers = "^3.11.0"
-drf-spectacular = "^0.24.2"
-django-crispy-forms = "^1.14.0"
-loguru = "^0.6.0"
-
-# [tool.poetry.dependencies.en_core_web_sm]
-docutils = ">=0.18.1,<0.20.0"
-# url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.2.0/en_core_web_sm-3.2.0.tar.gz"
-coreapi = "^2.3.3"
-coreschema = "^0.0.4"
-itypes = "^1.2.0"
-
-
-[tool.poetry.dev-dependencies]
-Werkzeug = {extras = ["watchdog"], version = "^2.1.2"}
-ipdb = "^0.13.9"
-psycopg2-binary = "^2.9.3"
-watchgod = "^0.8"
-mypy = "^0.991"
-django-stubs = "^1.10.1"
-pytest = "^7.1.2"
-pytest-sugar = "^0.9.4"
-djangorestframework-stubs = "^1.4.0"
-flake8 = "^5.0.4"
-flake8-isort = "^5.0.0"
-coverage = "^6.3.1"
-black = {extras = ["d"], version = "^22.1.0"}
-pylint-django = "^2.5.0"
-pre-commit = "^2.19.0"
-factory-boy = "^3.2.1"
-django-debug-toolbar = "^3.4.0"
-django-extensions = "^3.1.5"
-django-coverage-plugin = "^2.0.3"
-pytest-django = "^4.5.2"
-pytest-cov = "^4.0.0"
-django-easy-logging = "^0.4.0"
-types-python-slugify = "^6.1.0"
-types-Markdown = "^3.3.14"
-safety = "^2.2.0"
-darglint = "^1.8.1"
-bandit = "^1.7.4"
-django-stubs-ext = "^0.7.0"
-mkdocs = "^1.4.2"
-mkdocs-material = "^9.0.2"
-mkdocstrings = {extras = ["python"], version = "^0.19.0"}
-mkdocs-include-markdown-plugin = "^3.5.1"
-colorama = "^0.4.4"
+[project.urls]
+Repository = "https://github.com/andrlik/django-quotes"
+Homepage = "https://github.com/andrlik/django-quotes"
+Documentation = "https://andrlik.github.io/django-quotes/"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/django_quotes"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/django_quotes", "tests"]
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "werkzeug[watchdog]>=3.0.2",
+    "watchgod>=0.8.2",
+    "ipdb>=0.13.13",
+    "mypy>=1.9.0",
+    "django-stubs>=4.2.7",
+    "pytest-sugar>=1.0.0",
+    "pytest-cov>=5.0.0",
+    "pytest-django>=4.8.0",
+    "black>=24.3.0",
+    "factory-boy>=3.3.0",
+    "django-debug-toolbar>=4.3.0",
+    "django-extensions>=3.2.3",
+    "django-coverage-plugin>=3.1.0",
+    "django-easy-logging>=0.70",
+    "types-python-slugify>=8.0.2.20240310",
+    "types-markdown>=3.6.0.20240316",
+    "bandit[toml]>=1.7.8",
+    "mkdocs-material>=9.5.17",
+    "mkdocstrings[python]>=0.24.2",
+    "mkdocs-include-markdown-plugin>=6.0.5",
+    "en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.7.3/en_core_web_trf-3.7.3-py3-none-any.whl",
+    "psycopg[binary]>=3.1.18",
+]
+#dev-dependencies = [
+#"Werkzeug[watchdog]>=2.1.2",
+#"ipdb>=0.13.9",
+#"watchgod>=0.8",
+#"mypy>=0.991",
+#"django-stubs1.10.1",
+#"pytest^7.1.2",
+#"pytest-sugar^0.9.4",
+#"djangorestframework-stubs^1.4.0",
+#"flake8^5.0.4",
+#"flake8-isort^5.0.0",
+#"coverage^6.3.1",
+#"black[d]^22.1.0",
+#"pylint-django^2.5.0",
+#"factory-boy^3.2.1",
+#"django-debug-toolbar^3.4.0",
+#"django-extensions^3.1.5",
+#"django-coverage-plugin^2.0.3",
+#"pytest-django^4.5.2",
+#"pytest-cov^4.0.0",
+#"django-easy-logging^0.4.0",
+#"types-python-slugify^6.1.0",
+#"types-Markdown^3.3.14",
+#"safety^2.2.0",
+#"darglint^1.8.1",
+#"bandit^1.7.4",
+#"mkdocs^1.4.2",
+#"mkdocs-material^9.0.2",
+#"mkdocstrings[python]^0.19.0",
+#"mkdocs-include-markdown-plugin^3.5.1",
+#]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source = ["django_quotes"]
+omit = ["*migrations*", "*tests*", "*staticfiles*"]
+plugins = ["django_coverage_plugin"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
 
 [tool.black]
 # https://github.com/psf/black
-target-version = ["py39"]
-line-length = 88
+target-version = ["py311"]
+line-length = 120
 color = true
 
 exclude = '''
@@ -106,10 +149,16 @@ exclude = '''
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/6.2.x/customize.html#pyproject-toml
 # Directories that are not visited by pytest collector:
-testpaths = ["tests", "django_quotes"]
-python_files = ["tests.py", "test_*.py"]
+DJANGO_SETTINGS_MODULE = "tests.django_settings"
+pythonpath = [".", "src"]
+testpaths = ["tests", "src/django_quotes"]
+django_find_project = false
 norecursedirs = ["hooks", "*.egg", ".eggs", "dist", "build", "docs", ".tox", ".git", "__pycache__", ".venv"]
 doctest_optionflags = ["NUMBER", "NORMALIZE_WHITESPACE", "IGNORE_EXCEPTION_DETAIL"]
+filterwarnings = [
+  "ignore::DeprecationWarning",
+  "ignore::PendingDeprecationWarning"
+]
 
 # Extra options:
 addopts = [
@@ -122,10 +171,82 @@ addopts = [
     "--reuse-db",
 ]
 
-[tool.coverage.run]
-source = ["django_quotes"]
-omit = ["*migrations*", "*tests*", "*staticfiles*"]
-plugins = ["django_coverage_plugin"]
+[tool.check-wheel-contents]
+ignore = ["W004"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+extend-exclude = ["migrations"]
+
+[tool.ruff.lint]
+select = [
+  "A",
+  "ARG",
+  "B",
+  "C",
+  "DJ",
+  "DTZ",
+  "E",
+  "EM",
+  "F",
+  "FBT",
+  "I",
+  "ICN",
+  "ISC",
+  "N",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "Q",
+  "RUF",
+  "S",
+  "T",
+  "TID",
+  "UP",
+  "W",
+  "YTT",
+]
+ignore = [
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105",
+  "S106",
+  "S107",
+  # Ignore complexity
+  "C901",
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR0915",
+  "DJ001",
+  "RUF012",
+  "ISC001",
+]
+unfixable = [
+  # Don't touch unused imports
+  "F401",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*.py" = ["S101", "FBT001", "ARG001", "ARG002", "E501", "PLR2004", "T201"]
+"tests/urls.py" = ["RUF005"]
+"src/django_quotes/receivers.py" = ["ARG001"]
+"src/django_quotes/rules.py" = ["ARG001"]
+"src/django_quotes/views.py" = ["A001"]
+"src/django_quotes/api/views.py" = ["ARG002"]
+"src/django_quotes/management/commands/*.py" = ["ARG002"]
+"conftest.py" = ["ARG001"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["django_markov"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
 
 [tool.mypy]
 # https://mypy.readthedocs.io/en/latest/config_file.html#using-a-pyproject-toml-file
@@ -160,17 +281,3 @@ ignore_errors = true
 
 [tool.django-stubs]
 django_settings_module = "tests.django_settings"
-
-[tool.isort]
-# https://github.com/timothycrosley/isort/
-py_version = 39
-line_length = 88
-
-known_typing = ["typing", "types", "typing_extensions", "mypy", "mypy_extensions"]
-sections = ["FUTURE", "TYPING", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-include_trailing_comma = true
-profile = "black"
-multi_line_output = 3
-indent = 4
-color_output = true
-skip_glob = "**/migrations/*.py"

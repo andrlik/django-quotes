@@ -1,0 +1,21 @@
+{% extends "../base.html" %}
+{% load i18n crispy_forms_filters %}
+{% block extratitle %}{% translate "Editing" %} {{ source.name }} - {% endblock %}
+{% block content %}
+        <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=source.group.slug %}">{{ source.group.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_list' group=source.group.slug %}">{% translate "sources" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_detail' source=source.slug %}">{{ source.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Edit" %}</li>
+  </ol>
+  </nav>
+<h1>{% translate "Edit" %} {{ source.name }}</h1>
+  <p>{% translate "Make your edits in the form below." %}</p>
+  <form method="post">
+  {% csrf_token %}
+    {{ form|crispy }}
+  <button type="submit" class="btn btn-success">{% translate "Update" %}</button> <a href="{% url 'quotes:source_detail' source=source.slug %}" class="btn btn-secondary">{% trans "Go back to source details" %}</a>
+  </form>
+{% endblock %}

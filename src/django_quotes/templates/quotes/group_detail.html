@@ -1,0 +1,72 @@
+{% extends "../base.html" %}
+{% load i18n %}
+{% block extratitle %}{{ group.name }} - {% endblock %}
+{% block content %}
+    <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ group.name }}</li>
+  </ol>
+  </nav>
+<h1>{% translate "Group Detail" %}: {{ group.name }}</h1>
+  <div class="card">
+  <h2 class="card-header">{{ group.name }}</h2>
+    <div class="card-body">
+{{ group.description_rendered|safe }}
+      </div>
+    <div class="card-footer text-muted">
+      <small>{% translate "Created at" %} {{ group.created }} {% translate "Last modified" %} {{ group.modified }}</small>
+    </div>
+  </div>
+  <p></p>
+<p>  <a href="{% url 'quotes:group_update' group=group.slug %}" class="btn btn-primary">{% trans "Edit group" %}</a> <a href="{% url 'quotes:group_list' %}" class="btn btn-secondary">{% trans "Back to list" %}</a></p>
+  <h2>{% translate "Sample of Sources" %}</h2>
+  <table class="table table-striped caption-top">
+  <caption>{% translate "Showing" %} {{ source_sample.count }} {% translate "of" %} {{ group.source_set.count }} {% translate "sources." %}
+  <a href="{% url 'quotes:source_list' group=group.slug %}">{% translate "See all." %}</a></caption>
+  <thead>
+  <tr>
+    <th scope="col">{% trans "Source" %}</th>
+    <th scope="col">{% trans "Allows Markov" %}</th>
+    <th scope="col" class="text-end">{% trans "# Quotes" %}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for source in source_sample %}
+  <tr>
+    <th scope="row"><a href="{% url 'quotes:source_detail' source=source.slug %}">{{ source.name }}</a></th>
+    <td><span class="badge {% if source.allow_markov %}bg-success{% else %}bg-secondary{% endif %}">{% if source.allow_markov %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</span></td>
+    <td class="text-end"><a href="{% url 'quotes:quote_list' source=source.slug %}">{{ source.quote_set.count }}</a></td>
+  </tr>
+  {% empty %}
+  {% endfor %}
+  </tbody>
+  </table>
+
+  <p><a href="{% url 'quotes:source_create' group=group.slug %}" class="btn btn-success">{% translate "Add new source" %}</a></p>
+
+  <h2>{% translate "Group Statistics" %}</h2>
+
+  <table class="table">
+  <thead>
+  <tr>
+    <th scope="col" class="text-end">{% translate "Total sources" %}</th>
+    <th scope="col" class="text-end">{% translate "Total quotes" %}</th>
+    <th scope="col" class="text-end">{% translate "Markov enabled sources" %}</th>
+    <th scope="col" class="text-end">{% translate "Random quotes requested" %}</th>
+    <th scope="col" class="text-end">{% translate "Markov sentences generated" %}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td class="text-end">{{ group.total_sources }}</td>
+    <td class="text-end">{{ group.total_quotes }}</td>
+    <td class="text-end">{{ group.markov_sources }}</td>
+    <td class="text-end">{{ group.stats.quotes_requested }}</td>
+    <td class="text-end">{{ group.stats.quotes_generated }}</td>
+  </tr>
+  </tbody>
+  </table>
+
+  <p class="text-end"><a href="{% url 'quotes:group_delete' group=group.slug %}" class="btn btn-danger">{% trans "Delete group" %}</a></p>
+{% endblock %}

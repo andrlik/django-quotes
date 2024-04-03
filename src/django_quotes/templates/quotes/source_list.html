@@ -1,0 +1,50 @@
+{% extends "../base.html" %}
+{% load i18n %}
+{% block extratitle %}{% blocktranslate %}Sources in{% endblocktranslate %} {{ group.name }} - {% endblock %}
+{% block content %}
+        <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=group.slug %}">{{ group.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Sources" %}</li>
+  </ol>
+  </nav>
+<h1>{% blocktranslate %}Sources in{% endblocktranslate %} {{ group.name }}</h1>
+  <table class="table table-striped caption-top">
+  <caption>{% translate "Showing" %} {{ page_obj|length }} {% translate "of" %} {{ group.total_sources }} {% translate "sources." %}</caption>
+<thead>
+<tr>
+  <th scope="col">{% translate "Name" %}</th>
+  <th scope="col">{% translate "Allows markov" %}</th>
+  <th scope="col" class="text-right">{% translate "# Quotes" %}</th>
+</tr>
+</thead>
+  <tbody>
+  {% for source in page_obj %}
+    <tr>
+    <th scope="row"><a href="{% url 'quotes:source_detail' source=source.slug %}">{{ source.name }}</a></th>
+      <td><span class="badge {% if source.allow_markov %}bg-success{% else %}bg-secondary{% endif %}">{% if source.allow_markov %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</span></td>
+      <td><a href="{% url 'quotes:quote_list' source=source.slug %}">{{ source.quote_set.count }}</a></td>
+   </tr>
+  {% empty %}
+  <li>{% translate "No sources found!" %}</li>
+  {% endfor %}
+  </tbody>
+  </table>
+  <p><a href="{% url 'quotes:source_create' group=group.slug %}" class="btn btn-success">{% translate "Add new source" %}</a></p>
+  {% if page_obj.has_other_pages %}
+  <nav aria-label="Page navigation">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page=1">&laquo; {% trans "First" %}</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+    {% endif %}
+    <li class="page-item active" aria-current="page"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% trans "Last" %} &raquo;</a></li>
+    {% endif %}
+  </ul>
+  </nav>
+  {% endif %}
+{% endblock %}

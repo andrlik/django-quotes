@@ -1,0 +1,26 @@
+{% extends "../base.html" %}
+{% load i18n crispy_forms_filters %}
+{% block extratitle %}{% blocktranslate %}Edit quote{% endblocktranslate %} - {% endblock %}
+{% block content %}
+        <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=quote.source.group.slug %}">{{ quote.source.group.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_list' group=quote.source.group.slug %}">{% translate "Sources" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_detail' source=quote.source.slug %}">{{ quote.source.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:quote_list' source=quote.source.slug %}">{% translate "Quotes" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:quote_detail' quote=quote.id %}">{{ quote.id }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Edit" %}</li>
+  </ol>
+  </nav>
+<h1>{% blocktranslate %}Edit quote{% endblocktranslate %}</h1>
+  <p>{% translate "This quote currently reads:" %}</p>
+  <blockquote>
+  {{ quote.quote_rendered|safe }}
+  </blockquote>
+<p>{% translate "You can edit the quote using the form below." %}</p>
+<form method="post">{% csrf_token %}
+{{ form|crispy }}
+<button class="btn btn-success" type="submit">{% translate "Update quote" %}</button> <a href="{% url "quotes:quote_list" source=quote.source.slug %}" class="btn btn-secondary">{% translate "Return to quote list" %}</a>
+</form>
+{% endblock %}
