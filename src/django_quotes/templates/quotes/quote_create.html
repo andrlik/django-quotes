@@ -1,0 +1,21 @@
+{% extends "../base.html" %}
+{% load i18n crispy_forms_filters %}
+{% block extratitle %}{% blocktranslate %}Add quote for{% endblocktranslate %} {{ source.name }} - {% endblock %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=source.group.slug %}">{{ source.group.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_list' group=source.group.slug %}">{% translate "Sources" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_detail' source=source.slug %}">{{ source.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:quote_list' source=source.slug %}">{% translate "Quotes" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Add quote" %}</li>
+  </ol>
+  </nav>
+<h1>{% blocktranslate %}Add quote for{% endblocktranslate %} {{ source.name }}</h1>
+<p>{% translate "You can add the quote using the form below." %}</p>
+<form method="post">{% csrf_token %}
+{{ form|crispy }}
+<button class="btn btn-success" type="submit">{% translate "Add quote" %}</button> <a href="{% url 'quotes:quote_list' source=source.slug %}" class="btn btn-secondary">{% translate "Return to quote list" %}</a>
+</form>
+{% endblock %}

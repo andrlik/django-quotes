@@ -1,0 +1,20 @@
+{% extends "../base.html" %}
+{% load i18n %}
+{% block extratitle %}{% trans "Deleting" %} {{ object.name }} - {% endblock %}
+{% block content %}
+          <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=object.group.slug %}">{{ object.group.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_list' group=object.group.slug %}">{% translate "Sources" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_detail' source=object.slug %}">{{ object.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Delete" %}</li>
+  </ol>
+  </nav>
+<h1>{% trans "Deleting:" %} {{ object.name }}</h1>
+  <p><strong>{% trans "Are you sure you want to delete source:" %}</strong> {{ object.name }}</p>
+  <form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button> <a href="{% url 'quotes:source_detail' source=object.slug %}" class="btn btn-secondary">{% trans "Go back to source details" %}</a>
+  </form>
+{% endblock %}

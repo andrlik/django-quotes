@@ -1,12 +1,12 @@
 import pytest
 from django.test import RequestFactory
 from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APIClient
-
 from django_quotes.api.serializers import SourceSerializer
 from django_quotes.api.views import SourceGroupViewSet
 from django_quotes.models import Source, SourceGroup
+from rest_framework import status
+from rest_framework.test import APIClient
+
 from tests.factories.users import UserFactory
 
 pytestmark = pytest.mark.django_db(transaction=True)
@@ -55,23 +55,15 @@ class TestGroupViewSet:
 
     def test_markov_group(self, apiclient, property_group):
         apiclient.force_authenticate(user=property_group.owner)
-        response = apiclient.get(
-            reverse(
-                "api:group-generate-sentence", kwargs={"group": property_group.slug}
-            )
-        )
+        response = apiclient.get(reverse("api:group-generate-sentence", kwargs={"group": property_group.slug}))
         assert response.status_code == status.HTTP_200_OK
 
     def test_disallowed_markov_group(self, apiclient):
         user = UserFactory()
         group = SourceGroup.objects.create(name="Nothing here", owner=user)
-        Source.objects.create(
-            name="No Fun", group=group, owner=user, allow_markov=False
-        )
+        Source.objects.create(name="No Fun", group=group, owner=user, allow_markov=False)
         apiclient.force_authenticate(user=user)
-        response = apiclient.get(
-            reverse("api:group-generate-sentence", kwargs={"group": group.slug})
-        )
+        response = apiclient.get(reverse("api:group-generate-sentence", kwargs={"group": group.slug}))
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_empty_markov_group(self, apiclient):
@@ -79,9 +71,7 @@ class TestGroupViewSet:
         group = SourceGroup.objects.create(name="Nothing here", owner=user)
         Source.objects.create(name="No Fun", group=group, owner=user, allow_markov=True)
         apiclient.force_authenticate(user=user)
-        response = apiclient.get(
-            reverse("api:group-generate-sentence", kwargs={"group": group.slug})
-        )
+        response = apiclient.get(reverse("api:group-generate-sentence", kwargs={"group": group.slug}))
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
 
@@ -93,15 +83,9 @@ class TestSourceViewSet:
 
     def test_list_sources_by_group(self, apiclient, property_group):
         apiclient.force_authenticate(user=property_group.owner)
-        extra_group = SourceGroup.objects.create(
-            name="I'm extra", owner=property_group.owner
-        )
-        Source.objects.create(
-            name="Bobble the Odd", group=extra_group, owner=property_group.owner
-        )
-        response = apiclient.get(
-            reverse("api:source-list") + f"?group={property_group.slug}"
-        )
+        extra_group = SourceGroup.objects.create(name="I'm extra", owner=property_group.owner)
+        Source.objects.create(name="Bobble the Odd", group=extra_group, owner=property_group.owner)
+        response = apiclient.get(reverse("api:source-list") + f"?group={property_group.slug}")
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == property_group.source_set.count()
 
@@ -115,9 +99,7 @@ class TestSourceViewSet:
         char_to_retrieve = property_group.source_set.all()[0]
         serializer = SourceSerializer(char_to_retrieve)
         apiclient.force_authenticate(user=property_group.owner)
-        response = apiclient.get(
-            reverse("api:source-detail", kwargs={"source": char_to_retrieve.slug})
-        )
+        response = apiclient.get(reverse("api:source-detail", kwargs={"source": char_to_retrieve.slug}))
         assert response.status_code == status.HTTP_200_OK
         assert response.data == serializer.data
 
@@ -134,12 +116,8 @@ class TestSourceViewSet:
 
     def test_random_quote_empty_source(self, apiclient, property_group):
         apiclient.force_authenticate(user=property_group.owner)
-        source = Source.objects.create(
-            name="Bobble the Elder", group=property_group, owner=property_group.owner
-        )
-        response = apiclient.get(
-            reverse("api:source-get-random-quote", kwargs={"source": source.slug})
-        )
+        source = Source.objects.create(name="Bobble the Elder", group=property_group, owner=property_group.owner)
+        response = apiclient.get(reverse("api:source-get-random-quote", kwargs={"source": source.slug}))
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_source_generate_sentence(self, apiclient, property_group):

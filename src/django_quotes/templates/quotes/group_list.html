@@ -1,0 +1,49 @@
+{% extends "../base.html" %}
+{% load i18n crispy_forms_tags %}
+{% block extratitle %}{% trans "Source Groups" %} - {% endblock %}
+{% block content %}
+  <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Groups" %}</li>
+  </ol>
+  </nav>
+<h1>{% trans "Your Source Groups" %}</h1>
+<table class="table table-striped caption-top">
+<caption>{% translate "Showing" %} {{ page_obj|length }} {% translate "of" %} {{ page_obj.paginator.object_list.count }}</caption>
+<thead>
+<tr>
+  <th scope="col">{% translate "Group" %}</th>
+  <th scope="col">{% translate "Summary" %}</th>
+  <th scope="col" class="text-end">{% translate "# Sources" %}</th>
+  <th scope="col" class="text-end">{% translate "# Quotes" %}</th>
+</tr>
+</thead>
+<tbody>
+  {% for group in page_obj %}
+  <tr>
+    <th scope="row"><a href="{% url 'quotes:group_detail' group=group.slug %}">{{ group.name }}</a></th>
+    <td>{{ group.description_rendered|truncatewords_html:10|safe }}</td>
+    <td class="text-end">{{ group.total_sources }}</td>
+    <td class="text-end">{{ group.total_quotes }}</td>
+  </tr>
+  {% empty %}
+  {% endfor%}
+</tbody>
+</table>
+  <p><a class="btn btn-success" href="{% url 'quotes:group_create' %}">{% trans "Add new group" %}</a></p>
+  {% if page_obj.has_other_pages %}
+  <nav aria-label="Page navigation">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page=1">&laquo; {% trans "First" %}</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+    {% endif %}
+    <li class="page-item active" aria-current="page"><a href="#" class="page-link">{{ page_obj.number }}</a></li>
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% trans "Last" %} &raquo;</a></li>
+    {% endif %}
+  </ul>
+  </nav>
+  {% endif %}
+{% endblock %}

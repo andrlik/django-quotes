@@ -64,6 +64,7 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
+    "crispy_bootstrap4",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
@@ -91,9 +92,7 @@ AUTHENTICATION_BACKENDS = [
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -165,6 +164,10 @@ TEMPLATES = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#form-renderer
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
 # FIXTURES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#fixture-dirs
@@ -188,12 +191,7 @@ X_FRAME_OPTIONS = "DENY"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
-        }
-    },
+    "formatters": {"verbose": {"format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"}},
     "handlers": {
         "console": {
             "level": "DEBUG",
@@ -243,7 +241,7 @@ SPECTACULAR_SETTINGS = {
         {"url": "https://127.0.0.1:8000", "description": "Local Development server"},
     ],
 }
-REST_FRAMEWORK["TEST_REQUEST_DEFAULT_FORMAT"] = "json"  # noqa
+REST_FRAMEWORK["TEST_REQUEST_DEFAULT_FORMAT"] = "json"
 
 # EMAIL
 # ------------------------------------------------------------------------------

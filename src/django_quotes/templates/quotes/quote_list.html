@@ -1,0 +1,66 @@
+{% extends "../base.html" %}
+{% load i18n %}
+{% block extratitle %}{% blocktranslate %}Quotes from{% endblocktranslate %} {{ source.name }} - {% endblock %}
+{% block content %}
+    <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_detail' group=source.group.slug %}">{{ source.group.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_list' group=source.group.slug %}">{% translate "Sources" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'quotes:source_detail' source=source.slug %}">{{ source.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Quotes" %}</li>
+  </ol>
+  </nav>
+<h1>{% blocktranslate %}Quotes from {% endblocktranslate %} {{ source.name }}</h1>
+
+
+<table class="table table-striped caption-top">
+<caption>{% translate "Showing" %} {{ page_obj|length }} {% translate "of" %} {{ page_obj.paginator.object_list.count }}</caption>
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">{% translate "Quote" %}</th>
+    <th scope="col">{% translate "Cite" %}</th>
+    <th scope="col" class="text-end">{% translate "# Times Used" %}</th>
+    <th scope="col">{% translate "Tools" %}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for quote in page_obj %}
+  <tr>
+    <th scope="row"><a href="{% url 'quotes:quote_detail' quote=quote.id %}">{{ quote.id }}</a></th>
+    <td>{{ quote.quote_rendered|safe }}</td>
+    <td>
+      {% if quote.citation or quote.citation_url %}
+      {% if quote.citation_url %}<a href="{{ quote.citation_url }}" target="_blank">{% endif %}{% if quote.citation %}{{ quote.citation }}{% else %}{{ quote.citation_url }}{% endif %}{% if quote.citation_url %}</a>{% endif %}
+      {% endif %}
+    </td>
+  <td class="text-end">{{ quote.stats.times_used }}</td>
+    <td><a href="{% url 'quotes:quote_update' quote=quote.id %}" class="btn btn-primary">{% translate "Edit" %}</a> <a href="{% url 'quotes:quote_delete' quote=quote.id %}" class="btn btn-danger">{% translate "Delete" %}</a></td>
+  </tr>
+  {% empty %}
+    <tr>
+    <th scope="row"></th>
+    <td>{% translate "No quotes found!" %}</td>
+    <td></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+  <p><a href="{% url 'quotes:quote_create' source=source.slug %}" class="btn btn-success">{% translate "Add quote" %}</a></p>
+  {% if page_obj.has_other_pages %}
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page=1">&laquo; {% trans "First" %}</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+    {% endif %}
+    <li class="page-item active" aria-current="page"><a href="#" class="page-link">{{ page_obj.number }}</a></li>
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% trans "Last" %} &raquo;</a></li>
+    {% endif %}
+  </ul>
+  </nav>
+  {% endif %}
+{% endblock %}

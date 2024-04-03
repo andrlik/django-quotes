@@ -2,7 +2,6 @@ from io import StringIO
 
 import pytest
 from django.core.management import call_command
-
 from django_quotes.models import GroupMarkovModel, SourceGroup, SourceMarkovModel
 
 pytestmark = pytest.mark.django_db(transaction=True)
@@ -14,9 +13,7 @@ def test_markov_command(property_group):
     group_modify = pgmm.modified
     cmm = SourceMarkovModel.objects.get(source=source)
     char_modify = cmm.modified
-    nochangegroup = SourceGroup.objects.create(
-        name="So Alone", owner=property_group.owner
-    )
+    nochangegroup = SourceGroup.objects.create(name="So Alone", owner=property_group.owner)
     nochange_modify = GroupMarkovModel.objects.get(group=nochangegroup).modified
     out = StringIO()
     call_command("makemarkov", stdout=out, stderr=StringIO())

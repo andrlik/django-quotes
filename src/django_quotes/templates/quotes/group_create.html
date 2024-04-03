@@ -1,0 +1,17 @@
+{% extends "../base.html" %}
+{% load i18n crispy_forms_filters %}
+{% block extratitle %}{% trans "Create new group" %} - {% endblock %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'quotes:group_list' %}">{% translate "Groups" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% translate "Add Group" %}</li>
+  </ol>
+  </nav>
+<h1>{% trans "Add new group" %}</h1>
+<form method="post" action="">{% csrf_token %}
+  {{ form|crispy }}
+  <button type="submit" class="btn btn-primary">{% trans "Create" %}</button>
+  <a href="{% url 'quotes:group_list' %}" class="btn btn-secondary">{% trans "Back to list" %}</a>
+</form>
+{% endblock %}

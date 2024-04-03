@@ -10,10 +10,10 @@ First install `django-quotes` using a tool like pip.
 pip install django-quotes
 ```
 
-Because we're using `spacy`, we also need to download the language model we are using, which is `en_core_web_sm`.[^1] While there are a number of ugly ways to annotate this process, it's safer for you to do the installation directly using the following command.
+Because we're using `spacy`, we also need to download the language model we are using, which is `en_core_web_trf`.[^1] While there are a number of ugly ways to annotate this process, it's safer for you to do the installation directly using the following command.
 
 ```bash title="It's an extra step because academia."
-python -m spacy download en_core_web_sm
+python -m spacy download en_core_web_trf
 ```
 
 ## Configuration

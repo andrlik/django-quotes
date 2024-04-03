@@ -1,5 +1,4 @@
 import pytest
-
 from django_quotes import views
 
 
