@@ -27,24 +27,26 @@ on:
 jobs:
   # With no caching at all the entire ci process takes 4m 30s to complete!
   run:
-    name: Python ${{ matrix.python-version }}
+    name: Python ${{ matrix.python-version }} Django ${{ matrix.django-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
         python-version: [ "3.11", "3.12" ]
+        django-version: ["5.0"]
 
     steps:
 
     - name: Checkout Code Repository
       uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.python-version }} Django ${{ matrix.django-version }}
       id: setup_python
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        django-version: ${{ matrix.django-version }}
 
     - name: Install uv
       run: pip install --upgrade uv
@@ -53,12 +55,14 @@ jobs:
       uses: actions/cache@v4
       with:
         path: .venv
-        key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-${{ hashFiles('requirements-dev.lock') }}
-        restore-keys: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-
+        key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-Django-${{ steps.setup_python.outputs.django_version }}-${{ hashFiles('requirements-dev.lock') }}
+        restore-keys: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-Django-${{ steps.setup_python.outputs.django_version }}-
 
     - name: Create venv, install dependencies
       run: |
-        python -m uv venv
+        if [ ! -d .venv ]; then
+            python -m uv venv
+        fi
         python -m uv pip install -r requirements-dev.lock
         source .venv/bin/activate
         echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
