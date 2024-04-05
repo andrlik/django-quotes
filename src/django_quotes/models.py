@@ -4,6 +4,7 @@ import random
 from typing import TYPE_CHECKING, Any
 
 import rules
+from asgiref.sync import async_to_sync
 
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager
@@ -15,12 +16,12 @@ from django.utils.translation import gettext_lazy as _
 from loguru import logger
 from rules.contrib.models import RulesModelBase, RulesModelMixin
 
-from django_quotes.markov_utils import MarkovPOSText
+from django_markov.models import MarkovTextModel
 from django_quotes.rules import (  # is_character_owner,; is_group_owner_and_authenticated,
     is_owner,
     is_owner_or_public,
 )
-from django_quotes.signals import markov_sentence_generated, quote_random_retrieved
+from django_quotes.signals import quote_random_retrieved
 from django_quotes.utils import generate_unique_slug_for_model
 
 MAX_QUOTES_FOR_RANDOM_SET = 50
@@ -109,6 +110,13 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
         blank=True,
         help_text=_("Unique slug for this group."),
     )
+    text_model = models.OneToOneField(
+        MarkovTextModel,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        help_text=_("The markov model for this group."),
+    )
 
     class Meta:
         rules_permissions = {
@@ -158,7 +166,16 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
             return True
         return False
 
-    def generate_markov_sentence(self, max_characters: int | None = 280) -> str | None:
+    async def aupdate_markov_model(self) -> None:
+        markov_sources = self.source_set.filter(allow_markov=True)
+        if await markov_sources.aexists():
+            quotes = Quote.objects.filter(source__in=markov_sources)
+            await self.text_model.aupdate_model_from_corpus(corpus_entries=[quote.quote async for quote in quotes])
+
+    def update_markov_model(self) -> None:
+        async_to_sync(self.aupdate_markov_model)()
+
+    def generate_markov_sentence(self, max_characters: int = 280, tries: int = 20) -> str | None:
         """
         Generate a markov sentence based on quotes from markov enabled characters for the group.
 
@@ -166,14 +183,13 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
         """
         if self.markov_ready:
             logger.debug("Group is ready for markov sentences. Checking model...")
-            mmodel = GroupMarkovModel.objects.get(group=self)
-            if mmodel.data is None:
+            mmodel = self.text_model
+            if not mmodel.is_ready:
                 logger.debug("Markov model for group is not generated yet! Generating...")
-                mmodel.generate_model_from_corpus()
-            logger.debug("Loading text model...")
-            text_model = MarkovPOSText.from_json(mmodel.data)
+                self.update_markov_model()
+                mmodel.refresh_from_db()
             logger.debug("Generating sentence...")
-            sentence: str | None = text_model.make_short_sentence(max_chars=max_characters)
+            sentence: str | None = mmodel.generate_sentence(char_limit=max_characters, tries=tries)
             if sentence is not None:
                 logger.debug(f"Returning generated sentence: '{sentence}'")
                 return sentence
@@ -248,6 +264,13 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         on_delete=models.CASCADE,
         help_text=_("The group this character belongs to."),
     )
+    text_model = models.OneToOneField(
+        MarkovTextModel,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        help_text=_("The text model for this character."),
+    )
 
     class Meta:
         rules_permissions = {
@@ -277,7 +300,27 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
             return True
         return False
 
-    def get_markov_sentence(self, max_characters: int | None = 280) -> str | None:
+    async def _amarkov_ready(self) -> bool:
+        if self.allow_markov and await Quote.objects.filter(source=self).acount() > 10:  # noqa: PLR2004
+            return True
+        return False
+
+    async def aupdate_markov_model(self) -> None:
+        """
+        Process all quotes into the associated model.
+        """
+        if self.allow_markov:
+            await self.text_model.aupdate_model_from_corpus(
+                corpus_entries=[quote.quote async for quote in self.quote_set.all()], char_limit=0, store_compiled=False
+            )
+
+    def update_markov_model(self) -> None:
+        """
+        Sync wrapper around aupdate_markov_model.
+        """
+        async_to_sync(self.aupdate_markov_model)()
+
+    def get_markov_sentence(self, max_characters: int | None = 280, tries: int = 20) -> str | None:
         """
         If valid, generate a markov sentence. If not, return None.
 
@@ -287,15 +330,13 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         logger.debug("Checking to see if character is markov ready...")
         if self.markov_ready:
             logger.debug("It IS ready. Fetching markov model.")
-            markov_model = SourceMarkovModel.objects.get(source=self)
-            if not markov_model.data:
+            markov_model = self.text_model
+            if not markov_model.is_ready:
                 logger.debug("No model defined yet, generating...")
-                markov_model.generate_model_from_corpus()
-            text_model = MarkovPOSText.from_json(markov_model.data)
+                self.update_markov_model()
             logger.debug("Markov text model loaded. Generating sentence.")
-            sentence: str | None = text_model.make_short_sentence(max_chars=max_characters)
+            sentence: str | None = markov_model.generate_sentence(char_limit=max_characters, tries=tries)
             if sentence is not None:
-                markov_sentence_generated.send(type(self), instance=self)
                 return sentence
         return None
 
@@ -380,87 +421,89 @@ class Quote(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Rul
         return f"{self.source.name}: {self.quote}"
 
 
-class SourceMarkovModel(TimeStampedModel):
-    """
-    The cached markov model for a given source. The database object for this is automatically created
-    whenever a new character object is saved.
+# class SourceMarkovModel(TimeStampedModel):
+#     """
+#     The cached markov model for a given source. The database object for this is automatically created
+#     whenever a new character object is saved.
+#
+#     Attributes:
+#         id (int): Database primary key for the object.
+#         source (Source): The character who the model is sourced from.
+#         data (json): The JSON representation of the Markov model created by ``markovify``.
+#         created (datetime): When this object was first created. Auto-generated.
+#         modified (datetime): Last time this object was modified. Auto-generated.
+#
+#     """
+#
+#     source = models.OneToOneField(Source, on_delete=models.CASCADE)
+#     data = models.JSONField(null=True, blank=True)
+#
+#     def __str__(self):  # pragma: nocover
+#         return self.source.name
+#
+#     async def agenerate_model_from_corpus(self):
+#         """
+#         Collect all quotes attributed to the related character. Then
+#         create, compile, and save the model.
+#         """
+#         logger.debug("Generating text model. Fetching quotes.")
+#         quotes = Quote.objects.filter(source=self.source)
+#         # Don't bother generating model if there isn't data.
+#         if not await quotes.aexists():
+#             logger.debug("There are no quotes. Returning None.")
+#             return None
+#         logger.debug("Processing corpus...")
+#         await self.aupdate_model_from_corpus(
+#             corpus_entries=[quote.quote async for quote in quotes], char_limit=0, store_compiled=True
+#         )
+#         logger.debug("Updated!")
+#
+#     def generate_model_from_corpus(self):
+#         """
+#         Collect all quotes attributed to the related character. Then
+#         create, compile, and save the model.
+#         """
+#         async_to_sync(self.agenerate_model_from_corpus)()
 
-    Attributes:
-        id (int): Database primary key for the object.
-        source (Source): The character who the model is sourced from.
-        data (json): The JSON representation of the Markov model created by ``markovify``.
-        created (datetime): When this object was first created. Auto-generated.
-        modified (datetime): Last time this object was modified. Auto-generated.
 
-    """
-
-    source = models.OneToOneField(Source, on_delete=models.CASCADE)
-    data = models.JSONField(null=True, blank=True)
-
-    def __str__(self):  # pragma: nocover
-        return self.source.name
-
-    def generate_model_from_corpus(self):
-        """
-        Collect all quotes attributed to the related character. Then
-        create, compile, and save the model.
-        """
-        logger.debug("Generating text model. Fetching quotes.")
-        quotes = Quote.objects.filter(source=self.source)
-        # Don't bother generating model if there isn't data.
-        if not quotes.exists():  # pragma: nocover
-            logger.debug("There are no quotes. Returning None.")
-            return
-        logger.debug("Quotes retrieved! Forming into corpus.")
-        corpus = " ".join(quote.quote for quote in quotes)
-        logger.debug("Building text model.")
-        text_model = MarkovPOSText(corpus)
-        logger.debug("Compiling text model.")
-        text_model.compile(inplace=True)
-        logger.debug("Saving model as JSON.")
-        self.data = text_model.to_json()
-        self.save()
-        logger.debug("Markov model populated to database.")
-
-
-class GroupMarkovModel(TimeStampedModel):
-    """
-    The cached markov model for the entire group. It is made up of every quote from every markov enabled
-    character within the group.
-
-    Attributes:
-        id (int): The database id of this object.
-        group (SourceGroup): The OneToOne relationship to ``SourceGroup``
-        data (json): The cached markov model.
-        created (datetime): When the object was created.
-        modified (datetime): When the object was last modified.
-    """
-
-    group = models.OneToOneField(
-        SourceGroup,
-        on_delete=models.CASCADE,
-        help_text=_("The character group this model belongs to."),
-    )
-    data = models.JSONField(null=True, blank=True, help_text=_("The cached markov model as JSON."))
-
-    def generate_model_from_corpus(self):
-        """
-        Collect all quotes from markov enabled characters in this group and then compile the model and save it.
-        """
-        logger.debug(f"Gathering corpus for character group: {self.group.name}")
-        quotes = Quote.objects.filter(source__in=Source.objects.filter(group=self.group, allow_markov=True))
-        if quotes.exists():
-            if quotes.count() >= 10:  # noqa:PLR2004
-                logger.debug("Found sufficient quotes for a model!")
-                corpus = " ".join(quote.quote for quote in quotes)
-                logger.debug("Forming text model...")
-                text_model = MarkovPOSText(corpus)
-                logger.debug("Compiling text model...")
-                text_model.compile(inplace=True)
-                logger.debug("Saving compiled model to JSON...")
-                self.data = text_model.to_json()
-                self.save()
-                logger.debug(f"Finished building and saving group markov model for {self.group.name}!")
+# class GroupMarkovModel(TimeStampedModel):
+#     """
+#     The cached markov model for the entire group. It is made up of every quote from every markov enabled
+#     character within the group.
+#
+#     Attributes:
+#         id (int): The database id of this object.
+#         group (SourceGroup): The OneToOne relationship to ``SourceGroup``
+#         data (json): The cached markov model.
+#         created (datetime): When the object was created.
+#         modified (datetime): When the object was last modified.
+#     """
+#
+#     group = models.OneToOneField(
+#         SourceGroup,
+#         on_delete=models.CASCADE,
+#         help_text=_("The character group this model belongs to."),
+#     )
+#     data = models.JSONField(null=True, blank=True, help_text=_("The cached markov model as JSON."))
+#
+#     async def agenerate_model_from_corpus(self):
+#         """Collect all quotes from markov enabled characters in this group, compile the model, and save it."""
+#         logger.debug(f"Gathering corpus for character group: {self.group.name}")
+#         quotes = Quote.objects.filter(source__in=Source.objects.filter(group=self.group, allow_markov=True))
+#         if await quotes.aexists():
+#             if await quotes.acount() >= 10:
+#                 logger.debug("Found sufficient quotes for a model!")
+#                 logger.debug("Processing corpus...")
+#                 await self.aupdate_model_from_corpus(corpus_entries=[quote.quote async for quote in quotes])
+#                 logger.debug(f"Finished processing corpus for {self.group.name}!")
+#         logger.debug("Not enough quotes for a model!")
+#
+#     def generate_model_from_corpus(self):
+#         """
+#         Collect all quotes from markov enabled characters in this group and then compile the model and save it.
+#         Wraps the async version.
+#         """
+#         async_to_sync(self.agenerate_model_from_corpus)()
 
 
 class QuoteStats(TimeStampedModel):
@@ -506,6 +549,9 @@ class GroupStats(TimeStampedModel):
         help_text=_("Number of times markov generated quotes have been requested."),
     )
 
+    def __str__(self):  # pragma: nocover
+        return f"Stats for Group {self.group.name}"
+
 
 class SourceStats(TimeStampedModel):
     """
@@ -525,3 +571,6 @@ class SourceStats(TimeStampedModel):
         default=0,
         help_text=_("Number of times markov generated quotes have been requested."),
     )
+
+    def __str__(self):  # pragma: nocover
+        return f"Stats for Source {self.source.name}"

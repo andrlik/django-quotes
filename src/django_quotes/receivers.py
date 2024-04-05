@@ -1,20 +1,20 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import F
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from markdown import markdown
 
+from django_markov.models import MarkovTextModel, sentence_generated
 from django_quotes.models import (
-    GroupMarkovModel,
     GroupStats,
     Quote,
     QuoteStats,
     Source,
     SourceGroup,
-    SourceMarkovModel,
     SourceStats,
 )
-from django_quotes.signals import markov_sentence_generated, quote_random_retrieved
+from django_quotes.signals import quote_random_retrieved
 
 
 @receiver(pre_save, sender=SourceGroup)
@@ -37,22 +37,22 @@ def render_quote(sender, instance, *args, **kwargs):
     instance.quote_rendered = markdown(instance.quote)
 
 
-@receiver(post_save, sender=SourceGroup)
-def initialize_group_markov_object(sender, instance, created, *args, **kwargs):
+@receiver(pre_save, sender=SourceGroup)
+def initialize_group_markov_object(sender, instance, *args, **kwargs):
     """
     Creates the one-to-one object for the group markov model.
     """
-    if created:
-        GroupMarkovModel.objects.create(group=instance)
+    if not instance.text_model:
+        instance.text_model = MarkovTextModel.objects.create()
 
 
-@receiver(post_save, sender=Source)
-def initialize_markov_object(sender, instance, created, *args, **kwargs):
+@receiver(pre_save, sender=Source)
+def initialize_markov_object(sender, instance, *args, **kwargs):
     """
     Creates the one-to-one object to accompany the source object.
     """
-    if created:
-        SourceMarkovModel.objects.create(source=instance)
+    if not instance.text_model:
+        instance.text_model = MarkovTextModel.objects.create()
 
 
 @receiver(post_save, sender=SourceGroup)
@@ -92,21 +92,31 @@ def update_stats_for_quote_character(sender, instance, quote_retrieved, *args, *
         quote_stats.save()
 
 
-@receiver(markov_sentence_generated, sender=Source)
-def update_stats_for_markov(sender, instance, *args, **kwargs):
+@receiver(sentence_generated, sender=MarkovTextModel)
+def update_stats_for_markov(sender, instance, char_limit, sentence, *args, **kwargs):
     """
     For a given source, update the stats on the Source and SourceGroup for markov requests.
     :param sender: The requesting class, usually Source.
     :param instance: The specific source requested.
+    :param char_limit: The character limit used when generating the sentence.
+    :param sentence: The sentence that was generated.
     :return: None
     """
-    group_stats = instance.group.stats
-    source_stats = instance.stats
+    try:
+        source = Source.objects.get(text_model__pk=instance.pk)
+        group = source.group
+    except ObjectDoesNotExist:
+        # this is a group model
+        source = None
+        group = SourceGroup.objects.get(text_model__pk=instance.pk)
+    group_stats = group.stats
+    source_stats = source.stats if source else None
     with transaction.atomic():
         group_stats.quotes_generated = F("quotes_generated") + 1
         group_stats.save()
-        source_stats.quotes_generated = F("quotes_generated") + 1
-        source_stats.save()
+        if source_stats is not None:
+            source_stats.quotes_generated = F("quotes_generated") + 1
+            source_stats.save()
 
 
 # @receiver(post_save, sender=Quote)
@@ -121,7 +131,5 @@ def update_markov_model_for_character_enabling_markov(sender, instance, *args, *
     if instance.id and instance.allow_markov:
         old_version = Source.objects.get(id=instance.id)
         if not old_version.allow_markov:
-            cmm = SourceMarkovModel.objects.get(source=instance)
-            gmm = GroupMarkovModel.objects.get(group=instance.group)
-            cmm.generate_model_from_corpus()
-            gmm.generate_model_from_corpus()
+            instance.update_markov_model()
+            instance.group.update_markov_model()

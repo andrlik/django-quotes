@@ -63,6 +63,7 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
+    "django_markov",
     "crispy_forms",
     "crispy_bootstrap4",
     "rest_framework",
@@ -247,6 +248,8 @@ REST_FRAMEWORK["TEST_REQUEST_DEFAULT_FORMAT"] = "json"
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+
+MARKOV_CORPUS_MAX_CHAR_LIMIT = 0
 
 
 MAX_QUOTES_FOR_RANDOM_SET = 50

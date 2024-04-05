@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from django_quotes.models import GroupMarkovModel, SourceGroup, SourceMarkovModel
+from django_quotes.models import SourceGroup
 
 
 class Command(BaseCommand):
@@ -11,20 +11,20 @@ class Command(BaseCommand):
         groups_updated = 0
         characters_updated = 0
         for group in groups:
-            gmm = GroupMarkovModel.objects.get(group=group)
+            gmm = group.text_model
             update_group = False
             for character in group.source_set.filter(allow_markov=True):
                 if character.markov_ready:
                     quote_to_test = character.quote_set.all().order_by("-modified")[0]
-                    cmm = SourceMarkovModel.objects.get(source=character)
+                    cmm = character.text_model
                     if cmm.modified > gmm.modified:
                         update_group = True
                     if quote_to_test.modified > cmm.modified:
-                        cmm.generate_model_from_corpus()
+                        character.update_markov_model()
                         characters_updated += 1
                         update_group = True
             if update_group:
-                gmm.generate_model_from_corpus()
+                group.update_markov_model()
                 groups_updated += 1
         self.stdout.write(
             self.style.SUCCESS(

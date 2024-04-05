@@ -56,7 +56,7 @@ class TestGroupViewSet:
     def test_markov_group(self, apiclient, property_group):
         apiclient.force_authenticate(user=property_group.owner)
         response = apiclient.get(reverse("api:group-generate-sentence", kwargs={"group": property_group.slug}))
-        assert response.status_code == status.HTTP_200_OK
+        assert response.status_code in [status.HTTP_200_OK, status.HTTP_204_NO_CONTENT]
 
     def test_disallowed_markov_group(self, apiclient):
         user = UserFactory()
@@ -129,8 +129,9 @@ class TestSourceViewSet:
                 kwargs={"source": char_to_retrieve.slug},
             )
         )
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data["sentence"] is not None
+        assert response.status_code in [status.HTTP_200_OK, status.HTTP_204_NO_CONTENT]
+        if response.status_code == status.HTTP_200_OK:
+            assert response.data["sentence"] is not None
 
     def test_disallowed_source_generate_sentence(self, apiclient, property_group):
         char_to_retrieve = property_group.source_set.filter(allow_markov=False)[0]

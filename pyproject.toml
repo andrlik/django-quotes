@@ -5,10 +5,9 @@ description = """A reusable Django app to collect quotes for use in random retri
     Markov Chains."""
 authors = [{ name = "Daniel Andrlik", email = "daniel@andrlik.org" }]
 dependencies = [
-    "django>=4.2",
+    "django-markov>=0.2.1",
     "rules>=3.1",
     "Markdown>=3.3.6",
-    "spacy>=3.7.4",
     "python-slugify>=6.1.1",
     "djangorestframework>=3.13.1",
     "django-cors-headers>=3.11.0",
@@ -19,7 +18,6 @@ dependencies = [
     "coreapi>=2.3.3",
     "coreschema>=0.0.4",
     "itypes>=1.2.0",
-    "markovify>=0.9.4",
     "crispy-bootstrap4>=2024.1",
 ]
 license = "BSD-3-Clause"
@@ -241,7 +239,7 @@ regex = false
 ignore_missing_version = false
 tag = true
 sign_tags = false
-tag_name = "{new_version}"
+tag_name = "v{new_version}"
 tag_message = "Bump version: {current_version} → {new_version}"
 allow_dirty = false
 commit = true
@@ -260,5 +258,5 @@ replace = "## {new_version}"
 
 [[tool.bumpversion.files]]
 filename = "CHANGELOG.md"
-search = "{current_version}...HEAD"
-replace = "{current_version}...{new_version}"
+search = "v{current_version}...HEAD"
+replace = "v{current_version}...v{new_version}"

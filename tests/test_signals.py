@@ -1,16 +1,16 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django_quotes.models import (
-    GroupMarkovModel,
     GroupStats,
     Quote,
     QuoteStats,
     Source,
     SourceGroup,
-    SourceMarkovModel,
     SourceStats,
 )
-from django_quotes.signals import markov_sentence_generated, quote_random_retrieved
+from django_quotes.signals import quote_random_retrieved
+
+from django_markov.models import MarkovTextModel, sentence_generated
 
 User = get_user_model()
 
@@ -69,7 +69,7 @@ def test_source_creation_allow_creates_markov_model_object(user: User) -> None:
     """
     group = SourceGroup.objects.create(name="Monkey", owner=user)
     source = Source.objects.create(name="Curious George", group=group, owner=user)
-    assert SourceMarkovModel.objects.get(source=source)
+    assert source.text_model
 
 
 def test_group_creation_creates_markov_model(user: User) -> None:
@@ -77,7 +77,7 @@ def test_group_creation_creates_markov_model(user: User) -> None:
     Ensure that creating a source group also creates a GroupMarkov instance.
     """
     group = SourceGroup.objects.create(name="Monkey", owner=user)
-    assert GroupMarkovModel.objects.get(group=group)
+    assert group.text_model
 
 
 def test_source_group_creation_generates_stats_object(user: User) -> None:
@@ -133,7 +133,9 @@ def test_quote_retrieve_stat_signal(statable_source):
 def test_markov_stat_signal(statable_source):
     char_quotes_generated = statable_source.stats.quotes_generated
     group_quotes_generated = statable_source.group.stats.quotes_generated
-    markov_sentence_generated.send(Source, instance=statable_source)
+    sentence_generated.send(
+        MarkovTextModel, instance=statable_source.text_model, char_limit=280, sentence="We all go mad sometimes."
+    )
     statable_source.refresh_from_db()
     assert char_quotes_generated < statable_source.stats.quotes_generated
     assert group_quotes_generated < statable_source.group.stats.quotes_generated
@@ -171,9 +173,9 @@ def test_markov_stat_signal(statable_source):
 #
 def test_source_set_to_allow_markov_regenerates_models(property_group):
     source = property_group.source_set.filter(allow_markov=False)[0]
-    cmodel_lastmodify = SourceMarkovModel.objects.get(source=source).modified
-    gmodel_lastmodify = GroupMarkovModel.objects.get(group=property_group).modified
+    cmodel_lastmodify = source.text_model.modified
+    gmodel_lastmodify = property_group.text_model.modified
     source.allow_markov = True
     source.save()
-    assert cmodel_lastmodify < SourceMarkovModel.objects.get(source=source).modified
-    assert gmodel_lastmodify < GroupMarkovModel.objects.get(group=property_group).modified
+    assert cmodel_lastmodify < MarkovTextModel.objects.get(pk=source.text_model.pk).modified
+    assert gmodel_lastmodify < MarkovTextModel.objects.get(pk=property_group.text_model.pk).modified

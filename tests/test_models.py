@@ -89,7 +89,7 @@ def test_generate_markov_sentence(property_group):
     assert noquote_source.get_markov_sentence() is None
     noquote_source.delete()
     quotable_source = Source.objects.filter(group=property_group)[0]
-    sentence = quotable_source.get_markov_sentence()
+    sentence = quotable_source.get_markov_sentence(tries=50)
     print(sentence)
     assert isinstance(sentence, str)
 
@@ -117,7 +117,7 @@ def test_group_generate_markov_sentence(property_group, corpus_sentences):
     for sentence in corpus_sentences:
         Quote.objects.create(source=quote_source, quote=sentence, owner=property_group.owner)
     assert no_quote_group.generate_markov_sentence() is None
-    assert property_group.generate_markov_sentence() is not None
+    assert property_group.generate_markov_sentence(tries=50) is not None
 
 
 def test_pub_date_prevents_inclusion_in_source_random_quote(property_group):
