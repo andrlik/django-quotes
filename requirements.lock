@@ -54,7 +54,7 @@ django-cors-headers==4.3.1
 django-crispy-forms==2.1
     # via crispy-bootstrap4
     # via django-quotes
-django-markov==0.2.1
+django-markov==0.2.2
     # via django-quotes
 djangorestframework==3.15.1
     # via django-quotes

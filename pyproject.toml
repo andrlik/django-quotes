@@ -5,7 +5,7 @@ description = """A reusable Django app to collect quotes for use in random retri
     Markov Chains."""
 authors = [{ name = "Daniel Andrlik", email = "daniel@andrlik.org" }]
 dependencies = [
-    "django-markov>=0.2.1",
+    "django-markov>=0.2.2",
     "rules>=3.1",
     "Markdown>=3.3.6",
     "python-slugify>=6.1.1",
@@ -133,7 +133,7 @@ addopts = [
   "--tb=short",
   "--doctest-modules",
   "--doctest-continue-on-failure",
-  "--cov=django_quotes",
+  "--cov=src/django_quotes",
   "--cov-report=term-missing", "--ds=tests.django_settings",
     "--reuse-db",
 ]
