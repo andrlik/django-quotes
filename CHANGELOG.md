@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
 
-[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.3.2...HEAD)
+[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.3.2...v0.4.0)
 
 - Drops support for Python 3.9 and 3.10.
 - Moves markov model management to [django-markov](https://github.com/django-markov).
