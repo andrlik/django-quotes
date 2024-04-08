@@ -13,11 +13,13 @@ def generate_unique_slug_for_model(
     """
     Generate a unique slug for the given model.
 
-    :param model_class: A class based upon ``django.db.models.Model``
-    :param text: Text to convert to a slug.
-    :param slug_field: The name of the slug field of the model.
-    :param max_length_override: Maximum number of characters to use if not the same as what's defined in the slug field.
-    :return: The generated slug.
+    Args:
+        model_class (Model): A class based upon ``django.db.models.Model``
+        text (str): Text to convert to a slug.
+        slug_field (str | None): The name of the slug field of the model.
+        max_length_override (int | None): Maximum number of characters to use if not the same as what's defined in the slug field.
+    Returns:
+         (str): The generated slug.
     """
     unique_found: bool = False
     has_next: bool = False

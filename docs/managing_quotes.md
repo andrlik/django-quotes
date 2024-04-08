@@ -39,26 +39,6 @@ Django-Quotes uses a number of rudimentary data models with basic scaffolding vi
     rendering:
       heading_level: 4
       
-### Source Markov Model
-
-::: django_quotes.models.SourceMarkovModel
-    handler: python
-    selection:
-      members:
-        - generate_model_from_corpus
-    rendering:
-      heading_level: 4
-
-### Group Markov Model
-
-::: django_quotes.models.GroupMarkovModel
-    handler: python
-    selection:
-      members:
-        - generate_model_from_corpus
-    rendering:
-      heading_level: 4
-      
 ### Group Stats
 
 ::: django_quotes.models.GroupStats

@@ -13,34 +13,38 @@ from django_quotes.models import (
 
 
 class SourceGroupAdmin(admin.ModelAdmin):
+    """Model admin for SourceGroup."""
+
     pass
 
 
 class SourceAdmin(admin.ModelAdmin):
+    """Model admin for Source."""
+
     pass
 
 
 class QuoteAdmin(admin.ModelAdmin):
-    pass
+    """Model admin for Quote."""
 
-
-class SourceMarkovModelAdmin(admin.ModelAdmin):
-    pass
-
-
-class GroupMarkovModelAdmin(admin.ModelAdmin):
     pass
 
 
 class GroupStatsAdmin(admin.ModelAdmin):
+    """Model admin for GroupStats"""
+
     pass
 
 
 class SourceStatAdmin(admin.ModelAdmin):
+    """Model admin for SourceStats"""
+
     pass
 
 
 class QuoteStatAdmin(admin.ModelAdmin):
+    """Model admin for QuoteStats"""
+
     pass
 
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.3.2...HEAD)
+
+- Drops support for Python 3.9 and 3.10.
+- Moves markov model management to [django-markov](https://github.com/django-markov).
+  - This replaces the current `SourceMarkovModel` and `GroupMakovModel` with `MarkovTextModel`.
+  - This replaces the `markov_sentence_generated` with `django-markov`'s `sentence_generated` signal.
+  - Migrations will transfer existing models to the new database tables and then remove the old one.
+    - While no data loss is anticipated, if is **highly** recommended that you take a backup of your database prior to upgrading.
+    - If you'd still like to implement the migrations cautiously, you can run `python manage.py migrate django_quotes 0011` first to confirm that the data migrated safely. Then you can run `python manage.py migrate django_quotes 0012` to complete the upgrade and remove the old tables.
+- As `django-markov` makes heavy use of the newest async features, Django>=5.0 is now required.
+- Improved python module reference documentation.
+
 ## 0.3.2
 
 [Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.3.1...v0.3.2)

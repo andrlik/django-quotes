@@ -131,12 +131,16 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
         return self.name
 
     def save(self, *args, **kwargs):
+        """Save and create slug if missing."""
         if not self.slug:  # Once this slug is set, it does not change except through devil pacts
             logger.debug("Group is being saved and a slug was provided.")
             self.slug = generate_unique_slug_for_model(model_class=type(self), text=self.name)
         super().save(*args, **kwargs)
 
     def refresh_from_db(self, *args, **kwargs):
+        """
+        Also reset cached properties.
+        """
         super().refresh_from_db(*args, **kwargs)
         cached_properties = ["total_sources", "markov_sources", "total_quotes"]
         for prop in cached_properties:
@@ -147,18 +151,22 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
 
     @cached_property
     def total_sources(self) -> int:
+        """Total number of sources for the group."""
         return Source.objects.filter(group=self).count()
 
     @cached_property
     def markov_sources(self) -> int:
+        """Total number of Markov sources for the group."""
         return Source.objects.filter(group=self, allow_markov=True).count()
 
     @cached_property
     def total_quotes(self) -> int:
+        """Total quotes for the group."""
         return Quote.objects.filter(source__in=Source.objects.filter(group=self)).count()
 
     @cached_property
     def markov_ready(self) -> bool:
+        """Checks to see if there are Markov enabled sources and sufficient quotes."""
         if (
             self.markov_sources > 0
             and Quote.objects.filter(source__in=self.source_set.filter(allow_markov=True)).count() > 10  # noqa:PLR2004
@@ -167,19 +175,27 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
         return False
 
     async def aupdate_markov_model(self) -> None:
+        """Updates the related MarkovTextModel."""
         markov_sources = self.source_set.filter(allow_markov=True)
         if await markov_sources.aexists():
             quotes = Quote.objects.filter(source__in=markov_sources)
             await self.text_model.aupdate_model_from_corpus(corpus_entries=[quote.quote async for quote in quotes])
 
     def update_markov_model(self) -> None:
+        """Updates the related MarkovTextModel."""
         async_to_sync(self.aupdate_markov_model)()
 
     def generate_markov_sentence(self, max_characters: int = 280, tries: int = 20) -> str | None:
         """
         Generate a markov sentence based on quotes from markov enabled characters for the group.
 
-        :return: str or None
+        Args:
+            max_characters (int): Maximum characters allowed in the resulting sentence.
+            tries (int): Maximum number of tries django_markov should use to create the sentence.
+
+        Returns:
+            (str | None): The generated sentence or None if no sentence was possible for the number
+                of tries.
         """
         if self.markov_ready:
             logger.debug("Group is ready for markov sentences. Checking model...")
@@ -201,7 +217,12 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
         Get a random quote object from any of the characters defined within the group.
         Prioritizes quotes that have been returned less often.
 
-        :return: ``Quote`` object or None if no quotes are defined.
+        Args:
+            max_quotes_to_process (int | None): Maximum number of quotes to retrieve before
+                selecting a random one.
+
+        Returns:
+             (Quote | None) Quote object or None if no quotes are found.
         """
         # TODO: Create Q object to filter for null datetimes or less than now.
         quotes = (
@@ -220,7 +241,7 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
 class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=RulesModelBase):
     """
     An individual source to attribute the quote to in the system, such as a character from a podcast/book, or a specific
-    author.
+    author. A user must be the owner of the related SourceGroup to add or delete a source.
 
     Attributes:
         id (int): Database primary key for the object.
@@ -284,6 +305,7 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         return self.name
 
     def save(self, *args, **kwargs):
+        """Save and create slug, if missing."""
         if not self.slug:
             self.slug = generate_unique_slug_for_model(type(self), text=f"{self.group.slug} {self.name}")
         super().save(*args, **kwargs)
@@ -294,13 +316,19 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         Conducts sanity checks to see if requesting a markov chain is feasible. Markov must be enabled for a character
         and there must be a sufficient corpus to generate a sentence from. Currently set at a minimum of 10 quotes.
 
-        :return: bool
+        Returns:
+            (bool): If ready for markov requests.
         """
         if self.allow_markov and Quote.objects.filter(source=self).count() > 10:  # noqa:PLR2004
             return True
         return False
 
     async def _amarkov_ready(self) -> bool:
+        """Async version of markov ready.
+
+        Returns:
+            (bool): If ready for markov
+        """
         if self.allow_markov and await Quote.objects.filter(source=self).acount() > 10:  # noqa: PLR2004
             return True
         return False
@@ -316,7 +344,7 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
 
     def update_markov_model(self) -> None:
         """
-        Sync wrapper around aupdate_markov_model.
+        Sync wrapper around `aupdate_markov_model`.
         """
         async_to_sync(self.aupdate_markov_model)()
 
@@ -324,8 +352,13 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         """
         If valid, generate a markov sentence. If not, return None.
 
-        :param max_characters: Optional maximum limit of characters in the return set. Default: 280
-        :return: str or None
+        Args:
+            max_characters (int | None): Maximum number of characters allowed in
+                resulting sentence.
+            tries (int): Number of times django_markov may try to generate sentence.
+
+        Returns:
+            (str | None): The resulting sentence or None if a sentence could not be formed.
         """
         logger.debug("Checking to see if character is markov ready...")
         if self.markov_ready:
@@ -346,7 +379,12 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         ordered ordered by how infrequently they've been returned, and then grab a random one
         in the set. But for our purposes, it's fine. If there aren't any quotes, it will return None.
 
-        :return: ``Quote`` object or None
+        Args:
+            max_quotes_to_process (int | None): Maximum number of quotes to retrive before
+                selecting at random.
+
+        Returns:
+            (Quote | None): The quote object or None if no quotes found.
         """
         quotes_to_pick = (
             Quote.objects.filter(source=self)
@@ -364,7 +402,7 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
 
 class Quote(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=RulesModelBase):
     """
-    A quote from a given source.
+    A quote from a given source. A user must own the related source to add or delete a quote.
 
     Attributes:
         id (int): Database primary key for the object.
@@ -419,91 +457,6 @@ class Quote(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Rul
 
     def __str__(self):  # pragma: nocover
         return f"{self.source.name}: {self.quote}"
-
-
-# class SourceMarkovModel(TimeStampedModel):
-#     """
-#     The cached markov model for a given source. The database object for this is automatically created
-#     whenever a new character object is saved.
-#
-#     Attributes:
-#         id (int): Database primary key for the object.
-#         source (Source): The character who the model is sourced from.
-#         data (json): The JSON representation of the Markov model created by ``markovify``.
-#         created (datetime): When this object was first created. Auto-generated.
-#         modified (datetime): Last time this object was modified. Auto-generated.
-#
-#     """
-#
-#     source = models.OneToOneField(Source, on_delete=models.CASCADE)
-#     data = models.JSONField(null=True, blank=True)
-#
-#     def __str__(self):  # pragma: nocover
-#         return self.source.name
-#
-#     async def agenerate_model_from_corpus(self):
-#         """
-#         Collect all quotes attributed to the related character. Then
-#         create, compile, and save the model.
-#         """
-#         logger.debug("Generating text model. Fetching quotes.")
-#         quotes = Quote.objects.filter(source=self.source)
-#         # Don't bother generating model if there isn't data.
-#         if not await quotes.aexists():
-#             logger.debug("There are no quotes. Returning None.")
-#             return None
-#         logger.debug("Processing corpus...")
-#         await self.aupdate_model_from_corpus(
-#             corpus_entries=[quote.quote async for quote in quotes], char_limit=0, store_compiled=True
-#         )
-#         logger.debug("Updated!")
-#
-#     def generate_model_from_corpus(self):
-#         """
-#         Collect all quotes attributed to the related character. Then
-#         create, compile, and save the model.
-#         """
-#         async_to_sync(self.agenerate_model_from_corpus)()
-
-
-# class GroupMarkovModel(TimeStampedModel):
-#     """
-#     The cached markov model for the entire group. It is made up of every quote from every markov enabled
-#     character within the group.
-#
-#     Attributes:
-#         id (int): The database id of this object.
-#         group (SourceGroup): The OneToOne relationship to ``SourceGroup``
-#         data (json): The cached markov model.
-#         created (datetime): When the object was created.
-#         modified (datetime): When the object was last modified.
-#     """
-#
-#     group = models.OneToOneField(
-#         SourceGroup,
-#         on_delete=models.CASCADE,
-#         help_text=_("The character group this model belongs to."),
-#     )
-#     data = models.JSONField(null=True, blank=True, help_text=_("The cached markov model as JSON."))
-#
-#     async def agenerate_model_from_corpus(self):
-#         """Collect all quotes from markov enabled characters in this group, compile the model, and save it."""
-#         logger.debug(f"Gathering corpus for character group: {self.group.name}")
-#         quotes = Quote.objects.filter(source__in=Source.objects.filter(group=self.group, allow_markov=True))
-#         if await quotes.aexists():
-#             if await quotes.acount() >= 10:
-#                 logger.debug("Found sufficient quotes for a model!")
-#                 logger.debug("Processing corpus...")
-#                 await self.aupdate_model_from_corpus(corpus_entries=[quote.quote async for quote in quotes])
-#                 logger.debug(f"Finished processing corpus for {self.group.name}!")
-#         logger.debug("Not enough quotes for a model!")
-#
-#     def generate_model_from_corpus(self):
-#         """
-#         Collect all quotes from markov enabled characters in this group and then compile the model and save it.
-#         Wraps the async version.
-#         """
-#         async_to_sync(self.agenerate_model_from_corpus)()
 
 
 class QuoteStats(TimeStampedModel):

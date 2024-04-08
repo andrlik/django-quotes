@@ -1,3 +1,5 @@
+"""Url patterns for application."""
+
 from django.urls import path
 
 from django_quotes.views import (

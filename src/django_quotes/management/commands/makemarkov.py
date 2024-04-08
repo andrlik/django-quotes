@@ -1,3 +1,5 @@
+"""Checks if markov models are out of date, and if so regenerates them."""
+
 from django.core.management.base import BaseCommand
 
 from django_quotes.models import SourceGroup
