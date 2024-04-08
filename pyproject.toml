@@ -36,6 +36,22 @@ Repository = "https://github.com/andrlik/django-quotes"
 Homepage = "https://github.com/andrlik/django-quotes"
 Documentation = "https://andrlik.github.io/django-quotes/"
 
+[project.optional-dependencies]
+test = [
+    "pytest-django",
+    "pytest-cov",
+    "pytest-sugar",
+    "pytest-asyncio",
+    "django-coverage",
+    "django-coverage-plugin",
+    "argon2-cffi",
+    "django-environ",
+    "pytest-mock",
+    "faker",
+    "django-extensions",
+    "django-types",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
