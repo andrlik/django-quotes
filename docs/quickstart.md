@@ -172,7 +172,7 @@ source_update.html
 
 ## Usage
 
-By default, django-quotes provides access via the admin site, and provides a set of basic views for managing the quotes and associated data. See [Managing Quotes](managing_quotes.md) for more information.
+By default, django-quotes provides access via the admin site, and provides a set of basic views for managing the quotes and associated data. 
 
 
 

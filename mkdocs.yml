@@ -6,7 +6,6 @@ watch: [mkdocs.yml, README.md, CHANGELOG.md, CODE_OF_CONDUCT.md, SECURITY.md, sr
 nav:
   - Home: index.md
   - Quickstart: quickstart.md
-  - "Managing Sources & Quotes": managing_quotes.md
   - Reference: reference/
   - Changelog: changelog.md
   - Contributing: contributing.md
