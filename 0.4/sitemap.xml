@@ -21,11 +21,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://andrlik.github.io/django-quotes/latest/managing_quotes/</loc>
-         <lastmod>2024-04-08</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://andrlik.github.io/django-quotes/latest/quickstart/</loc>
          <lastmod>2024-04-08</lastmod>
          <changefreq>daily</changefreq>
