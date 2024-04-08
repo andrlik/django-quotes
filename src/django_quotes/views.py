@@ -25,6 +25,8 @@ class SourceGroupListView(LoginRequiredMixin, GenericList):
     """
     Displays Source Groups owned by the user.
     TODO: For now, only user owned groups, we won't bother with public options.
+
+    Available at /groups/
     """
 
     model = SourceGroup
@@ -40,6 +42,8 @@ class SourceGroupListView(LoginRequiredMixin, GenericList):
 class SourceGroupDetailView(LoginRequiredMixin, PermissionRequiredMixin, GenericDetail):
     """
     Displays details for a source group.
+
+    Available at /groups/[group_slug]/
     """
 
     model = SourceGroup
@@ -58,6 +62,8 @@ class SourceGroupDetailView(LoginRequiredMixin, PermissionRequiredMixin, Generic
 class SourceGroupUpdateView(LoginRequiredMixin, PermissionRequiredMixin, GenericUpdate):
     """
     Update an existing source group
+
+    Available at /groups/[group_slug]/edit/
     """
 
     if TYPE_CHECKING:
@@ -78,6 +84,8 @@ class SourceGroupUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Generic
 class SourceGroupDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelete):  # type: ignore
     """
     Delete and existing source group.
+
+    Available at /groups/[group_slug]/delete/
     """
 
     model = SourceGroup
@@ -91,6 +99,8 @@ class SourceGroupDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Generic
 class SourceGroupCreateView(LoginRequiredMixin, GenericCreate):
     """
     Create a new source group.
+
+    Available at /groups/create/
     """
 
     model = SourceGroup
@@ -110,6 +120,8 @@ class SourceGroupCreateView(LoginRequiredMixin, GenericCreate):
 class SourceCreateView(LoginRequiredMixin, PermissionRequiredMixin, GenericCreate):
     """
     Create a new source and add them to a source group.
+
+    Available at /groups/[group_slug]/sources/add/
     """
 
     model = Source
@@ -142,6 +154,8 @@ class SourceCreateView(LoginRequiredMixin, PermissionRequiredMixin, GenericCreat
 class SourceDetailView(LoginRequiredMixin, PermissionRequiredMixin, GenericDetail):
     """
     Shows information about the specified source.
+
+    Available at /groups/[group_slug]/sources/[source_slug]/
     """
 
     model = Source
@@ -161,6 +175,8 @@ class SourceDetailView(LoginRequiredMixin, PermissionRequiredMixin, GenericDetai
 class SourceUpdateView(LoginRequiredMixin, PermissionRequiredMixin, GenericUpdate):
     """
     Allows editing and updating of a Source.
+
+    Available at /groups/[group_slug]/sources/[source_slug]/edit/
     """
 
     model = Source
@@ -178,6 +194,8 @@ class SourceUpdateView(LoginRequiredMixin, PermissionRequiredMixin, GenericUpdat
 class SourceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelete):  # type: ignore
     """
     Used to delete a given Source
+
+    Available at /groups/[group_slug]/sources/[source_slug]/delete/
     """
 
     model = Source
@@ -200,6 +218,8 @@ class SourceDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelet
 class SourceListView(LoginRequiredMixin, PermissionRequiredMixin, GenericList):
     """
     Display a list of sources for a given group.
+
+    Available at /groups/[group_slug]/sources/
     """
 
     model = Source
@@ -238,6 +258,8 @@ class SourceListView(LoginRequiredMixin, PermissionRequiredMixin, GenericList):
 class QuoteListView(LoginRequiredMixin, PermissionRequiredMixin, GenericList):
     """
     View for viewing quotes from a specific source.
+
+    Available at /groups/[group_slug]/sources/[source_slug]/quotes/
     """
 
     model = Quote
@@ -268,6 +290,8 @@ class QuoteListView(LoginRequiredMixin, PermissionRequiredMixin, GenericList):
 class QuoteCreateView(LoginRequiredMixin, PermissionRequiredMixin, GenericCreate):
     """
     View for adding a quote to a source.
+
+    Available at /groups/[group_slug]/sources/[source_slug]/quotes/add/
     """
 
     model = Quote
@@ -306,6 +330,8 @@ class QuoteCreateView(LoginRequiredMixin, PermissionRequiredMixin, GenericCreate
 class QuoteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, GenericUpdate):
     """
     View for updating a quote.
+
+    Available at /groups/[group_slug]/sources/[source_slug]/quotes/[quote_id]/edit/
     """
 
     model = Quote
@@ -323,6 +349,8 @@ class QuoteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, GenericUpdate
 class QuoteDetailView(LoginRequiredMixin, PermissionRequiredMixin, GenericDetail):
     """
     A quote detail view for use in things like previewing render or viewing statistics.
+
+    Available at /groups/[group_slug]/sources/[source_slug]/quotes/[quote_id]/
     """
 
     model = Quote
@@ -336,6 +364,8 @@ class QuoteDetailView(LoginRequiredMixin, PermissionRequiredMixin, GenericDetail
 class QuoteDeleteView(LoginRequiredMixin, PermissionRequiredMixin, GenericDelete):  # type: ignore
     """
     View to delete a quote.
+
+    Available at /groups/[group_slug]/sources/[source_slug]/quotes/[quote_id]/delete/
     """
 
     model = Quote

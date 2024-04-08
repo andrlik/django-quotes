@@ -78,7 +78,7 @@ django==5.0.4
     # via django-crispy-forms
     # via django-debug-toolbar
     # via django-extensions
-    # via django-quotes
+    # via django-markov
     # via django-stubs-ext
     # via djangorestframework
     # via drf-spectacular
@@ -89,7 +89,10 @@ django-crispy-forms==2.1
     # via django-quotes
 django-debug-toolbar==4.3.0
 django-easy-logging==0.70
+    # via django-quotes
 django-extensions==3.2.3
+django-markov==0.2.2
+    # via django-quotes
 django-stubs-ext==4.2.7
 django-types==0.19.1
 djangorestframework==3.15.1
@@ -162,7 +165,7 @@ markdown-extensions==0.0.1
 markdown-it-py==3.0.0
     # via rich
 markovify==0.9.4
-    # via django-quotes
+    # via django-markov
 markupsafe==2.1.5
     # via jinja2
     # via mkdocs
@@ -179,12 +182,16 @@ mike==2.0.0
 mkdocs==1.5.3
     # via mike
     # via mkdocs-autorefs
+    # via mkdocs-gen-files
     # via mkdocs-include-markdown-plugin
+    # via mkdocs-literate-nav
     # via mkdocs-material
     # via mkdocstrings
 mkdocs-autorefs==1.0.1
     # via mkdocstrings
+mkdocs-gen-files==0.5.0
 mkdocs-include-markdown-plugin==6.0.5
+mkdocs-literate-nav==0.6.1
 mkdocs-material==9.5.17
 mkdocs-material-extensions==1.3.1
     # via mkdocs-material
@@ -327,7 +334,7 @@ smart-open==6.4.0
 sniffio==1.3.1
     # via anyio
 spacy==3.7.4
-    # via django-quotes
+    # via django-markov
     # via en-core-web-trf
     # via spacy-curated-transformers
 spacy-curated-transformers==0.2.2

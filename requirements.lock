@@ -46,13 +46,17 @@ django==5.0.4
     # via crispy-bootstrap4
     # via django-cors-headers
     # via django-crispy-forms
-    # via django-quotes
+    # via django-markov
     # via djangorestframework
     # via drf-spectacular
 django-cors-headers==4.3.1
     # via django-quotes
 django-crispy-forms==2.1
     # via crispy-bootstrap4
+    # via django-quotes
+django-easy-logging==0.70
+    # via django-quotes
+django-markov==0.2.2
     # via django-quotes
 djangorestframework==3.15.1
     # via django-quotes
@@ -78,11 +82,12 @@ jsonschema-specifications==2023.12.1
 langcodes==3.3.0
     # via spacy
 loguru==0.7.2
+    # via django-easy-logging
     # via django-quotes
 markdown==3.6
     # via django-quotes
 markovify==0.9.4
-    # via django-quotes
+    # via django-markov
 markupsafe==2.1.5
     # via jinja2
 murmurhash==1.0.10
@@ -128,7 +133,7 @@ smart-open==6.4.0
     # via spacy
     # via weasel
 spacy==3.7.4
-    # via django-quotes
+    # via django-markov
 spacy-legacy==3.0.12
     # via spacy
 spacy-loggers==1.0.5

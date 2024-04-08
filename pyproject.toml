@@ -5,21 +5,20 @@ description = """A reusable Django app to collect quotes for use in random retri
     Markov Chains."""
 authors = [{ name = "Daniel Andrlik", email = "daniel@andrlik.org" }]
 dependencies = [
-    "django>=4.2",
+    "django-markov>=0.2.2",
     "rules>=3.1",
     "Markdown>=3.3.6",
-    "spacy>=3.7.4",
     "python-slugify>=6.1.1",
     "djangorestframework>=3.13.1",
     "django-cors-headers>=3.11.0",
     "drf-spectacular>=0.24.2",
     "django-crispy-forms>=1.14.0",
+    "django-easy-logging>=0.70",
     "loguru>=0.6.0",
     "docutils",
     "coreapi>=2.3.3",
     "coreschema>=0.0.4",
     "itypes>=1.2.0",
-    "markovify>=0.9.4",
     "crispy-bootstrap4>=2024.1",
 ]
 license = "BSD-3-Clause"
@@ -37,6 +36,23 @@ classifiers = [
 Repository = "https://github.com/andrlik/django-quotes"
 Homepage = "https://github.com/andrlik/django-quotes"
 Documentation = "https://andrlik.github.io/django-quotes/"
+
+[project.optional-dependencies]
+test = [
+    "pytest-django",
+    "pytest-cov",
+    "pytest-sugar",
+    "pytest-asyncio",
+    "django-coverage",
+    "django-coverage-plugin",
+    "argon2-cffi",
+    "django-environ",
+    "pytest-mock",
+    "faker",
+    "django-extensions",
+    "django-types",
+    "factory-boy>=3.3.0",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -64,7 +80,6 @@ dev-dependencies = [
     "factory-boy>=3.3.0",
     "django-debug-toolbar>=4.3.0",
     "django-extensions>=3.2.3",
-    "django-easy-logging>=0.70",
     "types-python-slugify>=8.0.2.20240310",
     "types-markdown>=3.6.0.20240316",
     "bandit[toml]>=1.7.8",
@@ -79,6 +94,8 @@ dev-dependencies = [
     "django-stubs-ext>=4.2.7",
     "mike>=2.0.0",
     "markdown-extensions>=0.0.1",
+    "mkdocs-gen-files>=0.5.0",
+    "mkdocs-literate-nav>=0.6.1",
 ]
 
 [tool.coverage.run]
@@ -135,7 +152,7 @@ addopts = [
   "--tb=short",
   "--doctest-modules",
   "--doctest-continue-on-failure",
-  "--cov=django_quotes",
+  "--cov=src/django_quotes",
   "--cov-report=term-missing", "--ds=tests.django_settings",
     "--reuse-db",
 ]
@@ -241,7 +258,7 @@ regex = false
 ignore_missing_version = false
 tag = true
 sign_tags = false
-tag_name = "{new_version}"
+tag_name = "v{new_version}"
 tag_message = "Bump version: {current_version} → {new_version}"
 allow_dirty = false
 commit = true
@@ -260,5 +277,5 @@ replace = "## {new_version}"
 
 [[tool.bumpversion.files]]
 filename = "CHANGELOG.md"
-search = "{current_version}...HEAD"
-replace = "{current_version}...{new_version}"
+search = "v{current_version}...HEAD"
+replace = "v{current_version}...v{new_version}"

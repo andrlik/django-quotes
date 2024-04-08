@@ -1,13 +1,11 @@
 from django.contrib import admin
 
 from django_quotes.models import (
-    GroupMarkovModel,
     GroupStats,
     Quote,
     QuoteStats,
     Source,
     SourceGroup,
-    SourceMarkovModel,
     SourceStats,
 )
 
@@ -15,42 +13,44 @@ from django_quotes.models import (
 
 
 class SourceGroupAdmin(admin.ModelAdmin):
+    """Model admin for SourceGroup."""
+
     pass
 
 
 class SourceAdmin(admin.ModelAdmin):
+    """Model admin for Source."""
+
     pass
 
 
 class QuoteAdmin(admin.ModelAdmin):
-    pass
+    """Model admin for Quote."""
 
-
-class SourceMarkovModelAdmin(admin.ModelAdmin):
-    pass
-
-
-class GroupMarkovModelAdmin(admin.ModelAdmin):
     pass
 
 
 class GroupStatsAdmin(admin.ModelAdmin):
+    """Model admin for GroupStats"""
+
     pass
 
 
 class SourceStatAdmin(admin.ModelAdmin):
+    """Model admin for SourceStats"""
+
     pass
 
 
 class QuoteStatAdmin(admin.ModelAdmin):
+    """Model admin for QuoteStats"""
+
     pass
 
 
 admin.site.register(SourceGroup, SourceGroupAdmin)
 admin.site.register(Source, SourceAdmin)
 admin.site.register(Quote, QuoteAdmin)
-admin.site.register(SourceMarkovModel, SourceMarkovModelAdmin)
-admin.site.register(GroupMarkovModel, GroupMarkovModelAdmin)
 admin.site.register(GroupStats, GroupStatsAdmin)
 admin.site.register(SourceStats, SourceStatAdmin)
 admin.site.register(QuoteStats, QuoteStatAdmin)

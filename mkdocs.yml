@@ -2,10 +2,12 @@ site_name: Django-Quotes Documentation
 site_url: https://andrlik.github.io/django-quotes/
 site_author: Daniel Andrlik
 copyright: Copyright &copy; 2022 Daniel Andrlik
+atch: [mkdocs.yml, README.md, CHANGELOG.md, CODE_OF_CONDUCT.md, SECURITY.md, src/django_quotes]
 nav:
   - Home: index.md
   - Quickstart: quickstart.md
   - "Managing Sources & Quotes": managing_quotes.md
+  - Reference: reference/
   - Changelog: changelog.md
   - Contributing: contributing.md
   - Code of Conduct: code_of_conduct.md
@@ -20,7 +22,13 @@ theme:
 repo_url: https://github.com/andrlik/django-quotes/
 plugins:
   - search
+  - autorefs
   - include-markdown
+  - gen-files:
+      scripts:
+        - docs/scripts/gen_ref_files.py
+  - literate-nav:
+      nav_file: SUMMARY.txt
   - mkdocstrings:
       handlers:
         python:
@@ -29,6 +37,13 @@ plugins:
             - "django.setup()"
   - mike:
       canonical_version: latest
+          options:
+            separate_signature: true
+            show_signature_annotations: true
+            merge_init_into_class: true
+            annotations_path: brief
+            docstring_options:
+              ignore_init_summary: true
 markdown_extensions:
     - pymdownx.highlight:
         anchor_linenums: true

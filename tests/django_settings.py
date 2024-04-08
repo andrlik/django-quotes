@@ -1,9 +1,12 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import django_stubs_ext
+if TYPE_CHECKING:
+    import django_stubs_ext
 from dj_easy_log import load_loguru
 
-django_stubs_ext.monkeypatch()
+if TYPE_CHECKING:
+    django_stubs_ext.monkeypatch()
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
 APPS_DIR = ROOT_DIR
@@ -63,6 +66,7 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
+    "django_markov",
     "crispy_forms",
     "crispy_bootstrap4",
     "rest_framework",
@@ -247,6 +251,8 @@ REST_FRAMEWORK["TEST_REQUEST_DEFAULT_FORMAT"] = "json"
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+
+MARKOV_CORPUS_MAX_CHAR_LIMIT = 0
 
 
 MAX_QUOTES_FOR_RANDOM_SET = 50

@@ -6,12 +6,35 @@ from django_quotes.models import Quote, Source, SourceGroup
 
 
 class SourceGroupSerializer(ModelSerializer):
+    """
+    Serializer for SourceGroup.
+
+    Includes the following fields:
+
+    - name (str)
+    - slug (str)
+    - description (str)
+    - description_rendered (str)
+    """
+
     class Meta:
         model = SourceGroup
         fields = ["name", "slug", "description", "description_rendered"]
 
 
 class SourceSerializer(ModelSerializer):
+    """
+    Serializer for Source.
+
+    Includes the following fields:
+
+    - name (str)
+    - group (SourceGroupSerializer)
+    - slug (str)
+    - description (str)
+    - description_rendered (str)
+    """
+
     group = SourceGroupSerializer()
 
     class Meta:
@@ -20,6 +43,18 @@ class SourceSerializer(ModelSerializer):
 
 
 class QuoteSerializer(ModelSerializer):
+    """
+    Serializer for Quote.
+
+    Includes the following fields:
+
+    - quote (str)
+    - quote_rendered (str)
+    - source (SourceSerializer)
+    - citation (str)
+    - citation_url (str)
+    """
+
     source = SourceSerializer()  # type: ignore
 
     class Meta:
