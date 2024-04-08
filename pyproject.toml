@@ -77,6 +77,8 @@ dev-dependencies = [
     "pyright>=1.1.357",
     "django-types>=0.19.1",
     "django-stubs-ext>=4.2.7",
+    "mike>=2.0.0",
+    "markdown-extensions>=0.0.1",
 ]
 
 [tool.coverage.run]

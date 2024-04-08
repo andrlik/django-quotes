@@ -1,4 +1,6 @@
 site_name: Django-Quotes Documentation
+site_url: https://andrlik.github.io/django-quotes/
+site_author: Daniel Andrlik
 copyright: Copyright &copy; 2022 Daniel Andrlik
 nav:
   - Home: index.md
@@ -10,6 +12,7 @@ nav:
   - Security: security.md
 theme:
   name: material
+  custom_dir: docs/overrides
   palette:
     scheme: slate
     primary: indigo
@@ -24,10 +27,16 @@ plugins:
           setup_commands:
             - "import django"
             - "django.setup()"
+  - mike:
+      canonical_version: latest
 markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences
-  - footnotes
+    - pymdownx.highlight:
+        anchor_linenums: true
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.superfences
+    - footnotes
+
+extra:
+  version:
+    provider: mike
