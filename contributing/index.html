@@ -10,11 +10,13 @@
         <meta name="author" content="Daniel Andrlik">
       
       
-        <link rel="canonical" href="https://andrlik.github.io/django-quotes/latest/security/">
+        <link rel="canonical" href="https://andrlik.github.io/django-quotes/contributing/">
       
       
-        <link rel="prev" href="../code_of_conduct/">
+        <link rel="prev" href="../changelog/">
       
+      
+        <link rel="next" href="../code_of_conduct/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +24,7 @@
     
     
       
-        <title>Security - Django-Quotes Documentation</title>
+        <title>Contributing - Django-Quotes Documentation</title>
       
     
     
@@ -74,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#security" class="md-skip">
+        <a href="#how-to-contribute" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +128,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Security
+              Contributing
             
           </span>
         </div>
@@ -320,10 +322,30 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -332,6 +354,95 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#development-task-runner" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development task runner
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dependencies
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running updates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codestyle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Codestyle
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Codestyle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before-submitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Before submitting
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other help
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -360,30 +471,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Security
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -392,44 +483,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#reporting-security-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      🔐 Reporting Security Issues
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#preferred-languages" class="md-nav__link">
-    <span class="md-ellipsis">
-      Preferred Languages
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -461,18 +514,69 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#reporting-security-issues" class="md-nav__link">
+  <a href="#development-task-runner" class="md-nav__link">
     <span class="md-ellipsis">
-      🔐 Reporting Security Issues
+      Development task runner
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#preferred-languages" class="md-nav__link">
+  <a href="#dependencies" class="md-nav__link">
     <span class="md-ellipsis">
-      Preferred Languages
+      Dependencies
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running updates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codestyle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Codestyle
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Codestyle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#before-submitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Before submitting
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Other help
     </span>
   </a>
   
@@ -496,31 +600,50 @@
   
 
 
-<!-- BEGIN INCLUDE ../SECURITY.md -->
-<h1 id="security">Security</h1>
-<h2 id="reporting-security-issues">🔐 Reporting Security Issues</h2>
-<blockquote>
-<p>Do not open issues that might have security implications!
-It is critical that security related issues are reported privately so we have time to address them before they become public knowledge.</p>
-</blockquote>
-<p>Vulnerabilities can be reported by emailing core members:</p>
-<ul>
-<li>Daniel Andrlik <a href="mailto:daniel@andrlik.org">daniel@andrlik.org</a></li>
-</ul>
-<p>Please include the requested information listed below (as much as you can provide) to help us better understand the nature and scope of the possible issue:</p>
-<ul>
-<li>Type of issue (e.g. buffer overflow, SQL injection, cross-site scripting, etc.)</li>
-<li>Full paths of source file(s) related to the manifestation of the issue</li>
-<li>The location of the affected source code (tag/branch/commit or direct URL)</li>
-<li>Any special configuration required to reproduce the issue</li>
-<li>Environment (e.g. Linux / Windows / macOS)</li>
-<li>Step-by-step instructions to reproduce the issue</li>
-<li>Proof-of-concept or exploit code (if possible)</li>
-<li>Impact of the issue, including how an attacker might exploit the issue</li>
-</ul>
-<p>This information will help us triage your report more quickly.</p>
-<h2 id="preferred-languages">Preferred Languages</h2>
-<p>We prefer all communications to be in English.</p>
+<!-- BEGIN INCLUDE ../CONTRIBUTING.md -->
+<h1 id="how-to-contribute">How to contribute</h1>
+<p>Contributions to either the code, localization, or the documentation are very welcome!</p>
+<h2 id="development-task-runner">Development task runner</h2>
+<p>We use <a href="https://github.com/casey/just"><code>just</code></a> to execute common tasks. It is available for any platform. Once installed, you can see a list of available commands by running <code>just --list</code>.</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>We use <code>rye</code> to manage the Python <a href="https://rye-up.com/..">dependencies</a>.
+If you don't have <code>rye</code>, you should install with <code>just rye-install</code>.</p>
+<p>To install dependencies and prepare <a href="https://pre-commit.com/"><code>pre-commit</code></a> hooks you would need to run the <code>setup</code> command:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>just<span class="w"> </span>bootstrap
+</code></pre></div>
+<h2 id="running-updates">Running updates</h2>
+<p>After pulling new updates from the repository you can quickly install updated dependencies and run database migrations by running <code>just bootstrap</code>.</p>
+<h2 id="codestyle">Codestyle</h2>
+<p>After installation you may execute code formatting.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>just<span class="w"> </span>fmt
+</code></pre></div>
+<h3 id="checks">Checks</h3>
+<p>Many checks are configured for this project.</p>
+<p>To run your test suite:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>just<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
+<p>To use pyright for type checking run:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>just<span class="w"> </span>check-types
+</code></pre></div></p>
+<p>To run linting:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>just<span class="w"> </span>lint
+</code></pre></div>
+<p>The <code>just safety</code> command will look at the security of your code.</p>
+<h3 id="before-submitting">Before submitting</h3>
+<p>Before submitting your code please do the following steps:</p>
+<ol>
+<li>Add any changes you want</li>
+<li>Add tests for the new changes</li>
+<li>Edit documentation if you have changed something significant</li>
+<li>Run <code>just fmt</code> to format your changes.</li>
+<li>Run <code>just lint</code> to ensure that types, security and docstrings are okay.</li>
+<li>Add your name to the <code>CONTRIBUTERS.txt</code> file.</li>
+</ol>
+<h2 id="other-help">Other help</h2>
+<p>You can contribute by spreading a word about this library.
+It would also be a huge contribution to write
+a short article on how you are using this project.
+You can also share your best practices with us.</p>
 <!-- END INCLUDE -->
 
 
