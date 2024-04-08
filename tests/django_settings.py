@@ -1,7 +1,8 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import django_stubs_ext
+if TYPE_CHECKING:
+    import django_stubs_ext
 from dj_easy_log import load_loguru
 
 if TYPE_CHECKING:
