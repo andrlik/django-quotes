@@ -13,6 +13,7 @@
     - If you'd still like to implement the migrations cautiously, you can run `python manage.py migrate django_quotes 0011` first to confirm that the data migrated safely. Then you can run `python manage.py migrate django_quotes 0012` to complete the upgrade and remove the old tables.
 - As `django-markov` makes heavy use of the newest async features, Django>=5.0 is now required.
 - Improved python module reference documentation.
+- Add versioning to documentation.
 
 ## 0.3.2
 
