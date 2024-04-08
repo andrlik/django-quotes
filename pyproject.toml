@@ -99,7 +99,7 @@ dev-dependencies = [
 ]
 
 [tool.coverage.run]
-source = ["django_quotes"]
+source = ["src/django_quotes"]
 omit = ["*migrations*", "*tests*", "*staticfiles*"]
 
 [tool.coverage.report]

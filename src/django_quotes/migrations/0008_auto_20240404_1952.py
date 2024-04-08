@@ -3,7 +3,7 @@
 from django.db import migrations
 
 
-def move_data_from_quotes_django_markov(apps, schema_editor):
+def move_data_from_quotes_django_markov(apps, schema_editor):  # no cov
     Source = apps.get_model("django_quotes", "Source")
     SourceGroup = apps.get_model("django_quotes", "SourceGroup")
     SourceMarkovModel = apps.get_model("django_quotes", "SourceMarkovModel")
@@ -26,7 +26,7 @@ def move_data_from_quotes_django_markov(apps, schema_editor):
         s_m.save()
 
 
-def reverse_data_migration(apps, schema_editor):
+def reverse_data_migration(apps, schema_editor):  # no cov
     Source = apps.get_model("django_quotes", "Source")
     SourceGroup = apps.get_model("django_quotes", "SourceGroup")
     MarkovTextModel = apps.get_model("django_markov", "MarkovTextModel")
