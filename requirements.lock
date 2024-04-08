@@ -54,6 +54,8 @@ django-cors-headers==4.3.1
 django-crispy-forms==2.1
     # via crispy-bootstrap4
     # via django-quotes
+django-easy-logging==0.70
+    # via django-quotes
 django-markov==0.2.2
     # via django-quotes
 djangorestframework==3.15.1
@@ -80,6 +82,7 @@ jsonschema-specifications==2023.12.1
 langcodes==3.3.0
     # via spacy
 loguru==0.7.2
+    # via django-easy-logging
     # via django-quotes
 markdown==3.6
     # via django-quotes

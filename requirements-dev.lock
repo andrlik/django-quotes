@@ -89,6 +89,7 @@ django-crispy-forms==2.1
     # via django-quotes
 django-debug-toolbar==4.3.0
 django-easy-logging==0.70
+    # via django-quotes
 django-extensions==3.2.3
 django-markov==0.2.2
     # via django-quotes
