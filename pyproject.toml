@@ -51,6 +51,7 @@ test = [
     "faker",
     "django-extensions",
     "django-types",
+    "factory-boy>=3.3.0",
 ]
 
 [build-system]
