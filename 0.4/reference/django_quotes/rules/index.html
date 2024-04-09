@@ -1056,13 +1056,13 @@
 
           <details class="quote">
             <summary>Source code in <code>src/django_quotes/rules.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-18">18</a></span>
-<span class="normal"><a href="#__codelineno-0-19">19</a></span>
-<span class="normal"><a href="#__codelineno-0-20">20</a></span>
-<span class="normal"><a href="#__codelineno-0-21">21</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="nd">@rules</span><span class="o">.</span><span class="n">predicate</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="k">def</span> <span class="nf">allows_submissions</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the object allows submissions.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">allow_submissions</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="nd">@rules</span><span class="o">.</span><span class="n">predicate</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="k">def</span> <span class="nf">allows_submissions</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the object allows submissions.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">allow_submissions</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1088,13 +1088,13 @@
 
           <details class="quote">
             <summary>Source code in <code>src/django_quotes/rules.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-27">27</a></span>
-<span class="normal"><a href="#__codelineno-0-28">28</a></span>
-<span class="normal"><a href="#__codelineno-0-29">29</a></span>
-<span class="normal"><a href="#__codelineno-0-30">30</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="nd">@rules</span><span class="o">.</span><span class="n">predicate</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="k">def</span> <span class="nf">is_group_owner</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the object&#39;s group is owned by the user.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="k">return</span> <span class="n">user</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">owner</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="nd">@rules</span><span class="o">.</span><span class="n">predicate</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="k">def</span> <span class="nf">is_group_owner</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the object&#39;s group is owned by the user.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="k">return</span> <span class="n">user</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">group</span><span class="o">.</span><span class="n">owner</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1120,13 +1120,13 @@
 
           <details class="quote">
             <summary>Source code in <code>src/django_quotes/rules.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-6">6</a></span>
-<span class="normal"><a href="#__codelineno-0-7">7</a></span>
-<span class="normal"><a href="#__codelineno-0-8">8</a></span>
-<span class="normal"><a href="#__codelineno-0-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="nd">@rules</span><span class="o">.</span><span class="n">predicate</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="k">def</span> <span class="nf">is_owner</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the user is the owner of the object.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9"></a>    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">owner</span> <span class="o">==</span> <span class="n">user</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="nd">@rules</span><span class="o">.</span><span class="n">predicate</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="k">def</span> <span class="nf">is_owner</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the user is the owner of the object.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">owner</span> <span class="o">==</span> <span class="n">user</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1152,13 +1152,13 @@
 
           <details class="quote">
             <summary>Source code in <code>src/django_quotes/rules.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-12">12</a></span>
-<span class="normal"><a href="#__codelineno-0-13">13</a></span>
-<span class="normal"><a href="#__codelineno-0-14">14</a></span>
-<span class="normal"><a href="#__codelineno-0-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="nd">@rules</span><span class="o">.</span><span class="n">predicate</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="k">def</span> <span class="nf">is_public</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the object is public.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">public</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="nd">@rules</span><span class="o">.</span><span class="n">predicate</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="k">def</span> <span class="nf">is_public</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the object is public.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">public</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1184,13 +1184,13 @@
 
           <details class="quote">
             <summary>Source code in <code>src/django_quotes/rules.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-33">33</a></span>
-<span class="normal"><a href="#__codelineno-0-34">34</a></span>
-<span class="normal"><a href="#__codelineno-0-35">35</a></span>
-<span class="normal"><a href="#__codelineno-0-36">36</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="nd">@rules</span><span class="o">.</span><span class="n">predicate</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="k">def</span> <span class="nf">is_source_owner</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check that the quote source is owned by the user.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="k">return</span> <span class="n">user</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">owner</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="nd">@rules</span><span class="o">.</span><span class="n">predicate</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="k">def</span> <span class="nf">is_source_owner</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check that the quote source is owned by the user.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="k">return</span> <span class="n">user</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">owner</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
