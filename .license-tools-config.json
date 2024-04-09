@@ -1,0 +1,13 @@
+{
+  "author": {
+    "from_git": true
+  },
+  "custom_license": "SPDX-License-Identifier: BSD-3-Clause",
+  "include": [
+    "**/*.py"
+  ],
+  "exclude": [
+    "^\\.[^/]+",
+    "/\\.[^/]+"
+  ]
+}

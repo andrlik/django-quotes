@@ -1,3 +1,12 @@
+#
+# receivers.py
+#
+# Copyright (c) 2024 Daniel Andrlik
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import F

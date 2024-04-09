@@ -1,3 +1,12 @@
+#
+# test_signals.py
+#
+# Copyright (c) 2024 Daniel Andrlik
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
 import pytest
 from django.contrib.auth import get_user_model
 from django_quotes.models import (

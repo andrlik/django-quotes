@@ -1,3 +1,12 @@
+#
+# models.py
+#
+# Copyright (c) 2024 Daniel Andrlik
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
 from __future__ import annotations
 
 import random
@@ -88,6 +97,7 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
 
     if TYPE_CHECKING:
         source_set: RelatedManager[Source]
+        stats: GroupStats
 
     name = models.CharField(
         _("Source Name"),
@@ -168,7 +178,7 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
     def markov_ready(self) -> bool:
         """Checks to see if there are Markov enabled sources and sufficient quotes."""
         if (
-            self.markov_sources > 0
+            self.markov_sources > 0 and self.text_model is not None
             and Quote.objects.filter(source__in=self.source_set.filter(allow_markov=True)).count() > 10  # noqa:PLR2004
         ):
             return True
@@ -176,10 +186,11 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
 
     async def aupdate_markov_model(self) -> None:
         """Updates the related MarkovTextModel."""
-        markov_sources = self.source_set.filter(allow_markov=True)
-        if await markov_sources.aexists():
-            quotes = Quote.objects.filter(source__in=markov_sources)
-            await self.text_model.aupdate_model_from_corpus(corpus_entries=[quote.quote async for quote in quotes])
+        if self.text_model is not None:
+            markov_sources = self.source_set.filter(allow_markov=True)
+            if await markov_sources.aexists():
+                quotes = Quote.objects.filter(source__in=markov_sources)
+                await self.text_model.aupdate_model_from_corpus(corpus_entries=[quote.quote async for quote in quotes])
 
     def update_markov_model(self) -> None:
         """Updates the related MarkovTextModel."""
@@ -197,7 +208,7 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
             (str | None): The generated sentence or None if no sentence was possible for the number
                 of tries.
         """
-        if self.markov_ready:
+        if self.markov_ready and self.text_model is not None:
             logger.debug("Group is ready for markov sentences. Checking model...")
             mmodel = self.text_model
             if not mmodel.is_ready:
@@ -261,6 +272,7 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
 
     if TYPE_CHECKING:
         quote_set: RelatedManager[Quote]
+        stats: SourceStats
 
     name = models.CharField(max_length=100, help_text=_("Name of the character"))
     slug = models.SlugField(
@@ -337,7 +349,7 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         """
         Process all quotes into the associated model.
         """
-        if self.allow_markov:
+        if self.allow_markov and self.text_model is not None:
             await self.text_model.aupdate_model_from_corpus(
                 corpus_entries=[quote.quote async for quote in self.quote_set.all()], char_limit=0, store_compiled=False
             )
@@ -360,8 +372,10 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         Returns:
             (str | None): The resulting sentence or None if a sentence could not be formed.
         """
+        if not max_characters:  # no cov
+            max_characters = 280
         logger.debug("Checking to see if character is markov ready...")
-        if self.markov_ready:
+        if self.markov_ready and self.text_model is not None:
             logger.debug("It IS ready. Fetching markov model.")
             markov_model = self.text_model
             if not markov_model.is_ready:

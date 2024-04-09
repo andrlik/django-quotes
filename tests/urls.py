@@ -1,3 +1,12 @@
+#
+# urls.py
+#
+# Copyright (c) 2022 - 2024 Daniel Andrlik
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin

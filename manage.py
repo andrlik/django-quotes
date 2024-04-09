@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+#
+# manage.py
+#
+# Copyright (c) 2024 Daniel Andrlik
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
 import os
 import sys
 from pathlib import Path

@@ -1,3 +1,12 @@
+#
+# utils.py
+#
+# Copyright (c) 2024 Daniel Andrlik
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Model
 from loguru import logger
@@ -17,7 +26,8 @@ def generate_unique_slug_for_model(
         model_class (Model): A class based upon ``django.db.models.Model``
         text (str): Text to convert to a slug.
         slug_field (str | None): The name of the slug field of the model.
-        max_length_override (int | None): Maximum number of characters to use if not the same as what's defined in the slug field.
+        max_length_override (int | None): Maximum number of characters to use
+            if not the same as what's defined in the slug field.
     Returns:
          (str): The generated slug.
     """

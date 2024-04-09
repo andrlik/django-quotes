@@ -1,3 +1,12 @@
+#
+# views.py
+#
+# Copyright (c) 2024 Daniel Andrlik
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
 from typing import TYPE_CHECKING
 
 from django.contrib import messages
