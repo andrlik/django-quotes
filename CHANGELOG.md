@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.4.1
 
-[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.4.0...HEAD)
+[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.4.0...v0.4.1)
 
 - Some improvements to migrations to handle some upgrade use cases.
 - Some type annotation improvements.
