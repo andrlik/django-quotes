@@ -21,7 +21,7 @@ A simple reusable [Django](https://www.djangoproject.com) app that allows you to
 - Support for abstract grouping of quote sources.
 - Convenience methods for fetching a random quote.
 - Object-level permissions via [django-rules](https://github.com/dfunckt/django-rules).
-- Generate sentences based off of a Markov-chain for individual sources and groups using natural language processing.
+- Generate sentences based off of a Markov-chain for individual sources and groups using natural language processing. (via [django-markov](https://github.com/andrlik/django-markov))
 - Bootstrap-compatible templates.
 - A simple REST API for fetching data via JSON with CORS support.
 
