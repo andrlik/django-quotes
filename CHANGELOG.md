@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.4.2
 
-[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.4.1...HEAD)
+[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.4.1...v0.4.2)
 
 - Rendered fields have been removed: `description_rendered` and `quote_rendered`. For backwards compatibility, their values can be accessed via properties of the same names.
 
