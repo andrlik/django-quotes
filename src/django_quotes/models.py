@@ -156,7 +156,7 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
 
     @property
     def description_rendered(self) -> str:
-        """Return the markdown rendered version of the string."""
+        """Return the markdown rendered version of the description."""
         if self.description is None or self.description == "":
             return ""
         return markdown(self.description)
@@ -323,7 +323,7 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
 
     @property
     def description_rendered(self) -> str:
-        """Return the markdown rendered version of the string."""
+        """Return the markdown rendered version of the description."""
         if self.description is None or self.description == "":
             return ""
         return markdown(self.description)
@@ -474,7 +474,7 @@ class Quote(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Rul
 
     @property
     def quote_rendered(self) -> str:
-        """Return the markdown rendered version of the string."""
+        """Return the markdown rendered version of the quote."""
         if self.quote is None or self.quote == "":
             return ""
         return markdown(self.quote)
