@@ -1,11 +1,9 @@
-#
 # test_signals.py
 #
 # Copyright (c) 2024 Daniel Andrlik
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -33,13 +31,13 @@ def test_sourcegroup_description_render(user: User) -> None:
     :return:
     """
     group = SourceGroup.objects.create(name="Monkey", owner=user)
-    assert group.description is None and group.description == group.description_rendered
+    assert group.description is None and group.description_rendered == ""
     group.description = "A **dark** time for all."
     group.save()
     assert group.description_rendered == "<p>A <strong>dark</strong> time for all.</p>"
     group.description = None
     group.save()
-    assert group.description_rendered is None
+    assert group.description_rendered == ""
 
 
 def test_source_description_render(user: User) -> None:
@@ -50,13 +48,13 @@ def test_source_description_render(user: User) -> None:
     """
     group = SourceGroup.objects.create(name="Monkey", owner=user)
     source = Source.objects.create(name="Curious George", group=group, owner=user)
-    assert source.description is None and source.description_rendered == source.description
+    assert source.description is None and source.description_rendered == ""
     source.description = "A **dark** time for all."
     source.save()
     assert source.description_rendered == "<p>A <strong>dark</strong> time for all.</p>"
     source.description = None
     source.save()
-    assert source.description_rendered is None
+    assert source.description_rendered == ""
 
 
 def test_quote_rendering(user: User) -> None:

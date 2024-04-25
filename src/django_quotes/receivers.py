@@ -1,18 +1,15 @@
-#
 # receivers.py
 #
 # Copyright (c) 2024 Daniel Andrlik
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import F
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from markdown import markdown
 
 from django_markov.models import MarkovTextModel, sentence_generated
 from django_quotes.models import (
@@ -24,26 +21,6 @@ from django_quotes.models import (
     SourceStats,
 )
 from django_quotes.signals import quote_random_retrieved
-
-
-@receiver(pre_save, sender=SourceGroup)
-@receiver(pre_save, sender=Source)
-def render_description(sender, instance, *args, **kwargs):
-    """
-    Automatically renders the description from markdown.
-    """
-    if instance.description:
-        instance.description_rendered = markdown(instance.description)
-    else:
-        instance.description_rendered = None
-
-
-@receiver(pre_save, sender=Quote)
-def render_quote(sender, instance, *args, **kwargs):
-    """
-    Render the quote via markdown and save the results.
-    """
-    instance.quote_rendered = markdown(instance.quote)
 
 
 @receiver(pre_save, sender=SourceGroup)
