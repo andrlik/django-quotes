@@ -90,7 +90,7 @@ manage *ARGS: check
 
 # Access mkdocs commands
 docs *ARGS: check
-    rye run mkdocs {{ ARGS }}
+    rye run mike {{ ARGS }}
 
 # Build Python package
 build *ARGS: check
