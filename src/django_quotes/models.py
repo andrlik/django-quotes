@@ -84,7 +84,6 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
         id (int): Database primary key for the object.
         name (str): Human readable string to name the group. This will be converted to a slug prefix.
         description (str): A description of the group for convenience. Markdown can be used here for styling.
-        description_rendered (str): The HTML representation of the description string. Generated automatically.
         owner (User): The user that created the group and therefore owns it.
         public (bool): Is this group public or private. Defaults to False.
         allow_submissions (bool): Allow other users to submit characters to this. Not yet implemented.
@@ -264,7 +263,6 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         group (SourceGroup): The parent ``SourceGroup``.
         slug (str): Slug made up of a generated version of the character name and the group slug prefix.
         description (str): Description for the character. Markdown can be used for styling.
-        description_rendered (str): HTML representation of the description for convenience. Automatically generated.
         allow_markov (bool): Allow markov quotes to be requested from this character? Default False.
         owner (User): The user that created and owns this character.
         public (bool): Is the character public to other users? Defaults to False.
@@ -429,7 +427,6 @@ class Quote(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Rul
     Attributes:
         id (int): Database primary key for the object.
         quote (str): The quote text to use. You can use Markdown for styling. Must be <= 280 characters for tweets
-        quote_rendered (str): HTML rendered version of the quote field. Automatically generated.
         citation (str): Optional description of quote source, e.g. episode number or book title.
         citation_url (str): Optional accompanying URL for the citation.
         source (Source): The source of this quote.
