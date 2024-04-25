@@ -7,7 +7,7 @@
 
 Vulnerabilities can be reported by emailing core members:
 
-- Daniel Andrlik [daniel@andrlik.org](mailto:daniel@andrlik.org)
+- Daniel Andrlik [django-quotes-security@andrlik.org](mailto:django-quotes-security@andrlik.org)
 
 Please include the requested information listed below (as much as you can provide) to help us better understand the nature and scope of the possible issue:
 
