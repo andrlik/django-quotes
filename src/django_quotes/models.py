@@ -1,11 +1,9 @@
-#
 # models.py
 #
 # Copyright (c) 2024 Daniel Andrlik
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#
 
 from __future__ import annotations
 
@@ -23,6 +21,7 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from loguru import logger
+from markdown import markdown
 from rules.contrib.models import RulesModelBase, RulesModelMixin
 
 from django_markov.models import MarkovTextModel
@@ -110,9 +109,6 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
         null=True,
         blank=True,
     )
-    description_rendered = models.TextField(
-        help_text=_("Automatically generated from description"), null=True, blank=True
-    )
     slug = models.SlugField(
         unique=True,
         max_length=70,
@@ -159,6 +155,13 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
             except KeyError:  # pragma: nocover
                 pass
 
+    @property
+    def description_rendered(self) -> str:
+        """Return the markdown rendered version of the string."""
+        if self.description is None or self.description == "":
+            return ""
+        return markdown(self.description)
+
     @cached_property
     def total_sources(self) -> int:
         """Total number of sources for the group."""
@@ -178,7 +181,8 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
     def markov_ready(self) -> bool:
         """Checks to see if there are Markov enabled sources and sufficient quotes."""
         if (
-            self.markov_sources > 0 and self.text_model is not None
+            self.markov_sources > 0
+            and self.text_model is not None
             and Quote.objects.filter(source__in=self.source_set.filter(allow_markov=True)).count() > 10  # noqa:PLR2004
         ):
             return True
@@ -288,9 +292,6 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         blank=True,
         help_text=_("Description of this character. You can style this with Markdown."),
     )
-    description_rendered = models.TextField(
-        null=True, blank=True, help_text=_("Automatically generated from description on save.")
-    )
     allow_markov = models.BooleanField(default=False, help_text=_("Allow to be used in markov chains?"))
     group = models.ForeignKey(
         SourceGroup,
@@ -321,6 +322,13 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         if not self.slug:
             self.slug = generate_unique_slug_for_model(type(self), text=f"{self.group.slug} {self.name}")
         super().save(*args, **kwargs)
+
+    @property
+    def description_rendered(self) -> str:
+        """Return the markdown rendered version of the string."""
+        if self.description is None or self.description == "":
+            return ""
+        return markdown(self.description)
 
     @property
     def markov_ready(self) -> bool:
@@ -424,7 +432,7 @@ class Quote(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Rul
         quote_rendered (str): HTML rendered version of the quote field. Automatically generated.
         citation (str): Optional description of quote source, e.g. episode number or book title.
         citation_url (str): Optional accompanying URL for the citation.
-        character (Source): The source of this quote.
+        source (Source): The source of this quote.
         owner (User): The user that created and owns this quote.
         created (datetime): When this object was first created. Auto-generated.
         modified (datetime): Last time this object was modified. Auto-generated.
@@ -437,11 +445,6 @@ class Quote(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Rul
     quote = models.CharField(
         max_length=280,  # Keep the base limit to 280 so that quotes are 'tweetable'
         help_text="Plain text representation of quote. You can use Markdown here.",
-    )
-    quote_rendered = models.TextField(
-        null=True,
-        blank=True,
-        help_text=_("HTML rendered version of quote generated from quote plain text."),
     )
     source = models.ForeignKey(
         Source,
@@ -471,6 +474,13 @@ class Quote(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Rul
 
     def __str__(self):  # pragma: nocover
         return f"{self.source.name}: {self.quote}"
+
+    @property
+    def quote_rendered(self) -> str:
+        """Return the markdown rendered version of the string."""
+        if self.quote is None or self.quote == "":
+            return ""
+        return markdown(self.quote)
 
 
 class QuoteStats(TimeStampedModel):
