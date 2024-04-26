@@ -170,11 +170,21 @@ source_list.html
 source_update.html
 ```
 
+## Updating Markov Models
+
+Depending on the number of quotes included for a given Source or Source Group, generating the stored text models can become time consuming. While the 
+app will trigger model building on certain events, such as when you enable "Allow markov" on a source that has sufficient quotes, it does
+not do this for every save event. It's recommended that you either set up a cronjob to run the management command `python manage.py makemarkov`, or that
+you use a task queue app such as [celery](https://github.com/celery/celery) or [django-q2](https://github.com/django-q2/django-q2) to 
+schedule those tasks on a `post_save` signal from the `Quote` model. These additional dependencies are not included for this package as their
+use is a project-level determination. 
+
+If you choose to use a task queue, there is a task function that can be used as the callable to pass to the queue: 
+`django_quotes.tasks.update_models_on_quote_save`. See the [reference documentation](reference/django_quotes/tasks.md) for more info.
+
 ## Usage
 
-By default, django-quotes provides access via the admin site, and provides a set of basic views for managing the quotes and associated data. 
-
-
+By default, django-quotes provides access via the admin site, and provides a set of basic views for managing the quotes and associated data.
 
 
 [^1]: Other languages are not supported at this time.

@@ -179,7 +179,7 @@ def test_markov_stat_signal(statable_source):
 #
 #
 def test_source_set_to_allow_markov_regenerates_models(property_group):
-    source = property_group.source_set.filter(allow_markov=False)[0]
+    source = property_group.source_set.select_related("text_model").filter(allow_markov=False)[0]
     cmodel_lastmodify = source.text_model.modified
     gmodel_lastmodify = property_group.text_model.modified
     source.allow_markov = True

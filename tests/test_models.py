@@ -1,11 +1,9 @@
-#
 # test_models.py
 #
 # Copyright (c) 2024 Daniel Andrlik
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#
 
 from datetime import timedelta
 
@@ -42,6 +40,12 @@ def test_generate_source_slug(user: User) -> None:
     assert source.slug == "monkey-john-smith"
 
 
+def test_quote_rendered(property_group):
+    source = property_group.source_set.first()
+    quote = Quote.objects.create(quote="", source=source, owner=property_group.owner)
+    assert quote.quote_rendered == ""
+
+
 @pytest.mark.parametrize(
     "group1,group2,source_name,slug",
     [
@@ -68,6 +72,21 @@ def test_group_properties_calculation(property_group: SourceGroup) -> None:
     assert property_group.total_sources == 10
     assert property_group.markov_sources == 5
     assert property_group.total_quotes == 200
+
+
+@pytest.mark.asyncio
+async def test_async_markov_ready(property_group) -> None:
+    valid_source = await property_group.source_set.select_related("text_model").filter(allow_markov=True).afirst()
+    valid_source_with_small_corpus = await Source.objects.acreate(
+        group=property_group, owner=property_group.owner, name="Quiet", allow_markov=True
+    )
+    await Quote.objects.acreate(
+        quote="Shh, I'm being sneaky.", source=valid_source_with_small_corpus, owner=property_group.owner
+    )
+    invalid_source = await property_group.source_set.select_related("text_model").filter(allow_markov=False).afirst()
+    assert await valid_source._amarkov_ready()
+    assert not await valid_source_with_small_corpus._amarkov_ready()
+    assert not await invalid_source._amarkov_ready()
 
 
 def test_refresh_from_db_also_updates_cached_properties(property_group: SourceGroup, user: User) -> None:
@@ -97,7 +116,7 @@ def test_generate_markov_sentence(property_group):
     noquote_source = Source.objects.create(group=property_group, name="No One", owner=property_group.owner)
     assert noquote_source.get_markov_sentence() is None
     noquote_source.delete()
-    quotable_source = Source.objects.filter(group=property_group)[0]
+    quotable_source = Source.objects.filter(group=property_group, allow_markov=True)[0]
     sentence = quotable_source.get_markov_sentence(tries=50)
     print(sentence)
     assert isinstance(sentence, str)
@@ -125,6 +144,9 @@ def test_group_generate_markov_sentence(property_group, corpus_sentences):
     )
     for sentence in corpus_sentences:
         Quote.objects.create(source=quote_source, quote=sentence, owner=property_group.owner)
+    for source in property_group.source_set.select_related("text_model").filter(allow_markov=True):
+        if source.markov_ready:
+            source.update_markov_model()
     assert no_quote_group.generate_markov_sentence() is None
     assert property_group.generate_markov_sentence(tries=50) is not None
 

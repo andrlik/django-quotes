@@ -118,4 +118,5 @@ def update_markov_model_for_character_enabling_markov(sender, instance, *args, *
         old_version = Source.objects.get(id=instance.id)
         if not old_version.allow_markov:
             instance.update_markov_model()
-            instance.group.update_markov_model()
+            instance.text_model.refresh_from_db()
+            instance.group.update_markov_model(additional_model=instance.text_model)
