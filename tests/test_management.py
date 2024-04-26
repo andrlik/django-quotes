@@ -1,11 +1,9 @@
-#
 # test_management.py
 #
 # Copyright (c) 2024 Daniel Andrlik
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#
 
 from io import StringIO
 
@@ -20,7 +18,7 @@ pytestmark = pytest.mark.django_db(transaction=True)
 
 def test_markov_command(property_group):
     pgmm = property_group.text_model
-    source = property_group.source_set.filter(allow_markov=True)[0]
+    source = property_group.source_set.select_related("text_model").filter(allow_markov=True)[0]
     group_modify = pgmm.modified
     cmm = source.text_model
     char_modify = cmm.modified
