@@ -7,6 +7,7 @@
 
 import pytest
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from django_quotes.models import (
     GroupStats,
     Quote,
@@ -148,36 +149,6 @@ def test_markov_stat_signal(statable_source):
     assert group_quotes_generated < statable_source.group.stats.quotes_generated
 
 
-# def test_quote_create_edit_markov_generation_signal(property_group):
-#     source = property_group.source_set.filter(allow_markov=True)[0]
-#     cmodel_lastmodify = SourceMarkovModel.objects.get(source=source).modified
-#     gmodel_lastmodify = GroupMarkovModel.objects.get(group=property_group).modified
-#     q = Quote.objects.create(
-#         quote="I am a new quote, full of exciting things to think about.",
-#         source=source,
-#         owner=property_group.owner,
-#         citation="Some episode",
-#     )
-#     assert (
-#         cmodel_lastmodify
-#         < SourceMarkovModel.objects.get(source=source).modified
-#     )
-#     assert (
-#         gmodel_lastmodify < GroupMarkovModel.objects.get(group=property_group).modified
-#     )
-#     cmodel_lastmodify = SourceMarkovModel.objects.get(source=source).modified
-#     gmodel_lastmodify = GroupMarkovModel.objects.get(group=property_group).modified
-#     q.quote = "Let's change things up a bit with a new quote."
-#     q.save()
-#     assert (
-#         cmodel_lastmodify
-#         < SourceMarkovModel.objects.get(source=source).modified
-#     )
-#     assert (
-#         gmodel_lastmodify < GroupMarkovModel.objects.get(group=property_group).modified
-#     )
-#
-#
 def test_source_set_to_allow_markov_regenerates_models(property_group):
     source = property_group.source_set.select_related("text_model").filter(allow_markov=False)[0]
     cmodel_lastmodify = source.text_model.modified
@@ -186,3 +157,12 @@ def test_source_set_to_allow_markov_regenerates_models(property_group):
     source.save()
     assert cmodel_lastmodify < MarkovTextModel.objects.get(pk=source.text_model.pk).modified
     assert gmodel_lastmodify < MarkovTextModel.objects.get(pk=property_group.text_model.pk).modified
+
+
+def test_delete_orphaned_text_models(property_group):
+    source = property_group.source_set.select_related("text_model").filter(allow_markov=True).first()
+    assert source.text_model is not None
+    model_id = source.text_model.id
+    source.delete()
+    with pytest.raises(ObjectDoesNotExist):
+        MarkovTextModel.objects.get(pk=model_id)

@@ -9,8 +9,8 @@ from datetime import timedelta
 
 import pytest
 from django.utils import timezone
-from django_quotes.models import Quote, Source
-from django_quotes.tasks import QuoteCorpusError, update_models_on_quote_save
+from django_quotes.models import Quote, QuoteCorpusError, Source
+from django_quotes.tasks import update_models_on_quote_save
 
 from django_markov.text_models import POSifiedText
 

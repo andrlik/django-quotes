@@ -10,6 +10,7 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING, Any
 
+import markovify
 import rules
 from asgiref.sync import async_to_sync
 
@@ -42,6 +43,14 @@ if hasattr(settings, "MAX_QUOTES_FOR_RANDOM_SET"):  # pragma: nocover
 
 if hasattr(settings, "MAX_QUOTES_FOR_RANDOM_GROUP_SET"):  # pragma: nocover
     MAX_QUOTES_FOR_RANDOM_GROUP_SET = settings.MAX_QUOTES_FOR_RANDOM_GROUP_SET
+
+
+class QuoteCorpusError(Exception):
+    """
+    An exception raised when a quote corpus fails to generate.
+    """
+
+    pass
 
 
 class AbstractOwnerModel(models.Model):
@@ -90,6 +99,7 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
         public (bool): Is this group public or private. Defaults to False.
         allow_submissions (bool): Allow other users to submit characters to this. Not yet implemented.
         slug (str): A unique slug to represent this group. Generated automatically from name.
+        text_model (MarkovTextModel | None): The current text model.
         created (datetime): When this object was first created. Auto-generated.
         modified (datetime): Last time this object was modified. Auto-generated.
 
@@ -119,7 +129,7 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
     )
     text_model = models.OneToOneField(
         MarkovTextModel,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         help_text=_("The markov model for this group."),
@@ -295,6 +305,7 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         owner (User): The user that created and owns this character.
         public (bool): Is the character public to other users? Defaults to False.
         allow_submissions (bool): Allow other users to submit quotes for this character? Defaults to False.
+        text_model (MarkovTextModel | None): The current text_model.
         created (datetime): When this object was first created. Auto-generated.
         modified (datetime): Last time this object was modified. Auto-generated.
 
@@ -326,7 +337,7 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
     )
     text_model = models.OneToOneField(
         MarkovTextModel,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         help_text=_("The text model for this character."),
@@ -383,9 +394,11 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         """
         Process all quotes into the associated model.
         """
-        if self._amarkov_ready():
+        if await self._amarkov_ready():
             await self.text_model.aupdate_model_from_corpus(  # type: ignore
-                corpus_entries=[quote.quote async for quote in self.quote_set.all()], char_limit=0, store_compiled=False
+                corpus_entries=[quote.quote async for quote in self.quote_set.all()],
+                char_limit=0,
+                store_compiled=False,
             )
 
     def update_markov_model(self) -> None:
@@ -393,6 +406,44 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         Sync wrapper around `aupdate_markov_model`.
         """
         async_to_sync(self.aupdate_markov_model)()
+
+    async def aadd_new_quote_to_model(self, quote_to_add: Quote) -> None:
+        """Allows adding a new quote to the source's (and group's) text model without parsing the whole corpus.
+        Note that deleting or editing a quote will still require a full re-ingest of the corpus to remove old data.
+
+        Args:
+            quote_to_add (Quote): A quote to add to the source text model.
+        """
+        if self.allow_markov and await self.quote_set.acount() > 10 and self.text_model is not None:  # noqa: PLR2004
+            if not self.text_model.data:
+                await self.aupdate_markov_model()
+                await self.group.aupdate_markov_model()
+            else:
+                if self.group.text_model is None:  # no cov
+                    self.group.text_model = await MarkovTextModel.objects.acreate()
+                source_model = POSifiedText.from_json(self.text_model.data)
+                group_model = POSifiedText.from_json(self.group.text_model.data)
+                quote_model = POSifiedText(quote_to_add.quote)
+                try:
+                    combined_source_model = markovify.combine([source_model, quote_model])
+                    combined_group_model = markovify.combine([group_model, quote_model])
+                except ValueError as ve:
+                    msg = f"Unable to combine models: {ve}"
+                    raise QuoteCorpusError(msg) from ve
+                self.text_model.data = combined_source_model.to_json()  # type: ignore
+                self.group.text_model.data = combined_group_model.to_json()  # type: ignore
+                await self.text_model.asave()
+                await self.group.text_model.asave()
+
+    def add_new_quote_to_model(self, quote_to_add: Quote) -> None:
+        """Sync wrapper for `aadd_new_quote_to_model`.
+        Allows adding a new quote to the source's text model without parsing the whole corpus.
+        Note that deleting or editing a quote will still require a full re-ingest of the corpus to remove old data.
+
+        Args:
+            quote_to_add (Quote): A quote to add to the source text model.
+        """
+        async_to_sync(self.aadd_new_quote_to_model)(quote_to_add)
 
     def get_markov_sentence(self, max_characters: int | None = 280, tries: int = 20) -> str | None:
         """

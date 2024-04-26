@@ -8,7 +8,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import F
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_delete, pre_save
 from django.dispatch import receiver
 
 from django_markov.models import MarkovTextModel, sentence_generated
@@ -24,18 +24,10 @@ from django_quotes.signals import quote_random_retrieved
 
 
 @receiver(pre_save, sender=SourceGroup)
-def initialize_group_markov_object(sender, instance, *args, **kwargs):
-    """
-    Creates the one-to-one object for the group markov model.
-    """
-    if not instance.text_model:
-        instance.text_model = MarkovTextModel.objects.create()
-
-
 @receiver(pre_save, sender=Source)
 def initialize_markov_object(sender, instance, *args, **kwargs):
     """
-    Creates the one-to-one object to accompany the source object.
+    Creates the one-to-one object for the group markov model.
     """
     if not instance.text_model:
         instance.text_model = MarkovTextModel.objects.create()
@@ -105,18 +97,22 @@ def update_stats_for_markov(sender, instance, char_limit, sentence, *args, **kwa
             source_stats.save()
 
 
-# @receiver(post_save, sender=Quote)
-# def update_markov_model_on_quote_change(sender, instance, created, *args, **kwargs):
-#     if instance.character.allow_markov:
-#         cmm = CharacterMarkovModel.objects.get(character=instance.character)
-#         cmm.generate_model_from_corpus()
-
-
 @receiver(pre_save, sender=Source)
 def update_markov_model_for_character_enabling_markov(sender, instance, *args, **kwargs):
+    """
+    When updating a source to allow_markov, trigger markov model updates.
+    """
     if instance.id and instance.allow_markov:
         old_version = Source.objects.get(id=instance.id)
         if not old_version.allow_markov:
             instance.update_markov_model()
             instance.text_model.refresh_from_db()
             instance.group.update_markov_model(additional_model=instance.text_model)
+
+
+@receiver(pre_delete, sender=Source)
+@receiver(pre_delete, sender=SourceGroup)
+def delete_markov_models_before_orphaning(sender, instance, *args, **kwargs):
+    """When deleting a source or source group, ensure that its text_model is deleted first."""
+    if instance.text_model is not None:
+        instance.text_model.delete()

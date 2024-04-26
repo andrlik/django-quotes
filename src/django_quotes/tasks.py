@@ -11,15 +11,7 @@ from django.db.transaction import atomic
 from django.utils import timezone
 
 from django_markov.models import MarkovCombineError
-from django_quotes.models import Quote
-
-
-class QuoteCorpusError(Exception):
-    """
-    An exception raised when a quote corpus fails to generate.
-    """
-
-    pass
+from django_quotes.models import Quote, QuoteCorpusError
 
 
 def update_models_on_quote_save(quote: Quote) -> bool:

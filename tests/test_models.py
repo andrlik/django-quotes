@@ -11,7 +11,9 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.utils import timezone
-from django_quotes.models import Quote, Source, SourceGroup
+from django_quotes.models import Quote, QuoteCorpusError, Source, SourceGroup
+
+from django_markov.text_models import POSifiedText
 
 User = get_user_model()
 
@@ -180,3 +182,128 @@ def test_pub_date_prevents_inclusion_in_group_random_quote(property_group):
     q.pub_date = timezone.now() - timedelta(days=2)
     q.save()
     assert new_group.get_random_quote() == q
+
+
+def test_add_quote_to_model_compile_fail(property_group):
+    sources = (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=True)
+    )
+    for source in sources:
+        source.update_markov_model()
+    property_group.update_markov_model()
+    source_one = sources.first()
+    source_two = sources.exclude(pk=source_one.pk).last()
+    # We grab a quote from another source to bypass any automated updates.
+    quote = source_one.quote_set.first()
+    # Now we go and compile source_two's models to ensure they won't be compatible.
+    model_to_compile = POSifiedText.from_json(source_two.text_model.data)
+    model_to_compile.compile(inplace=True)
+    source_two.text_model.data = model_to_compile.to_json()
+    source_two.text_model.save()
+    old_source_modify = source_two.text_model.modified
+    old_group_modify = property_group.text_model.modified
+    with pytest.raises(QuoteCorpusError):
+        source_two.add_new_quote_to_model(quote)
+    source_two.text_model.refresh_from_db()
+    property_group.text_model.refresh_from_db()
+    assert source_two.text_model.modified == old_source_modify
+    assert property_group.text_model.modified == old_group_modify
+
+
+def test_add_quote_to_text_models_success(property_group):
+    sources = (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=True)
+    )
+    for source in sources:
+        source.update_markov_model()
+    property_group.update_markov_model()
+    source_one = sources.first()
+    source_two = sources.exclude(pk=source_one.pk).last()
+    old_source_modify = source_two.text_model.modified
+    old_group_modify = property_group.text_model.modified
+    # We grab a quote from another source to bypass any automated updates.
+    quote = source_one.quote_set.first()
+    source_two.add_new_quote_to_model(quote)
+    source_two.text_model.refresh_from_db()
+    property_group.text_model.refresh_from_db()
+    assert source_two.text_model.modified > old_source_modify
+    assert property_group.text_model.modified > old_group_modify
+
+
+def test_add_quote_to_too_small_corpus(property_group):
+    other_source = (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=True)
+        .first()
+    )
+    source = Source.objects.create(
+        group=property_group, name="Future Man", owner=property_group.owner, allow_markov=True
+    )
+    assert source.text_model is not None
+    Quote.objects.create(quote="I love these snakes!", source=source, owner=source.owner)
+    source.update_markov_model()
+    old_source_modify = source.text_model.modified
+    old_group_modify = property_group.text_model.modified
+    new_quote = other_source.quote_set.first()
+    source.add_new_quote_to_model(new_quote)
+    source.text_model.refresh_from_db()
+    source.group.text_model.refresh_from_db()
+    assert old_source_modify == source.text_model.modified
+    assert old_group_modify == property_group.text_model.modified
+
+
+def test_add_quote_with_markov_disabled_fails(property_group):
+    other_source = (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=True)
+        .first()
+    )
+    source = (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=False)
+        .first()
+    )
+    source.update_markov_model()
+    source.text_model.refresh_from_db()
+    old_source_modify = source.text_model.modified
+    old_group_modify = property_group.text_model.modified
+    quote = other_source.quote_set.first()
+    source.add_new_quote_to_model(quote)
+    source.text_model.refresh_from_db()
+    source.group.text_model.refresh_from_db()
+    assert source.text_model.modified == old_source_modify
+    assert property_group.text_model.modified == old_group_modify
+
+
+def test_add_quote_to_model_fallback_on_empty_model(property_group):
+    other_source = (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=True)
+        .first()
+    )
+    source = (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=True)
+        .exclude(pk=other_source.pk)
+        .first()
+    )
+    source.text_model.data = None
+    source.text_model.save()
+    source.text_model.refresh_from_db()
+    old_source_modify = source.text_model.modified
+    old_group_modify = property_group.text_model.modified
+    new_quote = other_source.quote_set.first()
+    source.add_new_quote_to_model(new_quote)
+    source.text_model.refresh_from_db()
+    property_group.text_model.refresh_from_db()
+    assert source.text_model.modified > old_source_modify
+    assert property_group.text_model.modified > old_group_modify
