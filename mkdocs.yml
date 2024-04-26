@@ -50,6 +50,7 @@ markdown_extensions:
     - pymdownx.snippets
     - pymdownx.superfences
     - footnotes
+    - admonition
 
 extra:
   version:

@@ -181,6 +181,11 @@ use is a project-level determination.
 
 If you choose to use a task queue, there is a task function that can be used as the callable to pass to the queue: 
 `django_quotes.tasks.update_models_on_quote_save`. See the [reference documentation](reference/django_quotes/tasks.md) for more info.
+For further optimization, you can also make use of the `Source.add_quote_to_model` method with your queue, which creates a text model of a single quote and then uses the faster `makovify.combine` functions add to the source and group models. 
+
+!!! warning
+    
+    Do not connect these functions to your receivers directly. They can negatively impact peformance if being handled in the midst of a request. **Always** trigger these as background or ad hoc tasks!
 
 ## Usage
 
