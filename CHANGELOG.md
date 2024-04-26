@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.5.0
 
-[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.4.2...HEAD)
+[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.4.2...v0.5.0)
 
 - Adds a method `django_quotes.tasks.update_models_on_quote_save` that can be used for distributed task queues such as django-q2 or celery for updating markov models as a background task.
 - Updates behavior of SourceGroup when generating its text model based its sources. It now makes use of `django-markov`'s `combine_models`, which is over 750% faster!
