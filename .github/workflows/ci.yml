@@ -63,7 +63,7 @@ jobs:
         if [ ! -d .venv ]; then
             python -m uv venv
         fi
-        python -m uv pip install -e .[test]
+        python -m uv pip install -r requirements-dev.lock
         python -m uv pip install "en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.7.3/en_core_web_trf-3.7.3-py3-none-any.whl"
         python -m uv pip install Django~="${{ matrix.django-version }}.0"
         source .venv/bin/activate
