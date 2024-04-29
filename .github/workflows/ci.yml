@@ -56,7 +56,7 @@ jobs:
       with:
         path: .venv
         key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-Django-${{ steps.setup_python.outputs.django_version }}-${{ hashFiles('requirements-dev.lock') }}
-        restore-keys: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-Django-${{ steps.setup_python.outputs.django_version }}-
+        restore-keys: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-Django-${{ steps.setup_python.outputs.django_version }}
 
     - name: Create venv, install dependencies
       run: |
