@@ -8,9 +8,9 @@
 from __future__ import annotations
 
 import random
+from collections.abc import AsyncIterable, Iterable
 from typing import TYPE_CHECKING, Any
 
-import markovify
 import rules
 from asgiref.sync import async_to_sync
 
@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 from django.conf import settings
 from django.db import models
 from django.db.models import Count
+from django.db.models.query import QuerySet
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -26,7 +27,7 @@ from loguru import logger
 from markdown import markdown
 from rules.contrib.models import RulesModelBase, RulesModelMixin
 
-from django_markov.models import MarkovTextModel
+from django_markov.models import MarkovCombineError, MarkovEmptyError, MarkovTextModel
 from django_markov.text_models import POSifiedText
 from django_quotes.rules import (  # is_character_owner,; is_group_owner_and_authenticated,
     is_owner,
@@ -407,12 +408,13 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
         """
         async_to_sync(self.aupdate_markov_model)()
 
-    async def aadd_new_quote_to_model(self, quote_to_add: Quote) -> None:
+    async def aadd_new_quote_to_model(self, quote_to_add: Quote | Iterable[Quote] | AsyncIterable[Quote]) -> None:
         """Allows adding a new quote to the source's (and group's) text model without parsing the whole corpus.
         Note that deleting or editing a quote will still require a full re-ingest of the corpus to remove old data.
 
         Args:
-            quote_to_add (Quote): A quote to add to the source text model.
+            quote_to_add (Quote | Iterable[Quote] | AsyncIterable[Quote]): A Quote instance, or an iterable of Quote
+                instances to add to the source text model.
         """
         if self.allow_markov and await self.quote_set.acount() > 10 and self.text_model is not None:  # noqa: PLR2004
             if not self.text_model.data:
@@ -421,19 +423,24 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
             else:
                 if self.group.text_model is None:  # no cov
                     self.group.text_model = await MarkovTextModel.objects.acreate()
-                source_model = POSifiedText.from_json(self.text_model.data)
-                group_model = POSifiedText.from_json(self.group.text_model.data)
-                quote_model = POSifiedText(quote_to_add.quote)
+                if isinstance(quote_to_add, AsyncIterable | QuerySet):
+                    corpus_entries = [quote.quote async for quote in quote_to_add]
+                elif isinstance(quote_to_add, Iterable):
+                    corpus_entries = [quote.quote for quote in quote_to_add]
+                else:
+                    corpus_entries = [quote_to_add.quote]
                 try:
-                    combined_source_model = markovify.combine([source_model, quote_model])
-                    combined_group_model = markovify.combine([group_model, quote_model])
-                except ValueError as ve:
+                    await self.text_model.aadd_new_corpus_data_to_model(corpus_entries=corpus_entries)
+                    await self.group.text_model.aadd_new_corpus_data_to_model(corpus_entries=corpus_entries)
+                except ValueError as ve:  # no cov
                     msg = f"Unable to combine models: {ve}"
                     raise QuoteCorpusError(msg) from ve
-                self.text_model.data = combined_source_model.to_json()  # type: ignore
-                self.group.text_model.data = combined_group_model.to_json()  # type: ignore
-                await self.text_model.asave()
-                await self.group.text_model.asave()
+                except MarkovCombineError as mce:
+                    msg = f"Unable to add data to model: {mce}"
+                    raise QuoteCorpusError(msg) from mce
+                except MarkovEmptyError as mee:
+                    msg = f"Cannot add a quote with no text to model: {mee}"
+                    raise QuoteCorpusError(msg) from mee
 
     def add_new_quote_to_model(self, quote_to_add: Quote) -> None:
         """Sync wrapper for `aadd_new_quote_to_model`.

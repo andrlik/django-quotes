@@ -56,7 +56,7 @@ django-crispy-forms==2.1
     # via django-quotes
 django-easy-logging==0.70
     # via django-quotes
-django-markov==0.2.2
+django-markov==0.3.0
     # via django-quotes
 djangorestframework==3.15.1
     # via django-quotes

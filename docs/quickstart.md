@@ -181,7 +181,7 @@ use is a project-level determination.
 
 If you choose to use a task queue, there is a task function that can be used as the callable to pass to the queue: 
 `django_quotes.tasks.update_models_on_quote_save`. See the [reference documentation](reference/django_quotes/tasks.md) for more info.
-For further optimization, you can also make use of the `Source.add_quote_to_model` method with your queue, which creates a text model of a single quote and then uses the faster `makovify.combine` functions add to the source and group models. 
+For further optimization, you can also make use of the `Source.add_quote_to_model` method with your queue, which creates a text model of a single quote (or iterable of quotes) and then uses `django_markov`'s `add_new_corpus_data_to_model` to add to the source and group models. 
 
 !!! warning
     

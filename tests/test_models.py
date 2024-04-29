@@ -307,3 +307,55 @@ def test_add_quote_to_model_fallback_on_empty_model(property_group):
     property_group.text_model.refresh_from_db()
     assert source.text_model.modified > old_source_modify
     assert property_group.text_model.modified > old_group_modify
+
+
+def test_add_empty_quote_list_fails(property_group):
+    source = (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=True)
+        .first()
+    )
+    source.update_markov_model()
+    with pytest.raises(QuoteCorpusError):
+        source.add_new_quote_to_model(quote_to_add=[])
+
+
+def test_add_empty_quote_queryset_fails(property_group):
+    source = (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=True)
+        .first()
+    )
+    source.update_markov_model()
+    quotes = Quote.objects.none()
+    with pytest.raises(QuoteCorpusError):
+        source.add_new_quote_to_model(quote_to_add=quotes)
+
+
+@pytest.mark.asyncio
+async def test_add_empty_async_quote_queryset_fails(property_group):
+    source = await (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=True)
+        .afirst()
+    )
+    await source.aupdate_markov_model()
+    quotes = Quote.objects.none()
+    with pytest.raises(QuoteCorpusError):
+        await source.aadd_new_quote_to_model(quote_to_add=quotes)
+
+
+def test_add_blank_quote_fails(property_group):
+    source = (
+        property_group.source_set.select_related("text_model", "group", "group__text_model")
+        .prefetch_related("quote_set")
+        .filter(allow_markov=True)
+        .first()
+    )
+    source.update_markov_model()
+    quote = Quote.objects.create(quote="", source=source, owner=source.owner)
+    with pytest.raises(QuoteCorpusError):
+        source.add_new_quote_to_model(quote)

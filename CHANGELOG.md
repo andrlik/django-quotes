@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.5.0...HEAD)
+
+- Updates to `django-markov` to 0.3.0
+- Converts add_new_quote_to_model to use the underlying functions from django-markov.
+- Adds the ability to add an iterable of Quote instances to the model at once. The call accepts either an iterable or QuerySet of Quote instances, or a single instance to maintain backwards compatibility.
+
 ## 0.5.0
 
 [Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.4.2...v0.5.0)
