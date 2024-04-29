@@ -56,14 +56,14 @@ jobs:
       with:
         path: .venv
         key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-Django-${{ steps.setup_python.outputs.django_version }}-${{ hashFiles('requirements-dev.lock') }}
-        restore-keys: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-Django-${{ steps.setup_python.outputs.django_version }}-
+        restore-keys: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-Django-${{ steps.setup_python.outputs.django_version }}
 
     - name: Create venv, install dependencies
       run: |
         if [ ! -d .venv ]; then
             python -m uv venv
         fi
-        python -m uv pip install -r requirements-dev.lock
+        python -m uv pip install -e .[test]
         python -m uv pip install "en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.7.3/en_core_web_trf-3.7.3-py3-none-any.whl"
         python -m uv pip install Django~="${{ matrix.django-version }}.0"
         source .venv/bin/activate
