@@ -4,6 +4,7 @@ version = "0.5.1"
 description = """A reusable Django app to collect quotes for use in random retrieval or generation of sentences using \
     Markov Chains."""
 authors = [{ name = "Daniel Andrlik", email = "daniel@andrlik.org" }]
+requires-python = ">= 3.11"
 dependencies = [
     "django-markov>=0.3.0",
     "rules>=3.1",
@@ -67,7 +68,7 @@ packages = ["src/django_quotes"]
 [tool.hatch.build.targets.sdist]
 include = ["src/django_quotes", "tests"]
 
-[tool.rye]
+[tool.uv]
 managed = true
 dev-dependencies = [
     "werkzeug[watchdog]>=3.0.2",
@@ -86,7 +87,7 @@ dev-dependencies = [
     "mkdocs-material>=9.5.17",
     "mkdocstrings[python]>=0.24.2",
     "mkdocs-include-markdown-plugin>=6.0.5",
-    "en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.7.3/en_core_web_trf-3.7.3-py3-none-any.whl",
+    "en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.8.0/en_core_web_trf-3.8.0-py3-none-any.whl",
     "psycopg[binary]>=3.1.18",
     "bump-my-version>=0.20.0",
     "pyright>=1.1.357",
