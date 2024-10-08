@@ -8,25 +8,34 @@ help:
 # Script to rule them all recipes.               #
 # ---------------------------------------------- #
 
-# Downloads and installs rye on your system. If on Windows, download an official release from https://rye-up.com instead.
-rye-install:
+# Install pre-commit hooks
+_install-pre-commit: _check-pre-commit
+    #!/usr/bin/env bash
+    if [[ ! -f .git/hooks/pre-commit ]]; then
+      echo "Pre-commit hooks are not installed yet! Doing so now."
+      pre-commit install
+    fi
+    exit 0
+
+# Downloads and installs uv on your system. If on Windows, follow the directions at https://docs.astral.sh/uv/getting-started/installation/ instead.
+uv-install:
     #!/usr/bin/env bash
     set -euo pipefail
-    if ! command -v rye &> /dev/null;
+    if ! command -v uv &> /dev/null;
     then
-      echo "Rye is not found on path! Starting install..."
-      curl -sSf https://rye-up.com/get | bash
+      echo "uv is not found on path! Starting install..."
+      curl -LsSf https://astral.sh/uv/install.sh | sh
     else
-      rye self update
+      uv self update
     fi
 
-# Update Rye
-rye-update:
-    rye self update
+# Update uv
+uv-update:
+    uv self update
 
-# Uninstall Rye
-rye-uninstall:
-    rye self uninstall
+# Uninstall uv
+uv-uninstall:
+    uv self uninstall
 
 _check-pre-commit:
     #!/usr/bin/env bash
@@ -37,24 +46,23 @@ _check-pre-commit:
 
 _check-env:
     #!/usr/bin/env bash
-    if [[ -z "$DJANGO_SETTINGS_MODULE" ]]; then
-      echo "DJANGO_SETTINGS_MODULE is not set!" >&2
+    if [[ -z "$DJANGO_DEBUG" ]]; then
+      echo "DJANGO_DEBUG is not set and application will run in production mode." >&2
     fi
 
-# Installs pre-commit into your clone of the git repo.
-_install-pre-commit: _check-pre-commit
-    pre-commit install
-
 # Setup the project and update dependencies.
-bootstrap: rye-install _install-pre-commit _check-env
-    rye sync
-    rye run django-admin migrate
+bootstrap: uv-install _install-pre-commit _check-env
+    #!/usr/bin/env bash
+    uv sync --inexact
+    uv pip install pip
+    uv run -m spacy info en_core_web_trf && echo "Lang model is already installed" || uv run -m spacy download en_core_web_trf
+    DJANGO_SETTINGS_MODULE="tests.django_settings" PYTHONPATH="$PYTHONPATH:$(pwd)" uv run django-admin migrate
 
 # Checks that project is ready for development.
 check: _check-env _check-pre-commit
     #!/usr/bin/env bash
-    if ! command -v rye &> /dev/null; then
-      echo "Rye is not installed!"
+    if ! command -v uv &> /dev/null; then
+      echo "UV is not installed!"
       exit 1
     fi
     if [[ ! -f ".venv/bin/python" ]]; then
@@ -64,37 +72,37 @@ check: _check-env _check-pre-commit
 
 # Check types
 check-types: check
-    rye run pyright
+    uv run pyright
 
 # Run just formatter and rye formatter.
 fmt: check
     just --fmt --unstable
-    rye fmt
+    uvx run ruff format
 
 # Run ruff linting
 lint: check
-    rye check
+    uvx run ruff check
 
 # Run the test suite
 test *ARGS: check
-    rye run pytest {{ ARGS }}
+    uv run -m pytest {{ ARGS }}
 
 # Runs bandit safety checks.
 safety: check
-    rye run python -m bandit -c pyproject.toml -r src
+    uv run -m bandit -c pyproject.toml -r src
 
 # Access Django management commands.
 manage *ARGS: check
     #!/usr/bin/env bash
-    DJANGO_SETTINGS_MODULE="tests.django_settings" PYTHONPATH="$PYTHONPATH:$(pwd)" rye run django-admin {{ ARGS }}
+    DJANGO_SETTINGS_MODULE="tests.django_settings" PYTHONPATH="$PYTHONPATH:$(pwd)" uv run django-admin {{ ARGS }}
 
 # Access mkdocs commands
 docs *ARGS: check
-    rye run mike {{ ARGS }}
+    uv run mike {{ ARGS }}
 
 # Build Python package
 build *ARGS: check
-    rye build {{ ARGS }}
+    uv build {{ ARGS }}
 
 # Removes pycache directories and files.
 _pycache-remove:

@@ -8,8 +8,8 @@ We use [`just`](https://github.com/casey/just) to execute common tasks. It is av
 
 ## Dependencies
 
-We use `rye` to manage the Python [dependencies](https://rye-up.com).
-If you don't have `rye`, you should install with `just rye-install`.
+We use `uv` to manage the Python [dependencies](https://rye-up.com).
+If you don't have `uv`, you should install with `just uv-install`.
 
 To install dependencies and prepare [`pre-commit`](https://pre-commit.com/) hooks you would need to run the `setup` command:
 
@@ -47,7 +47,7 @@ just check-types
 To run linting:
 
 ```bash
-just lint
+just check
 ```
 
 The `just safety` command will look at the security of your code.
@@ -60,7 +60,7 @@ Before submitting your code please do the following steps:
 2. Add tests for the new changes
 3. Edit documentation if you have changed something significant
 4. Run `just fmt` to format your changes.
-5. Run `just lint` to ensure that types, security and docstrings are okay.
+5. Run `just check` to ensure that types, security and docstrings are okay.
 6. Add your name to the `CONTRIBUTERS.txt` file.
 
 ## Other help

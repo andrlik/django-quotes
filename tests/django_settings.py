@@ -1,11 +1,9 @@
-#
 # django_settings.py
 #
 # Copyright (c) 2024 Daniel Andrlik
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#
 
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -18,7 +16,7 @@ if TYPE_CHECKING:
     django_stubs_ext.monkeypatch()
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
-APPS_DIR = ROOT_DIR
+APPS_DIR = Path(ROOT_DIR, "src")
 ADMIN_URL = "admin/"
 
 # GENERAL

@@ -34,38 +34,32 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: [ "3.11", "3.12" ]
-        django-version: ["5.0"]
+        django-version: ["5.0", "5.1"]
 
     steps:
 
     - name: Checkout Code Repository
       uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }} Django ${{ matrix.django-version }}
-      id: setup_python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        django-version: ${{ matrix.django-version }}
-
     - name: Install uv
-      run: pip install --upgrade uv
+      uses: astral-sh/setup-uv@v3
+      with:
+        enable-cache: true
+        cache-dependency-glob: uv.lock
+
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
 
     - name: Setup cache
       uses: actions/cache@v4
       with:
         path: .venv
-        key: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-Django-${{ steps.setup_python.outputs.django_version }}-${{ hashFiles('requirements-dev.lock') }}
-        restore-keys: venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version}}-Django-${{ steps.setup_python.outputs.django_version }}
+        key: venv-${{ runner.os }}-${{ matrix.python-version}}-Django-${{ matrix.django-version }}-${{ hashFiles('uv.lock') }}
+        restore-keys: venv-${{ runner.os }}-${{ matrix.python-version}}-Django-${{ matrix.django-version }}
 
     - name: Create venv, install dependencies
       run: |
-        if [ ! -d .venv ]; then
-            python -m uv venv
-        fi
-        python -m uv pip install --upgrade -e .[test]
-        python -m uv pip install "en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.7.3/en_core_web_trf-3.7.3-py3-none-any.whl"
-        python -m uv pip install Django~="${{ matrix.django-version }}.0"
+        uv sync
         source .venv/bin/activate
         echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
         echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
@@ -73,9 +67,9 @@ jobs:
     - name: Test with pytest
       run: |
         sqlite3 tests/django_quotes.db '.databases'
-        python manage.py collectstatic --noinput
-        python -m pytest --cov-report= --cov-config=pyproject.toml --cov=src/django_quotes
-        python -m coverage lcov
+        uv run --with Django~="${{ matrix.django-version }}.0" manage.py collectstatic --noinput
+        uv run --with Django~="${{ matrix.django-version }}.0" -m pytest --cov-report= --cov-config=pyproject.toml --cov=src/django_quotes
+        uv run --with Django~="${{ matrix.django-version }}.0" -m coverage lcov
 
     - name: Submit coverage data to coveralls.io
       uses: coverallsapp/github-action@master
