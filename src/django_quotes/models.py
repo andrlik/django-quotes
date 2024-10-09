@@ -11,7 +11,7 @@ import random
 from collections.abc import AsyncIterable, Iterable
 from typing import TYPE_CHECKING, Any
 
-import rules
+import rules as django_rules
 from asgiref.sync import async_to_sync
 
 if TYPE_CHECKING:
@@ -138,7 +138,7 @@ class SourceGroup(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metacla
 
     class Meta:
         rules_permissions = {
-            "add": rules.is_authenticated,
+            "add": django_rules.is_authenticated,  # type: ignore
             "read": is_owner_or_public,
             "edit": is_owner,
             "delete": is_owner,
@@ -346,7 +346,7 @@ class Source(AbstractOwnerModel, RulesModelMixin, TimeStampedModel, metaclass=Ru
 
     class Meta:
         rules_permissions = {
-            "add": rules.is_authenticated,
+            "add": django_rules.is_authenticated,  # type: ignore
             "read": is_owner_or_public,
             "edit": is_owner,
             "delete": is_owner,

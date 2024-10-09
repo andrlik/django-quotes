@@ -1,19 +1,17 @@
-#
 # conftest.py
 #
 # Copyright (c) 2024 Daniel Andrlik
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#
 
 import re
 from pathlib import Path
 
 import pytest
 from django.contrib.auth import get_user_model
-from django_quotes.models import Quote, Source, SourceGroup
 
+from django_quotes.models import Quote, Source, SourceGroup
 from tests.factories.users import UserFactory
 
 User = get_user_model()

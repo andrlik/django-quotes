@@ -98,6 +98,7 @@ dev-dependencies = [
     "mkdocs-gen-files>=0.5.0",
     "mkdocs-literate-nav>=0.6.1",
     "pytest-asyncio>=0.23.6",
+    "ruff>=0.6.9",
 ]
 
 [tool.coverage.run]
@@ -113,7 +114,7 @@ exclude_lines = [
 
 [tool.black]
 # https://github.com/psf/black
-target-version = ["py311"]
+target-version = ["py312"]
 line-length = 120
 color = true
 
@@ -141,6 +142,7 @@ DJANGO_SETTINGS_MODULE = "tests.django_settings"
 pythonpath = [".", "src"]
 testpaths = ["tests", "src/django_quotes"]
 django_find_project = false
+asyncio_default_fixture_loop_scope = "function"
 norecursedirs = ["hooks", "*.egg", ".eggs", "dist", "build", "docs", ".tox", ".git", "__pycache__", ".venv"]
 doctest_optionflags = ["NUMBER", "NORMALIZE_WHITESPACE", "IGNORE_EXCEPTION_DETAIL"]
 filterwarnings = [
@@ -159,13 +161,38 @@ addopts = [
     "--reuse-db",
 ]
 
+[tool.tox]
+env_list = ["3.12", "3.11", "lint", "types"]
+
+[tool.tox.env_run_base]
+description = "Run tests under {base_python}"
+allowlist_externals = ["{change_dir}/.tox/{base_python}/bin/python"]
+runner = "uv-venv-lock-runner"
+with_dev = true
+commands = [["pytest"]]
+
+[tool.tox.env.lint]
+description = "Run linting via ruff"
+skip_install = true
+allowlist_externals = ["{change_dir}/.tox/{base_python}/bin/python"]
+with_dev = true
+runner = "uv-venv-lock-runner"
+commands = [["ruff", "check", "src/django_quotes"]]
+
+[tool.tox.env.types]
+description = "Run type checks via pyright"
+allowlist_externals = ["{change_dir}/.tox/{base_python}/bin/python"]
+runner = "uv-venv-lock-runner"
+with_dev = true
+commands = [["pyright"]]
+
 [tool.check-wheel-contents]
 ignore = ["W004"]
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py312"
 line-length = 120
-extend-exclude = ["migrations"]
+extend-exclude = ["migrations", ".tox"]
 
 [tool.ruff.lint]
 select = [
@@ -237,9 +264,10 @@ known-first-party = ["django_markov"]
 ban-relative-imports = "all"
 
 [tool.pyright]
-pythonVersion = "3.11"
+pythonVersion = "3.12"
 exclude = ["**/migrations/",
     "**/__pycache__",
+    ".tox",
     ".venv",
     "tests",
 ]

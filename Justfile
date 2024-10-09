@@ -81,11 +81,15 @@ fmt: check
 
 # Run ruff linting
 lint: check
-    uvx run ruff check
+    uv run ruff check src
 
 # Run the test suite
 test *ARGS: check
     uv run -m pytest {{ ARGS }}
+
+# Run tox for code style, type checking, and multi-python tests. Uses run-parallel.
+tox *ARGS: check
+    uvx --python 3.12 --with tox-uv tox run-parallel {{ ARGS }}
 
 # Runs bandit safety checks.
 safety: check
