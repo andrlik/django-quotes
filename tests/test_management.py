@@ -9,9 +9,9 @@ from io import StringIO
 
 import pytest
 from django.core.management import call_command
-from django_quotes.models import SourceGroup
 
 from django_markov.models import MarkovTextModel
+from django_quotes.models import SourceGroup
 
 pytestmark = pytest.mark.django_db(transaction=True)
 

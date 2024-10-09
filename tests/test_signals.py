@@ -8,6 +8,8 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+
+from django_markov.models import MarkovTextModel, sentence_generated
 from django_quotes.models import (
     GroupStats,
     Quote,
@@ -17,8 +19,6 @@ from django_quotes.models import (
     SourceStats,
 )
 from django_quotes.signals import quote_random_retrieved
-
-from django_markov.models import MarkovTextModel, sentence_generated
 
 User = get_user_model()
 

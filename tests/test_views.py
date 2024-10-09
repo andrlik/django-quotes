@@ -1,17 +1,15 @@
-#
 # test_views.py
 #
 # Copyright (c) 2024 Daniel Andrlik
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#
 
 import pytest
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
-from django_quotes.models import Quote, Source, SourceGroup
 
+from django_quotes.models import Quote, Source, SourceGroup
 from tests.factories.users import UserFactory
 
 pytestmark = pytest.mark.django_db(transaction=True)

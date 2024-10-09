@@ -1,21 +1,19 @@
-#
 # test_api.py
 #
 # Copyright (c) 2024 Daniel Andrlik
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#
 
 import pytest
 from django.test import RequestFactory
 from django.urls import reverse
-from django_quotes.api.serializers import SourceSerializer
-from django_quotes.api.views import SourceGroupViewSet
-from django_quotes.models import Source, SourceGroup
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from django_quotes.api.serializers import SourceSerializer
+from django_quotes.api.views import SourceGroupViewSet
+from django_quotes.models import Source, SourceGroup
 from tests.factories.users import UserFactory
 
 pytestmark = pytest.mark.django_db(transaction=True)

@@ -11,9 +11,9 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.utils import timezone
-from django_quotes.models import Quote, QuoteCorpusError, Source, SourceGroup
 
 from django_markov.text_models import POSifiedText
+from django_quotes.models import Quote, QuoteCorpusError, Source, SourceGroup
 
 User = get_user_model()
 
@@ -111,7 +111,7 @@ def test_retrieve_random_quote(property_group):
     assert noquote_source.get_random_quote() is None
     noquote_source.delete()
     quoteable_source = Source.objects.filter(group=property_group)[0]
-    assert type(quoteable_source.get_random_quote()) == Quote
+    assert isinstance(quoteable_source.get_random_quote(), Quote)
 
 
 def test_generate_markov_sentence(property_group):

@@ -1,11 +1,9 @@
-#
 # test_utils.py
 #
 # Copyright (c) 2024 Daniel Andrlik
 # All rights reserved.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#
 
 from __future__ import annotations
 
@@ -13,6 +11,7 @@ import re
 
 import pytest
 from django.contrib.auth import get_user_model
+
 from django_quotes.models import SourceGroup
 from django_quotes.utils import generate_unique_slug_for_model
 
