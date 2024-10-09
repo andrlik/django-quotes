@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.5.2
 
-[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.5.1...HEAD)
+[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.5.1...v0.5.2)
 
 - Officially supports Django 5.1
 

@@ -1,6 +1,6 @@
 [project]
 name = "django-quotes"
-version = "0.5.1"
+version = "0.5.2"
 description = """A reusable Django app to collect quotes for use in random retrieval or generation of sentences using \
     Markov Chains."""
 authors = [{ name = "Daniel Andrlik", email = "daniel@andrlik.org" }]
@@ -279,7 +279,7 @@ django_settings_module = "tests.django_settings"
 
 
 [tool.bumpversion]
-current_version = "0.5.1"
+current_version = "0.5.2"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 search = "{current_version}"
