@@ -4,7 +4,7 @@ version = "0.5.1"
 description = """A reusable Django app to collect quotes for use in random retrieval or generation of sentences using \
     Markov Chains."""
 authors = [{ name = "Daniel Andrlik", email = "daniel@andrlik.org" }]
-requires-python = ">= 3.11"
+requires-python = ">=3.11"
 dependencies = [
     "django-markov>=0.3.0",
     "rules>=3.1",
@@ -25,8 +25,8 @@ dependencies = [
 license = "BSD-3-Clause"
 readme = "README.md"
 classifiers = [
-    "Framework :: Django :: 4.2",
     "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
     "License :: OSI Approved :: BSD License",
     "Framework :: Django",
     "Programming Language :: Python :: 3.12",
