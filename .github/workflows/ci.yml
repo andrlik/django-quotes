@@ -17,11 +17,11 @@ env:
 on:
   pull_request:
     branches: [ "master", "main" ]
-    paths-ignore: [ "docs/**", "README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md", "LICENSE", "justfile"]
+    paths-ignore: [ "docs/**", "README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md", "LICENSE", "justfile", ".github/workflows/publish.yml", ".github/dependabot.yml", ".github/*_TEMPLATE/*.md"]
 
   push:
     branches: [ "master", "main" ]
-    paths-ignore: [ "docs/**", "README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md", "LICENSE", "justfile" ]
+    paths-ignore: [ "docs/**", "README.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md", "LICENSE", "justfile", ".github/workflows/publish.yml", ".github/dependabot.yml", ".github/*_TEMPLATE/*.md"]
 
 
 jobs:
