@@ -6,7 +6,7 @@
 
 **It is critical that security related issues are reported privately so we have time to address them before they become public knowledge.**
 
-Vulnerabilities can be reported by submitting a notice at https://github.com/andrlik/django-quotes/security
+Vulnerabilities can be reported by [submitting a private advisory via Github](https://github.com/andrlik/django-quotes/security).
 
 
 Please include the requested information listed below (as much as you can provide) to help us better understand the nature and scope of the possible issue:
