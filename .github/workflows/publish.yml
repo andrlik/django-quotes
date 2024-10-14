@@ -4,11 +4,6 @@ on:
   release:
     types: ["published"]
 
-env:
-  PYTHONUNBUFFERED: "1"
-  FORCE_COLOR: "1"
-  DJANGO_DEBUG: "1"
-
 jobs:
   run:
     name: "Build and publish release"
@@ -25,20 +20,6 @@ jobs:
 
       - name: Set up Python
         run: uv python install 3.12
-
-      - name: Setup cache
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: venv-publish-py312-${{ hashFiles('uv.lock') }}
-          restore-keys: venv-publish-py312-
-
-      - name: Create venv, install dependencies
-        run: |
-          uv sync
-          source .venv/bin/activate
-          echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
-          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
 
       - name: Build
         run: uv build
