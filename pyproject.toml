@@ -293,6 +293,7 @@ tag_message = "Bump version: {current_version} → {new_version}"
 allow_dirty = false
 commit = true
 message = "Bump version: {current_version} → {new_version}"
+pre_commit_hooks = ["uv sync", "git add uv.lock"]
 commit_args = ""
 
 [[tool.bumpversion.files]]
