@@ -1,0 +1,17 @@
+* django_quotes
+    * [admin](django_quotes/admin.md)
+    * api
+        * [serializers](django_quotes/api/serializers.md)
+        * [views](django_quotes/api/views.md)
+    * [apps](django_quotes/apps.md)
+    * management
+        * commands
+            * [makemarkov](django_quotes/management/commands/makemarkov.md)
+    * [models](django_quotes/models.md)
+    * [receivers](django_quotes/receivers.md)
+    * [rules](django_quotes/rules.md)
+    * [signals](django_quotes/signals.md)
+    * [tasks](django_quotes/tasks.md)
+    * [urls](django_quotes/urls.md)
+    * [utils](django_quotes/utils.md)
+    * [views](django_quotes/views.md)
