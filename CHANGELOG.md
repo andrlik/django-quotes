@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.6.0
 
-[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.5.2...HEAD)
+[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.5.2...v0.6.0)
 
 - Support for Python 3.13. Drops support for Python 3.11.
 - Support for Django 5.2
