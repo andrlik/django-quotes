@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+[Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.5.2...HEAD)
+
+- Support for Python 3.13. Drops support for Python 3.11.
+- Support for Django 5.2
+- Updates django-markov
+- Adds `--force` option to `makemarkov` management command to regenerate all MarkovTextModels. You should run this after updating to ensure your models are correctly stored.
+
 ## 0.5.2
 
 [Compare the full difference](https://github.com/andrlik/django-quotes/compare/v0.5.1...v0.5.2)
