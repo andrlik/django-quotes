@@ -78,13 +78,13 @@ repos:
     hooks:
       - id: ruff
         name: Run ruff
-        entry: rye check
+        entry: uvx ruff check
         language: system
         files: \.py$
 
       - id: pyright
         name: Run pyright type checking
-        entry: rye run pyright
+        entry: uvx pyright
         language: system
         files: \.py$
 

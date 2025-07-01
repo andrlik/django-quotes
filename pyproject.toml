@@ -4,9 +4,9 @@ version = "0.5.2"
 description = """A reusable Django app to collect quotes for use in random retrieval or generation of sentences using \
     Markov Chains."""
 authors = [{ name = "Daniel Andrlik", email = "daniel@andrlik.org" }]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
-    "django-markov>=0.3.0",
+    "django-markov>=0.4.1",
     "rules>=3.1",
     "Markdown>=3.3.6",
     "python-slugify>=6.1.1",
@@ -21,6 +21,11 @@ dependencies = [
     "coreschema>=0.0.4",
     "itypes>=1.2.0",
     "crispy-bootstrap4>=2024.1",
+    # The following are needed for some package managers to grab correct versions.
+    "spacy>=3.8.7",
+    "marisa-trie>=1.2.1",
+    "preshed>=3.0.10",
+    "numpy>=2.3.0",
 ]
 license = "BSD-3-Clause"
 readme = "README.md"
@@ -30,7 +35,7 @@ classifiers = [
     "License :: OSI Approved :: BSD License",
     "Framework :: Django",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.13",
     "Development Status :: 4 - Beta",
 ]
 
@@ -88,7 +93,7 @@ dev-dependencies = [
     "mkdocs-material>=9.5.17",
     "mkdocstrings[python]>=0.24.2",
     "mkdocs-include-markdown-plugin>=6.0.5",
-    "en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.8.0/en_core_web_trf-3.8.0-py3-none-any.whl",
+    "en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl",
     "psycopg[binary]>=3.1.18",
     "bump-my-version>=0.20.0",
     "pyright>=1.1.357",
@@ -163,7 +168,7 @@ addopts = [
 ]
 
 [tool.tox]
-env_list = ["3.12", "3.11", "lint", "types"]
+env_list = ["3.13", "3.12", "lint", "types"]
 
 [tool.tox.env_run_base]
 description = "Run tests under {base_python}"
