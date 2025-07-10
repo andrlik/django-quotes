@@ -175,17 +175,21 @@ _build-remove:
 _docs-clean:
     rm -rf site/*
 
+# Remove qa related caches
+_qa_cache_clean:
+    rm -rf .ruff_cache .pytest_cache .coverage*
+
 # Remove any generated virtualenvs.
 _env-clean:
     rm -rf .venv .tox
 
 # Removes pycache directories and files, and generated builds.
 [group('lifecycle')]
-clean: _pycache-remove _build-remove _docs-clean
+clean: _pycache-remove _build-remove _docs-clean _qa_cache_clean
 
 # Destroy and recreate the virtual environments from scratch
 [group('lifecycle')]
-fresh: _env-clean && bootstrap
+fresh: clean _env-clean && bootstrap
     @echo "Previous envs destroyed. Now recreating!"
 
 # Update project dependencies
