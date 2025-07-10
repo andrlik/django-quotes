@@ -45,6 +45,6 @@ class Command(BaseCommand):
                 groups_updated += 1
         self.stdout.write(
             self.style.SUCCESS(
-                f"Updated models for {groups_updated} Character Groups " f"and {characters_updated} Characters!"
+                f"Updated models for {groups_updated} Character Groups and {characters_updated} Characters!"
             )
         )

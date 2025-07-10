@@ -17,22 +17,34 @@ cog.out(
 ]]] -->
 ```
 Available recipes:
-    bootstrap    # Setup the project and update dependencies.
-    build *ARGS  # Build Python package
-    check        # Checks that project is ready for development.
-    check-types  # Check types
-    clean        # Removes pycache directories and files, and generated builds.
-    docs *ARGS   # Access mkdocs commands
-    fmt          # Run just formatter and rye formatter.
-    help         # Lists all available commands.
-    lint         # Run ruff linting
-    manage *ARGS # Access Django management commands.
-    safety       # Runs bandit safety checks.
-    test *ARGS   # Run the test suite
-    tox *ARGS    # Run tox for code style, type checking, and multi-python tests. Uses run-parallel.
-    uv-install   # Downloads and installs uv on your system. If on Windows, follow the directions at https://docs.astral.sh/uv/getting-started/installation/ instead.
-    uv-uninstall # Uninstall uv
-    uv-update    # Update uv
+    help                         # Lists all available commands.
+
+    [lifecycle]
+    bootstrap                    # Setup the project and update dependencies.
+    build *ARGS                  # Build Python package
+    clean                        # Removes pycache directories and files, and generated builds.
+    docs *ARGS                   # Access mkdocs commands
+    fresh                        # Destroy and recreate the virtual environments from scratch
+    upgrade                      # Update project dependencies
+
+    [qa]
+    check-types                  # Check types
+    fmt                          # Run just formatter and ruff formatter.
+    lint                         # Run ruff linting
+    safety                       # Runs bandit safety checks.
+    test *ARGS                   # Run the test suite
+    tox *ARGS                    # Run tox for code style, type checking, and multi-python tests. Uses run-parallel.
+
+    [run]
+    browser                      # Open a web browser to the development server.
+    manage *ARGS                 # Access Django management commands.
+    req path="app/groups/" *ARGS # Send a request to the development server to print to stdout. Uses curl if present, else httpie.
+    serve *ARGS                  # Run the development server
+
+    [uv]
+    uv-install                   # Downloads and installs uv on your system.
+    uv-uninstall                 # Uninstall uv
+    uv-update                    # Update uv
 ```
 <!-- [[[end]]] -->
 

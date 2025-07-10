@@ -1,11 +1,16 @@
 set dotenv-load := true
+set unstable := true
+
+PORT := env("PORT", "8000")
+ARGS_TEST := env("_UV_RUN_ARGS_TEST", "")
+ARGS_SERVE := env("_UV_RUN_ARGS_SERVE", "")
 
 # Lists all available commands.
 @help:
     just --list
 
 @_cog:
-   uvx --from cogapp cog -r CONTRIBUTING.md
+    uvx --from cogapp cog -r CONTRIBUTING.md
 
 # ---------------------------------------------- #
 # Script to rule them all recipes.               #
@@ -20,9 +25,13 @@ _install-pre-commit: _check-pre-commit
     fi
     exit 0
 
-# Downloads and installs uv on your system. If on Windows, follow the directions at https://docs.astral.sh/uv/getting-started/installation/ instead.
+# Downloads and installs uv on your system.
+[group('uv')]
+[linux]
+[macos]
+[script('bash')]
+[unix]
 uv-install:
-    #!/usr/bin/env bash
     set -euo pipefail
     if ! command -v uv &> /dev/null;
     then
@@ -32,38 +41,47 @@ uv-install:
       uv self update
     fi
 
+# Downloads and installs uv on your system
+[group('uv')]
+[script]
+[windows]
+uv-install:
+    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
 # Update uv
+[group('uv')]
 uv-update:
     uv self update
 
 # Uninstall uv
+[group('uv')]
 uv-uninstall:
     uv self uninstall
 
+[script]
 _check-pre-commit:
-    #!/usr/bin/env bash
     if ! command -v pre-commit &> /dev/null; then
       echo "Pre-commit is not installed!"
       exit 1
     fi
 
+[script]
 _check-env:
-    #!/usr/bin/env bash
     if [[ -z "$DJANGO_DEBUG" ]]; then
       echo "DJANGO_DEBUG is not set and application will run in production mode." >&2
     fi
 
 # Setup the project and update dependencies.
+[group('lifecycle')]
 bootstrap: uv-install _install-pre-commit _check-env
-    #!/usr/bin/env bash
-    uv sync --inexact
-    uv pip install pip
-    uv run -m spacy info en_core_web_trf && echo "Lang model is already installed" || uv run -m spacy download en_core_web_trf
-    DJANGO_SETTINGS_MODULE="tests.django_settings" PYTHONPATH="$PYTHONPATH:$(pwd)" uv run django-admin migrate
+    @uv sync --inexact
+    @uv pip install pip
+    @uv run -m spacy info en_core_web_sm && echo "Lang model is already installed" || uv run -m spacy download en_core_web_sm
+    @just manage migrate
 
 # Checks that project is ready for development.
-check: _check-env _check-pre-commit
-    #!/usr/bin/env bash
+[script]
+_check: _check-env _check-pre-commit
     if ! command -v uv &> /dev/null; then
       echo "UV is not installed!"
       exit 1
@@ -74,41 +92,75 @@ check: _check-env _check-pre-commit
     fi
 
 # Check types
-check-types: check
+[group('qa')]
+check-types: _check
     uv run pyright
 
-# Run just formatter and rye formatter.
-fmt: check
+# Run just formatter and ruff formatter.
+[group('qa')]
+fmt: _check
     just --fmt --unstable
-    uvx run ruff format
+    uv run -m ruff format
 
 # Run ruff linting
-lint: check
+[group('qa')]
+lint: _check
     uv run ruff check src
 
 # Run the test suite
-test *ARGS: check
-    uv run -m pytest {{ ARGS }}
+[group('qa')]
+test *ARGS: _check
+    uv run {{ARGS_TEST}} -m pytest {{ ARGS }}
 
 # Run tox for code style, type checking, and multi-python tests. Uses run-parallel.
-tox *ARGS: check
-    uvx --python 3.12 --with tox-uv tox {{ ARGS }}
+[group('qa')]
+tox *ARGS: _check
+    uvx --python 3.12 --with tox-uv {{ARGS_TEST}} tox {{ ARGS }}
 
 # Runs bandit safety checks.
-safety: check
+[group('qa')]
+safety: _check
     uv run -m bandit -c pyproject.toml -r src
 
 # Access Django management commands.
-manage *ARGS: check
-    #!/usr/bin/env bash
+[group('run')]
+[script('bash')]
+manage *ARGS: _check
     DJANGO_SETTINGS_MODULE="tests.django_settings" PYTHONPATH="$PYTHONPATH:$(pwd)" uv run django-admin {{ ARGS }}
 
+# Run the development server
+[group('run')]
+[script('bash')]
+serve *ARGS: _check
+    DJANGO_SETTINGS_MODULE="tests.django_settings" PYTHONPATH="$PYTHONPATH:$(pwd)" uv run {{ ARGS_SERVE }} django-admin runserver 127.0.0.1:{{ PORT }} {{ ARGS }}
+
+# Open a web browser to the development server.
+[group('run')]
+@browser: _check
+    uv run -m webbrowser -t http://127.0.0.1:{{ PORT }}
+
+# Send a request to the development server to print to stdout. Uses curl if present, else httpie.
+[group('run')]
+[script]
+req path="app/groups/" *ARGS:
+    if ! [ -x "$(command -v curl)" ]; then
+        @just _http {{ ARGS }} http://127.0.0.1:{{ PORT }}/{{ path }}
+    else
+        curl {{ ARGS }} -L http://127.0.0.1:{{ PORT }}/{{ path }}
+    fi
+
+# Invoke http from httpie
+_http *ARGS:
+    uvx --from httpie http {{ ARGS }}
+
 # Access mkdocs commands
-docs *ARGS: check
+[group('lifecycle')]
+@docs *ARGS: _check
     uv run mike {{ ARGS }}
 
 # Build Python package
-build *ARGS: check
+[group('lifecycle')]
+@build *ARGS: _check
     uv build {{ ARGS }}
 
 # Removes pycache directories and files.
@@ -123,5 +175,20 @@ _build-remove:
 _docs-clean:
     rm -rf site/*
 
+# Remove any generated virtualenvs.
+_env-clean:
+    rm -rf .venv .tox
+
 # Removes pycache directories and files, and generated builds.
+[group('lifecycle')]
 clean: _pycache-remove _build-remove _docs-clean
+
+# Destroy and recreate the virtual environments from scratch
+[group('lifecycle')]
+fresh: _env-clean && bootstrap
+    @echo "Previous envs destroyed. Now recreating!"
+
+# Update project dependencies
+[group('lifecycle')]
+@upgrade: _check
+    uv sync --upgrade
