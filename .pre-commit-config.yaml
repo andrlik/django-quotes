@@ -88,6 +88,12 @@ repos:
         language: system
         files: \.py$
 
+      - id: cog
+        name: Cog updates
+        entry: just _cog
+        language: system
+        pass_filenames: false
+
   - repo: https://github.com/asottile/blacken-docs
     rev: 1.19.0
     hooks:

@@ -1,8 +1,11 @@
 set dotenv-load := true
 
 # Lists all available commands.
-help:
+@help:
     just --list
+
+@_cog:
+   uvx --from cogapp cog -r CONTRIBUTING.md
 
 # ---------------------------------------------- #
 # Script to rule them all recipes.               #
