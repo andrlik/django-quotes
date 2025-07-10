@@ -1071,29 +1071,70 @@
 <h1 id="how-to-contribute">How to contribute</h1>
 <p>Contributions to either the code, localization, or the documentation are very welcome!</p>
 <h2 id="development-task-runner">Development task runner</h2>
-<p>We use <a href="https://github.com/casey/just"><code>just</code></a> to execute common tasks. It is available for any platform. Once installed, you can see a list of available commands by running <code>just --list</code>.</p>
+<p>We use <a href="https://github.com/casey/just"><code>just</code></a> to execute common tasks. It is available for any platform. Once installed, you can see a list of available commands by running <code>just</code>.</p>
+<!-- [[[cog
+import subprocess
+import cog
+
+list = subprocess.run(["just"], stdout=subprocess.PIPE)
+cog.out(
+    f"```\n{list.stdout.decode('utf-8')}```"
+)
+]]] -->
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Available recipes:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    help                         # Lists all available commands.
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    [lifecycle]
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    bootstrap                    # Setup the project and update dependencies.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    build *ARGS                  # Build Python package
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    clean                        # Removes pycache directories and files, and generated builds.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    docs *ARGS                   # Access mkdocs commands
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    fresh                        # Destroy and recreate the virtual environments from scratch
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    upgrade                      # Update project dependencies
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    [qa]
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    check-types                  # Check types
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    fmt                          # Run just formatter and ruff formatter.
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    lint                         # Run ruff linting
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    safety                       # Runs bandit safety checks.
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    test *ARGS                   # Run the test suite
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    tox *ARGS                    # Run tox for code style, type checking, and multi-python tests. Uses run-parallel.
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    [run]
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    browser                      # Open a web browser to the development server.
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    manage *ARGS                 # Access Django management commands.
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    req path=&quot;app/groups/&quot; *ARGS # Send a request to the development server to print to stdout. Uses curl if present, else httpie.
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    serve *ARGS                  # Run the development server
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    [uv]
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    uv-install                   # Downloads and installs uv on your system.
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    uv-uninstall                 # Uninstall uv
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    uv-update                    # Update uv
+</code></pre></div>
+<!-- [[[end]]] -->
+
 <h2 id="dependencies">Dependencies</h2>
 <p>We use <code>uv</code> to manage the Python <a href="https://rye-up.com/..">dependencies</a>.
 If you don't have <code>uv</code>, you should install with <code>just uv-install</code>.</p>
-<p>To install dependencies and prepare <a href="https://pre-commit.com/"><code>pre-commit</code></a> hooks you would need to run the <code>setup</code> command:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>just<span class="w"> </span>bootstrap
+<p>To install dependencies and prepare <a href="https://pre-commit.com/"><code>pre-commit</code></a> hooks you would need to run the <code>bootstrap</code> command:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>just<span class="w"> </span>bootstrap
 </code></pre></div>
 <h2 id="running-updates">Running updates</h2>
 <p>After pulling new updates from the repository you can quickly install updated dependencies and run database migrations by running <code>just bootstrap</code>.</p>
 <h2 id="codestyle">Codestyle</h2>
 <p>After installation you may execute code formatting.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>just<span class="w"> </span>fmt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>just<span class="w"> </span>fmt
 </code></pre></div>
 <h3 id="checks">Checks</h3>
 <p>Many checks are configured for this project.</p>
 <p>To run your test suite:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>just<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>just<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
 <p>To use pyright for type checking run:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>just<span class="w"> </span>check-types
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>just<span class="w"> </span>check-types
 </code></pre></div></p>
 <p>To run linting:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>just<span class="w"> </span>check
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>just<span class="w"> </span>check
 </code></pre></div>
 <p>The <code>just safety</code> command will look at the security of your code.</p>
 <h3 id="before-submitting">Before submitting</h3>

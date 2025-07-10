@@ -2,78 +2,78 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/changelog/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/code_of_conduct/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/contributing/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/quickstart/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/security/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/admin/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/apps/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/models/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/receivers/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/rules/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/signals/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/tasks/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/urls/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/utils/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/views/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/api/serializers/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/api/views/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
     <url>
          <loc>https://andrlik.github.io/django-quotes/latest/reference/django_quotes/management/commands/makemarkov/</loc>
-         <lastmod>2025-07-01</lastmod>
+         <lastmod>2025-07-10</lastmod>
     </url>
 </urlset>
