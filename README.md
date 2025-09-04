@@ -3,7 +3,7 @@
 A simple reusable [Django](https://www.djangoproject.com) app that allows you to collect quotes from arbitrary groups of characters, and then serve random quotes or Markov-chain generated sentences based upon them. Includes a Bootstrap compatible set of templates an optional REST API.
 
 > [!IMPORTANT]
-> This project has [migrated to Codeberg](https://codeberg.org/andrlik/django-quotes) as of release 0.7.0. All updates, issues, and pull requests will occur there.
+> This project has [migrated to Codeberg](https://codeberg.org/andrlik/django-quotes) as of release 0.6.1. All updates, issues, and pull requests will occur there.
 
 [![PyPI](https://img.shields.io/pypi/v/django-quotes)](https://pypi.org/project/django-quotes/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-markov)
